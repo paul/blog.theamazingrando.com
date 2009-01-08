@@ -9,4 +9,4 @@ Here's what it looks like this fine evening:
 
 Click the album link for more. From my porch, I can see parts of the mountainside flashing from the lights of the fire trucks. They've evacuated 11,000 homes, but the wind is blowing the fire the other direction. There have been clouds of smoke all afternoon, but once the sun set, I has able to see the flames.
 
-More details about the fires here: http://www.dailycamera.com/news/2009/jan/07/i-70-closed-over-vail-pass-avalanche-control/
+More details about the fires here: <a href="http://www.dailycamera.com/news/2009/jan/07/i-70-closed-over-vail-pass-avalanche-control/">http://www.dailycamera.com/news/2009/jan/07/i-70-closed-over-vail-pass-avalanche-control/</a>
