@@ -3,6 +3,8 @@ source "http://rubygems.org"
 
 gem "postly"
 gem "nokogiri"
-gem "ruby-git"
+gem "activesupport"
+gem "git"
+gem "maruku"
 
 
