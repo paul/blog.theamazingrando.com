@@ -42,6 +42,7 @@ doc.xpath('/rss/channel/item').sort_by { |item|
   repo.add(file)
   repo.commit("Import #{safe_title}")
   repo.branch("master").merge(branch)
+  repo.checkout("master")
   branch.delete
 
 end
