@@ -26,7 +26,7 @@ doc.xpath('/rss/channel/item').sort_by { |item|
   filename = "#{safe_title}.markdown"
   file = File.join(path, filename)
 
-  content = "\n##{title}\n\n#{content}"
+  content = "\nTitle: #{title}\n\n#{content}"
 
   ENV['GIT_AUTHOR_DATE']   = post_date.iso8601
   ENV['GIT_COMMITER_DATE'] = post_date.iso8601
