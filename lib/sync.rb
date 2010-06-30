@@ -24,16 +24,28 @@ site_posts = Postly::Post.find(:site_id => site.id)
 
 Dir['posts/**/*.markdown'].each do |file|
   content = File.open(file, 'r').read
+  html = Maruku.new(content).to_html
 
-  doc = Maruku.new(content)
-  p doc.title
-  html = Maruku.new(content).to_html_document
-  title = Nokogiri::HTML(html).css('title').first.content
-  puts html
-  p title
+  if match = Regexp.new(/^Title: ([^\n]+)/ ).match(content)
+    title = match[1]
+  else
+    warn("please set the title on #{file}")
+  end
 
-  published_date = Time.now
+  published_date = Time.parse(`git log -n1 --pretty=format:"%ai" #{file}`)
 
-  break
+  post = Array.wrap(site_posts).find { |post|
+    post.title == title
+  }
+  if post
+    puts "Updating '#{title}'"
+    post = Postly::Post.update(post.id, :title => title, :body => html)
+  else
+    puts "Creating '#{title}'"
+    post = Postly::Post.create(:site_id => site.id,
+                               :title => title,
+                               :body => html,
+                               :date => published_date)
+  end
 end
 
