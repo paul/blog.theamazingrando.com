@@ -15,7 +15,7 @@
 <!-- 6. WordPress will then import each of the posts, comments, and categories -->
 <!--    contained in this file into your blog -->
 
-<!-- generator="WordPress/2.7.1" created="2010-06-30 09:48"-->
+<!-- generator="WordPress/2.7.1" created="2010-06-30 10:03"-->
 <rss version="2.0"
 	xmlns:excerpt="http://wordpress.org/export/1.0/excerpt/"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -1907,21 +1907,6 @@ I guess my biggest gripe is the community. The focus has changed away from the u
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>2</wp:comment_user_id>
 </wp:comment>
-<wp:comment>
-<wp:comment_id>7611</wp:comment_id>
-<wp:comment_author><![CDATA[prostonik_7]]></wp:comment_author>
-<wp:comment_author_email>9ghyjkjunn77@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://www.mister-wong.de/user/rezeptkaufenviagra/</wp:comment_author_url>
-<wp:comment_author_IP>202.108.50.76</wp:comment_author_IP>
-<wp:comment_date>2010-03-04 10:09:34</wp:comment_date>
-<wp:comment_date_gmt>2010-03-04 16:09:34</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>Iraqi city hit by triple bombing</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
 	</item>
 <item>
 <title>Spec'ing Migrations (A Tutorial)</title>
@@ -2306,21 +2291,6 @@ http://github.com/paul/resourceful/commit/ee920cca2a7a177d612544849561ef13837a1a
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>7660</wp:comment_id>
-<wp:comment_author><![CDATA[Eugenio]]></wp:comment_author>
-<wp:comment_author_email>hemBefeWest@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://extraditablevideo.blogspot.com/</wp:comment_author_url>
-<wp:comment_author_IP>76.182.4.111</wp:comment_author_IP>
-<wp:comment_date>2010-03-08 07:32:56</wp:comment_date>
-<wp:comment_date_gmt>2010-03-08 13:32:56</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>Perfect. www.theamazingrando.com kicks ass.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9489</wp:comment_id>
 <wp:comment_author><![CDATA[Wordpress Themes]]></wp:comment_author>
 <wp:comment_author_email>ala234l@gawab.com</wp:comment_author_email>
@@ -2650,51 +2620,6 @@ Finally, add your config options to `config/application.yml`, using the same `de
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>8017</wp:comment_id>
-<wp:comment_author><![CDATA[Vladislav75]]></wp:comment_author>
-<wp:comment_author_email>allsmar@mail.ru</wp:comment_author_email>
-<wp:comment_author_url>http://smartpet.ru/catalog186_1.html</wp:comment_author_url>
-<wp:comment_author_IP>202.108.251.173</wp:comment_author_IP>
-<wp:comment_date>2010-03-27 22:52:27</wp:comment_date>
-<wp:comment_date_gmt>2010-03-28 04:52:27</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p><a href="http://smartpet.ru/catalog186_1.html" rel="nofollow">??? ????? ???? ????? ???????? ?????? ?? ??????????.</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>6401</wp:comment_id>
-<wp:comment_author><![CDATA[Switteimata]]></wp:comment_author>
-<wp:comment_author_email>hammapusa@mail.ru</wp:comment_author_email>
-<wp:comment_author_url>http://www.lk017.info</wp:comment_author_url>
-<wp:comment_author_IP>212.95.54.235</wp:comment_author_IP>
-<wp:comment_date>2009-11-23 17:15:41</wp:comment_date>
-<wp:comment_date_gmt>2009-11-23 23:15:41</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>??? ???? ??????????.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>7967</wp:comment_id>
-<wp:comment_author><![CDATA[Vladislav67]]></wp:comment_author>
-<wp:comment_author_email>supvayz@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://rupeople.com/</wp:comment_author_url>
-<wp:comment_author_IP>219.147.172.2</wp:comment_author_IP>
-<wp:comment_date>2010-03-24 12:35:30</wp:comment_date>
-<wp:comment_date_gmt>2010-03-24 18:35:30</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p><a href="http://rupeople.com/" rel="nofollow">????????? ?? ????? ??????????? ????? ?????? ?? ???? ????. ?????, ?????? ????? ?????????!</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9395</wp:comment_id>
 <wp:comment_author><![CDATA[toreodoris]]></wp:comment_author>
 <wp:comment_author_email>toreodoris@gmail.com</wp:comment_author_email>
@@ -2744,21 +2669,6 @@ rake:
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>7158</wp:comment_id>
-<wp:comment_author><![CDATA[Hyundai]]></wp:comment_author>
-<wp:comment_author_email>markus72@yahoo.com</wp:comment_author_email>
-<wp:comment_author_url>http://hyundaipower.ru/</wp:comment_author_url>
-<wp:comment_author_IP>92.241.168.141</wp:comment_author_IP>
-<wp:comment_date>2010-02-03 06:23:02</wp:comment_date>
-<wp:comment_date_gmt>2010-02-03 12:23:02</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>????????????! ?? ????? ???? ?????? ??????? ???????? ????</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9534</wp:comment_id>
 <wp:comment_author><![CDATA[analachWage]]></wp:comment_author>
 <wp:comment_author_email>laquintamartinek996@gmail.com</wp:comment_author_email>
@@ -2787,21 +2697,6 @@ http://www.converttube.eu/images/logo.gif</p>
 <wp:comment_content><![CDATA[<p><a href="http://swdn.ru/" rel="nofollow">?????????? ????? ??????, ??? ??? ?????? </a></p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>7785</wp:comment_id>
-<wp:comment_author><![CDATA[Vladislav30]]></wp:comment_author>
-<wp:comment_author_email>vladimirsinydes@ya.ru</wp:comment_author_email>
-<wp:comment_author_url>http://japantheatre.ru/</wp:comment_author_url>
-<wp:comment_author_IP>69.92.200.17</wp:comment_author_IP>
-<wp:comment_date>2010-03-15 13:35:22</wp:comment_date>
-<wp:comment_date_gmt>2010-03-15 19:35:22</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p><a href="http://japantheatre.ru/" rel="nofollow">? ????? ??? ????? ? ??? ??????? ??? ??? ????? ???-?? ?? ???.</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -2837,22 +2732,6 @@ http://www.converttube.eu/images/logo.gif</p>
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>6954</wp:comment_id>
-<wp:comment_author><![CDATA[JaneAir]]></wp:comment_author>
-<wp:comment_author_email>jane69air@mail.ru</wp:comment_author_email>
-<wp:comment_author_url>http://airdeck.info/</wp:comment_author_url>
-<wp:comment_author_IP>94.181.253.89</wp:comment_author_IP>
-<wp:comment_date>2010-01-05 10:30:08</wp:comment_date>
-<wp:comment_date_gmt>2010-01-05 16:30:08</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>????????, ?? ??????? ????? ??? ????????!? ??? ??????? ?????? ?????? ???? ?? ???? ??????????, ???????? ????? ???? ??, ??? ????????? ????-?????? ?????, ? ?? ??????? ???????? ??? 10 ????. ??? ??????? ?????? ?????? - ? ???????? ??????????, ?????? ? ????????? ??? ??? ?????? ?????, ????????? ???? ?????? ????? ??? ???, ?????? ?? ??? ?????????, ????? ? ?????? ???, ??? ???????? ?? ?????????? ????.. ???? :) ?????? ?? ???????? ? ?????????, ???????? ?? ???????, ?? ???????, ?????????? ?? ?????? ?????, ??????? ? ???????, ? ?????????? ????????? ??????? ????? ? ?????????, ?????????? ? ????? ?? ?????????, ? ????? ? ????????? ????????. ??????? ????? ?????????? ? ??????, ??? ??????? ??? 5 ???? ??????. ??? ???????? ???, ??? ??? ?? ???????. ??? ?????? ??? ?????????? ? ??? ?????????, ?????????? ?? ???? ??????. 
-?? ? ?????? ???????, ??? ?????? ???? ?????? - ??? ????, ?? ?? ?????? ?? ????????? ??????, ?? ? ??? ??? ?????)))</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9491</wp:comment_id>
 <wp:comment_author><![CDATA[Aleksandr3]]></wp:comment_author>
 <wp:comment_author_email>fsjdcgwe@ya.ru</wp:comment_author_email>
@@ -2863,36 +2742,6 @@ http://www.converttube.eu/images/logo.gif</p>
 <wp:comment_content><![CDATA[<p><a href="http://turlinks.ru/" rel="nofollow">It is a pity, that now I can not express - it is very occupied. But I will be released - I will necessarily write that I think on this question.</a></p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>7176</wp:comment_id>
-<wp:comment_author><![CDATA[???????? ????????]]></wp:comment_author>
-<wp:comment_author_email>narmed@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://narmedplus.ru</wp:comment_author_url>
-<wp:comment_author_IP>92.241.168.141</wp:comment_author_IP>
-<wp:comment_date>2010-02-04 08:32:10</wp:comment_date>
-<wp:comment_date_gmt>2010-02-04 14:32:10</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>??????? ??????. ???????, ?? ????? ????? ????? ????? ????? ?????????? ??????.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>8189</wp:comment_id>
-<wp:comment_author><![CDATA[Vladislav98]]></wp:comment_author>
-<wp:comment_author_email>dav6@mail.ru</wp:comment_author_email>
-<wp:comment_author_url>http://globous.info/</wp:comment_author_url>
-<wp:comment_author_IP>69.141.26.193</wp:comment_author_IP>
-<wp:comment_date>2010-04-05 15:38:28</wp:comment_date>
-<wp:comment_date_gmt>2010-04-05 21:38:28</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p><a href="http://globous.info/" rel="nofollow">? ????? ???-?? ????????, ?? ? ??? ???? ????? ??????? ????????</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -2928,26 +2777,6 @@ http://www.converttube.eu/images/logo.gif</p>
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>9418</wp:comment_id>
-<wp:comment_author><![CDATA[CyncInCar]]></wp:comment_author>
-<wp:comment_author_email>coicomids@mail.ru</wp:comment_author_email>
-<wp:comment_author_url>http://webmaster.audio-krasota.ru</wp:comment_author_url>
-<wp:comment_author_IP>81.198.225.25</wp:comment_author_IP>
-<wp:comment_date>2010-06-17 10:52:57</wp:comment_date>
-<wp:comment_date_gmt>2010-06-17 16:52:57</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>????? ?????
-????? ???????????? ???????
-http://webmaster.audio-krasota.ru/ - ???????-?????</p>
-
-<p><a href="http://webmaster.audio-krasota.ru" rel="nofollow">????????? ????????? ??????? ??????
-</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9426</wp:comment_id>
 <wp:comment_author><![CDATA[Dimon29]]></wp:comment_author>
 <wp:comment_author_email>klsjdhf@ya.ru</wp:comment_author_email>
@@ -2958,36 +2787,6 @@ http://webmaster.audio-krasota.ru/ - ???????-?????</p>
 <wp:comment_content><![CDATA[<p><a href="http://site-abort.info" rel="nofollow"><a href="http://site-abort.info/" rel="nofollow">????? ??????????</a></a></p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>8049</wp:comment_id>
-<wp:comment_author><![CDATA[Vladislav77]]></wp:comment_author>
-<wp:comment_author_email>kosmozzz@mail.ru</wp:comment_author_email>
-<wp:comment_author_url>http://kinohed.ru/</wp:comment_author_url>
-<wp:comment_author_IP>88.146.213.224</wp:comment_author_IP>
-<wp:comment_date>2010-03-29 14:53:15</wp:comment_date>
-<wp:comment_date_gmt>2010-03-29 20:53:15</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p><a href="http://kinohed.ru/" rel="nofollow">????????? ???????????? ???? ?????.</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>8001</wp:comment_id>
-<wp:comment_author><![CDATA[Vladislav71]]></wp:comment_author>
-<wp:comment_author_email>finance-econom@yandex.ru</wp:comment_author_email>
-<wp:comment_author_url>http://finance-econom.ru/</wp:comment_author_url>
-<wp:comment_author_IP>58.248.4.97</wp:comment_author_IP>
-<wp:comment_date>2010-03-26 21:42:05</wp:comment_date>
-<wp:comment_date_gmt>2010-03-27 03:42:05</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p><a href="http://finance-econom.ru/" rel="nofollow">?? ???? ??????? ? ????? ????????? ????? ???????!</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -3105,36 +2904,6 @@ http://connect.al.com/user/rodger7/index.html dublin hotel
 <wp:comment_content><![CDATA[<p><a href="http://norv.ru/" rel="nofollow">Full bad taste</a></p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>7932</wp:comment_id>
-<wp:comment_author><![CDATA[Vladislav62]]></wp:comment_author>
-<wp:comment_author_email>kosmozzz@mail.ru</wp:comment_author_email>
-<wp:comment_author_url>http://donelf.com/</wp:comment_author_url>
-<wp:comment_author_IP>219.147.172.2</wp:comment_author_IP>
-<wp:comment_date>2010-03-23 05:40:54</wp:comment_date>
-<wp:comment_date_gmt>2010-03-23 11:40:54</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p><a href="http://donelf.com/" rel="nofollow">???????? ??????. ????????? ???? ???? ??????</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>7166</wp:comment_id>
-<wp:comment_author><![CDATA[Nissan]]></wp:comment_author>
-<wp:comment_author_email>trailman@yahoo.com</wp:comment_author_email>
-<wp:comment_author_url>http://nissanpower.ru</wp:comment_author_url>
-<wp:comment_author_IP>92.241.168.141</wp:comment_author_IP>
-<wp:comment_date>2010-02-03 15:52:57</wp:comment_date>
-<wp:comment_date_gmt>2010-02-03 21:52:57</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>???????? ????????, ???????? ????????? ?????? ?? ??? ???? ???????, ??? ??? ???? ?? ????????? ? ?????? ???????, ? ?????????? ???? ?? ????? ?????????????? ? ????????????.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -3776,21 +3545,6 @@ Thats the entire method that I'm using right now. I hope to package this all up 
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>7716</wp:comment_id>
-<wp:comment_author><![CDATA[Hristianin]]></wp:comment_author>
-<wp:comment_author_email>hristianin@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://christforum.net/</wp:comment_author_url>
-<wp:comment_author_IP>202.108.50.76</wp:comment_author_IP>
-<wp:comment_date>2010-03-11 20:07:04</wp:comment_date>
-<wp:comment_date_gmt>2010-03-12 02:07:04</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>?????? ?????, ???? ?? ??????? ? ??? ???????.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9538</wp:comment_id>
 <wp:comment_author><![CDATA[fikolas]]></wp:comment_author>
 <wp:comment_author_email>fikolas@mymail-in.net</wp:comment_author_email>
@@ -3801,21 +3555,6 @@ Thats the entire method that I'm using right now. I hope to package this all up 
 <wp:comment_content><![CDATA[<p>??????? ???? ? ?????? ?????????.</p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>8572</wp:comment_id>
-<wp:comment_author><![CDATA[Donates]]></wp:comment_author>
-<wp:comment_author_email>donates@mail.saratov.com</wp:comment_author_email>
-<wp:comment_author_url>http://dynastystom.com.ua/</wp:comment_author_url>
-<wp:comment_author_IP>202.108.50.76</wp:comment_author_IP>
-<wp:comment_date>2010-04-27 03:49:48</wp:comment_date>
-<wp:comment_date_gmt>2010-04-27 09:49:48</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>????, ? ??? ?? ??? ???????????.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -3847,21 +3586,6 @@ Thats the entire method that I'm using right now. I hope to package this all up 
 http://tso.su/ - ????????????</p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>5269</wp:comment_id>
-<wp:comment_author><![CDATA[Adler]]></wp:comment_author>
-<wp:comment_author_email>adler@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://adler-kurort.com/</wp:comment_author_url>
-<wp:comment_author_IP>78.30.197.83</wp:comment_author_IP>
-<wp:comment_date>2009-09-18 04:37:51</wp:comment_date>
-<wp:comment_date_gmt>2009-09-18 10:37:51</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>????? ??? ? ???????, ?????? ?? ?????? ?????? ?? ?? ???? ???????</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -3956,21 +3680,6 @@ http://tso.su/ - ????????????</p>
 <p><a href="http://www.luxurygiftsbags.com" rel="nofollow">vuitton</a></p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>7744</wp:comment_id>
-<wp:comment_author><![CDATA[Daheng]]></wp:comment_author>
-<wp:comment_author_email>daheng@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://daheng.ru/</wp:comment_author_url>
-<wp:comment_author_IP>98.215.198.118</wp:comment_author_IP>
-<wp:comment_date>2010-03-13 04:39:38</wp:comment_date>
-<wp:comment_date_gmt>2010-03-13 10:39:38</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>???????? ??????, ??? ????????? ????????. ???? ???????????? ??????.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -4076,36 +3785,6 @@ http://tso.su/ - ????????????</p>
 <wp:comment_content><![CDATA[<p>???? ??????? ???????????, ?? ??????? ????????? ?????, ? ????? ?????????? ???????</p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>9384</wp:comment_id>
-<wp:comment_author><![CDATA[Attidlycliept]]></wp:comment_author>
-<wp:comment_author_email>unoliobiome@mail.ru</wp:comment_author_email>
-<wp:comment_author_url></wp:comment_author_url>
-<wp:comment_author_IP>79.164.42.35</wp:comment_author_IP>
-<wp:comment_date>2010-06-15 00:13:28</wp:comment_date>
-<wp:comment_date_gmt>2010-06-15 06:13:28</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>I can recommend to visit to you a site on which there is a lot of information on a theme interesting you.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>9385</wp:comment_id>
-<wp:comment_author><![CDATA[Attidlycliept]]></wp:comment_author>
-<wp:comment_author_email>unoliobiome@mail.ru</wp:comment_author_email>
-<wp:comment_author_url>http://nameena.ru</wp:comment_author_url>
-<wp:comment_author_IP>79.164.42.35</wp:comment_author_IP>
-<wp:comment_date>2010-06-15 00:50:58</wp:comment_date>
-<wp:comment_date_gmt>2010-06-15 06:50:58</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>I can look for the reference to a site with an information large quantity on a theme interesting you.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -4270,21 +3949,6 @@ http://tso.su/ - ????????????</p>
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>7615</wp:comment_id>
-<wp:comment_author><![CDATA[Eldar.Dtukilov]]></wp:comment_author>
-<wp:comment_author_email>eldar.dtukilov@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://www.barrus.ru/</wp:comment_author_url>
-<wp:comment_author_IP>98.195.44.122</wp:comment_author_IP>
-<wp:comment_date>2010-03-04 18:57:25</wp:comment_date>
-<wp:comment_date_gmt>2010-03-05 00:57:25</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>???????? ????, ?????? ?????? ????? ??????????, ? ??? ??? ??.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9511</wp:comment_id>
 <wp:comment_author><![CDATA[Asperok Alexst]]></wp:comment_author>
 <wp:comment_author_email>bannerfreelance@gmail.com</wp:comment_author_email>
@@ -4310,21 +3974,6 @@ http://tso.su/ - ????????????</p>
 <wp:comment_content><![CDATA[<p>???????? ????, ??? ??????????.</p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>8926</wp:comment_id>
-<wp:comment_author><![CDATA[DenT]]></wp:comment_author>
-<wp:comment_author_email>dent@gmail.com</wp:comment_author_email>
-<wp:comment_author_url>http://www.classic-dent.ru/</wp:comment_author_url>
-<wp:comment_author_IP>201.20.18.165</wp:comment_author_IP>
-<wp:comment_date>2010-05-17 13:00:23</wp:comment_date>
-<wp:comment_date_gmt>2010-05-17 19:00:23</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>???????? ?????. ???????? ??? ? ?????? ?? ????? ????????. ????? ???????.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -6401,34 +6050,6 @@ medicines for non epiletic seizures <a href="http://grou.ps/djedifamily/blogs/it
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>8437</wp:comment_id>
-<wp:comment_author><![CDATA[nomoreaccidents]]></wp:comment_author>
-<wp:comment_author_email>fredmauradoff@gawab.com</wp:comment_author_email>
-<wp:comment_author_url>http://theaccidentlawyers.com</wp:comment_author_url>
-<wp:comment_author_IP>200.50.229.10</wp:comment_author_IP>
-<wp:comment_date>2010-04-20 15:20:45</wp:comment_date>
-<wp:comment_date_gmt>2010-04-20 21:20:45</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>Long time lurker, thought I would say hello! I really dont post much but thanks for the good times I have here. Love this place..</p>
-
-<pre><code>  When I was hurt in that motorcycle accident my life would be changed always.  Sadly that driver had no car insurance and I was going to be in pain for ever.
-</code></pre>
-
-<p>This was not time for me to start and guess what to do. I had to find a good accident lawyer to help me get what I needed. After all, my family was counting on me.</p>
-
-<p>How terrible was it? I has bedridden for 6 months, I had to have constant care and my medical bills went through the roof!</p>
-
-<p>Gratefully, I found a good referral site to help me.</p>
-
-<p>I will post more later this week to tell you more about what I have been going through.</p>
-
-<p>If you need an accident attorney try the guys at  <a href="http://theaccidentlawyers.org" rel="nofollow">http://theaccidentlawyers.org</a></p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9460</wp:comment_id>
 <wp:comment_author><![CDATA[bingos]]></wp:comment_author>
 <wp:comment_author_email>bingos@cvportal.net</wp:comment_author_email>
@@ -7026,21 +6647,6 @@ new era pharmacy danforth toronto <a href="http://grou.ps/fuckerburmese/blogs/it
 <wp:comment_user_id>0</wp:comment_user_id>
 </wp:comment>
 <wp:comment>
-<wp:comment_id>7710</wp:comment_id>
-<wp:comment_author><![CDATA[gyclity]]></wp:comment_author>
-<wp:comment_author_email>gyclity61@fx-currencytrading.net</wp:comment_author_email>
-<wp:comment_author_url></wp:comment_author_url>
-<wp:comment_author_IP>123.160.184.74</wp:comment_author_IP>
-<wp:comment_date>2010-03-11 09:55:36</wp:comment_date>
-<wp:comment_date_gmt>2010-03-11 15:55:36</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>Uncertain if it is really  my Computer system mainly because I yet just had no free time to update and so i'm continue utilizing FireFox 3.0.14 but   I've saw some form of strange characters all around the webpage . It states that along with many additional things just after it, similar to Warning: Impossible modify body information ... and so forth. This is a little odd  because for me  my own website <a href="http://cheapflightstostlucia1.info/" rel="nofollow">cheap flights to st lucia </a> and the common sort just like as an example http://google.com  make me absolutely no issues.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
 <wp:comment_id>9406</wp:comment_id>
 <wp:comment_author><![CDATA[cxwuzcsqrq]]></wp:comment_author>
 <wp:comment_author_email>cxttm@gylrkad.com</wp:comment_author_email>
@@ -7087,23 +6693,6 @@ state of nevada board of pharmacy <a href="http://grou.ps/gayofes/blogs/item/upr
 polypeptides in sports medicine <a href="http://grou.ps/gayofes/blogs/item/prednisone" rel="nofollow">prednisone family</a> v s pharmacy in stonington</p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>7634</wp:comment_id>
-<wp:comment_author><![CDATA[urgereava]]></wp:comment_author>
-<wp:comment_author_email>revedunny@revedunny.com</wp:comment_author_email>
-<wp:comment_author_url>http://impeachingghotsvideos.blogspot.com/2010/03/ghotsvideos-classicise.html</wp:comment_author_url>
-<wp:comment_author_IP>67.242.114.182</wp:comment_author_IP>
-<wp:comment_date>2010-03-05 20:37:09</wp:comment_date>
-<wp:comment_date_gmt>2010-03-06 02:37:09</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p><a href='http://videofirmamental.blogspot.com/2010/03/attempted-incubators.html' title='video' rel="nofollow">video</a></p>
-
-<p>free videos games downloads funny.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -7587,21 +7176,6 @@ when is naruto shidpudden movie coming out  [url=http://moviestrawberry.com/film
 <wp:comment_content><![CDATA[<p>???????? ????, ????? ???? ???</p>
 ]]></wp:comment_content>
 <wp:comment_approved>spam</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>7541</wp:comment_id>
-<wp:comment_author><![CDATA[Angersvienoni]]></wp:comment_author>
-<wp:comment_author_email>runderblade@gmail.com</wp:comment_author_email>
-<wp:comment_author_url></wp:comment_author_url>
-<wp:comment_author_IP>91.205.207.132</wp:comment_author_IP>
-<wp:comment_date>2010-02-28 13:49:42</wp:comment_date>
-<wp:comment_date_gmt>2010-02-28 19:49:42</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>She sat up, staring with her nightsight at the outlines of the men around her.   With one last pat on Erikins arm, she left them to climb the staircase alone.   Their corner of the garden, right under the balcony of Nialdlyes suite, was relatively quiet.   Arkir grabbed for Lanthan and managed to keep his hold as the smaller man twisted.   She would not cause that fear tonight.   She took a deep breath, assessing.    Im eager to see this spell.   A soothing warmth pulsed within her, her goddesss spell primed.   Eyrhaen stared at the closed door, hands fisted at her sides.   Anything but admit she was wrong, even if she now knew she had been.   Angrily, she dashed tears from her eyes, stepping toward the outer door.   She couldnt help that her laugh was a tad nervous.   She found her own breath finally, staring up at him.   His body shook, his thrusts gone ragged.   Relief put a smile on Brevins face.   She turned her head to find Tykirs soft lips.   She blinked, never having seen it from that angle.   A page had been called to provide service for a hasty nineday.   I wouldnt want to deny you.     She met his gaze seriously.</p>
-]]></wp:comment_content>
-<wp:comment_approved>1</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
@@ -8383,30 +7957,6 @@ WWW.4URCHATROOM.BLOGSPOT.COM</p>
 <p>This lets you isolate the nonsense on the server side, and a similar bit of abstraction lets you limit the client-side mess. With the exception of those shims, the rest of your code on both sides can be properly RESTful.</p>
 ]]></wp:comment_content>
 <wp:comment_approved>1</wp:comment_approved>
-<wp:comment_type></wp:comment_type>
-<wp:comment_parent>0</wp:comment_parent>
-<wp:comment_user_id>0</wp:comment_user_id>
-</wp:comment>
-<wp:comment>
-<wp:comment_id>6833</wp:comment_id>
-<wp:comment_author><![CDATA[ABRAR]]></wp:comment_author>
-<wp:comment_author_email>chottabem@yahoo.com</wp:comment_author_email>
-<wp:comment_author_url>http://WWW.4URTUBE.BLOGSPOT.COM</wp:comment_author_url>
-<wp:comment_author_IP>119.153.51.90</wp:comment_author_IP>
-<wp:comment_date>2009-12-26 05:40:27</wp:comment_date>
-<wp:comment_date_gmt>2009-12-26 11:40:27</wp:comment_date_gmt>
-<wp:comment_content><![CDATA[<p>AMAING VIDEOS       WWW.4URTUBE.BLOGSPOT.COM</p>
-
-<p>200++ TV CHANNELS   WWW.4URTV.BLOGSPOT.COM</p>
-
-<p>SEND FREE SMS IN PAKISTAN ANY NETWORK UNLEMITED &amp; SEND FREE SMS IN WORLD    WWW.4URFREESMS.BLOGSPOT.COM</p>
-
-<p>FREE CHAT ROOM IN PAKISTAN &amp; AND  ALL WORLD
-WWW.4URCHATROOM.BLOGSPOT.COM</p>
-
-<p>WWW.PAKDESK.TK</p>
-]]></wp:comment_content>
-<wp:comment_approved>0</wp:comment_approved>
 <wp:comment_type></wp:comment_type>
 <wp:comment_parent>0</wp:comment_parent>
 <wp:comment_user_id>0</wp:comment_user_id>
