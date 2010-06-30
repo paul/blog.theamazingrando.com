@@ -27,7 +27,7 @@ Dir['posts/**/*.markdown'].each do |file|
   title = Nokogiri::HTML(html).css('h1').first.content
   puts title
 
-  created_time
+  published_date =
 
 end
 
