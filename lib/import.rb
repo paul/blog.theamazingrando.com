@@ -39,7 +39,7 @@ doc.xpath('/rss/channel/item').sort_by { |item|
   end
 
   `git add #{file}`
-  `git commit -m '#{title}'`
+  `git commit -m 'Import #{safe_title}'`
   `git checkout master`
   `git merge #{safe_title} --no-ff`
   `git branch -d #{safe_title}`
