@@ -5,12 +5,12 @@ Bundler.setup
 
 require 'nokogiri'
 require 'time'
-require 'ruby-git'
+require 'git'
 
 import_file = File.expand_path(File.dirname(__FILE__) + '/../incoming/wordpress.2010-06-30.xml')
 doc = Nokogiri::XML(File.read(import_file))
 
-repo = Git.open
+repo = Git.open('.')
 
 doc.xpath('/rss/channel/item').sort_by { |item|
   Time.parse(item.xpath('wp:post_date').first.content)
@@ -31,7 +31,8 @@ doc.xpath('/rss/channel/item').sort_by { |item|
   ENV['GIT_AUTHOR_DATE']   = post_date.iso8601
   ENV['GIT_COMMITER_DATE'] = post_date.iso8601
 
-  repo.branch(safe_title).checkout
+  branch = repo.branch(safe_title)
+  branch.checkout
 
   FileUtils.mkdir_p(path)
   File.open(file, 'w') do |f|
@@ -39,8 +40,8 @@ doc.xpath('/rss/channel/item').sort_by { |item|
   end
 
   repo.add(file)
-  repo.commit("Import #{title}")
-  repo.merge(repo.branch("master"))
+  repo.commit("Import #{safe_title}")
+  repo.branch("master").merge(branch)
   branch.delete
 
 end
