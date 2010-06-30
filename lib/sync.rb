@@ -17,12 +17,23 @@ class Postly::Post
     conform get('/readposts', defaults.merge(args))
   end
 
+  def self.update(post_id, params = {})
+    opts = defaults.merge(:query => {:post_id => post_id}, :body => params)
+    conform post("/updatepost", opts)
+  end
+
+  def self.create(params = {})
+    conform post("/updatepost", defaults.merge(:body => params))
+  end
+
+
 end
 
 site = Postly::Site.all.find { |s| s.url =~ /blog.theamazingrando.com$/ }
 site_posts = Postly::Post.find(:site_id => site.id)
 
 Dir['posts/**/*.markdown'].each do |file|
+  next unless file =~ /your/
   content = File.open(file, 'r').read
   html = Maruku.new(content).to_html
 
@@ -47,5 +58,6 @@ Dir['posts/**/*.markdown'].each do |file|
                                :body => html,
                                :date => published_date)
   end
+
 end
 
