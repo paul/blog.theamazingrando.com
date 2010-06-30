@@ -31,19 +31,18 @@ doc.xpath('/rss/channel/item').sort_by { |item|
   ENV['GIT_AUTHOR_DATE']   = post_date.iso8601
   ENV['GIT_COMMITER_DATE'] = post_date.iso8601
 
-  branch = repo.branch(safe_title)
-  branch.checkout
+  `git checkout -b #{safe_title}`
 
   FileUtils.mkdir_p(path)
   File.open(file, 'w') do |f|
     f.write(content)
   end
 
-  repo.add(file)
-  repo.commit("Import #{safe_title}")
-  repo.branch("master").merge(branch)
-  repo.checkout("master")
-  branch.delete
+  `git add #{file}`
+  `git commit -m '#{title}'`
+  `git checkout master`
+  `git merge #{safe_title} --no-ff`
+  `git branch -d #{safe_title}`
 
 end
 
