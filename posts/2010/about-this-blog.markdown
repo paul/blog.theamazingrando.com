@@ -32,6 +32,8 @@ So, in conclusion, its not perfect, but it'll do. I'll probably write a follow-u
 
 The world would be a better place if everyone would just use [Resourceful][]. `</shameless-plug>`
 
+Overall, I wrote ~100 lines of Ruby to import my old wordpress blog, and sync the whole thing up to Posterous. I don't have to host or maintain anything, so its a definite win. I hope it gives my more time to write about all the cool shit I've been working on over the last few months, and well as my new project, [MongoMachine][]. Stay tuned!
+
 
 [Peter Williams]:  http://barelyenough.org/
 [@spikex]:         http://twitter.com/spikex
@@ -41,3 +43,4 @@ The world would be a better place if everyone would just use [Resourceful][]. `<
 [postly]:          http://github.com/twoism/postly
 [maruku]:          http://maruku.rubyforge.org/
 [Resourceful]:     http://github.com/paul/resourceful
+[MongoMachine]:    http://mongomachine.com
