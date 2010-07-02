@@ -3,8 +3,6 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup
 
-require 'pp'
-
 require 'postly'
 require 'maruku'
 require 'nokogiri'
