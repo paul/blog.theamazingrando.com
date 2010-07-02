@@ -1,0 +1,130 @@
+md_el(:document,[
+	md_par([
+		"After nearly a year on hiatus, I",
+		md_entity("rsquo"),
+		"m finally ready to start blogging again. I have several neat projects I",
+		md_entity("rsquo"),
+		"ve been working on over the last several months, and I need a place to write about them."
+	]),
+	md_el(:header,["Why I stopped using Wordpress"],{:level=>2},[]),
+	md_par([
+		"My ",
+		md_link(["self-hosted Wordpress blog"],"oldblog"),
+		" on my Slicehost served me well over the last few years. With a hodge podge of plugins and hacks, I was able to write my posts in markdown. I was still stuck writing them in the textarea of the browser, or copy-pasting them from my real editor to the browser, but it worked well enough. Eventually, though, I was updating Wordpress for security vulnerabilities more often than I was posting, and it was collecting a ton of spam comments. I decided that I didn",
+		md_entity("rsquo"),
+		"t want to be in charge of that extra stuff any more."
+	]),
+	md_par([
+		"I made several attempts to port my blog over to something else. I had a few simple goals:"
+	]),
+	md_el(:ul,[
+		md_el(:li_span,[
+			"The canonical place for my posts is git. Version control of the posts is definitely the way to go."
+		],{:want_my_paragraph=>false},[]),
+		md_el(:li_span,[
+			"I just want to write content, not moderate spam, or manage plugins."
+		],{:want_my_paragraph=>false},[]),
+		md_el(:li_span,[
+			"I don",
+			md_entity("rsquo"),
+			"t want to maintain blogging software."
+		],{:want_my_paragraph=>false},[])
+	],{},[]),
+	md_par([
+		"I looked for several solutions, but nothing really fit the bill. Posterous",
+		md_entity("rsquo"),
+		"s announcement that they supported markdown got the wheels turning, though. Credit for the final bits go to ",
+		md_link(["Peter Williams"],"peter_williams"),
+		" and ",
+		md_link(["@spikex"],"spikex"),
+		", who got me started about how to manage drafts that I don",
+		md_entity("rsquo"),
+		"t want published."
+	]),
+	md_el(:header,["Importing Wordpress"],{:level=>2},[]),
+	md_par([
+		"First, however, I had to get all my old posts out of Wordpress and into a git repo. I hacked together ",
+		md_link(["this little script"],"import"),
+		" which parsed the Wordpress XML dump. It goes over the posts and creates a branch for each, adds the markdown for the post, then merges the branch into master. I did this so that I could get a bit of metadata about the posts in the git repo. The first commit for a post would be the ",
+		md_entity("ldquo"),
+		"created",
+		md_entity("rdquo"),
+		" date, and the commit when it was merged into master would be the ",
+		md_entity("ldquo"),
+		"published",
+		md_entity("rdquo"),
+		" date."
+	]),
+	md_par([
+		"Only after I did all this did I figure out that Posterous only exposed a ",
+		md_entity("ldquo"),
+		"date",
+		md_entity("rdquo"),
+		", but this worked well together with another shortcoming: the lack of metadata on the post itself. I originally wanted a way to handle updating existing posts, but I had no metadata to find the post again. So for the post",
+		md_entity("rsquo"),
+		"s ",
+		md_entity("ldquo"),
+		"date",
+		md_entity("rdquo"),
+		", I used the most-recent commit date, at the time of the sync. As long as I keep the post ",
+		md_entity("ldquo"),
+		"Title",
+		md_entity("rdquo"),
+		" unique, I",
+		md_entity("rsquo"),
+		"ll be able to find the post again, and update the content, but not the date."
+	]),
+	md_el(:header,["Syncing with Posterous"],{:level=>2},[]),
+	md_par([
+		"So the official place for all my posts is my own git repo, where I can track changes, and manage it. I get to write using whatever editor I feel like, instead of a textarea in a browser, and I get to write them in markdown. I have a ",
+		md_link(["script"],"sync"),
+		" that I use to publish all my posts to Posterous. The script is rather dumb, and just updates everything that needs updated. I had planned on making it better, but due to some shortcomings in the Posterous API, and in the ",
+		md_link(["postly"],"postly"),
+		" ruby gem, I took the lazy way out. You can see in the script where I had to monkey-patch the postly gem to make it even work at all."
+	]),
+	md_par([
+		"I wanted to use Posterous",
+		md_entity("rsquo"),
+		"s markdown, but it had its own shortcomings, like it couldn",
+		md_entity("rsquo"),
+		"t handle the metadata, or definition lists, like the ",
+		md_link(["maruku"],"maruku"),
+		" gem can. So just render it myself, and post the html body to Posterous. This means I",
+		md_entity("rsquo"),
+		"ll eventually have to figure out things like syntax highlighting, but since Posterous supports inline gists, maybe I",
+		md_entity("rsquo"),
+		"ll just do that."
+	]),
+	md_el(:header,["Finally"],{:level=>2},[]),
+	md_par([
+		"So, in conclusion, its not perfect, but it",
+		md_entity("rsquo"),
+		"ll do. I",
+		md_entity("rsquo"),
+		"ll probably write a follow-up post, about what the Posterous API needs to add, since their own docs say its incomplete, and they don",
+		md_entity("rsquo"),
+		"t know what to do with it. It also exposed some flaws in the HTTParty gem, which I hadn",
+		md_entity("rsquo"),
+		"t had exposure to until now. Its not really a bug, but rather a design decision, in that the request method only has two params: ",
+		md_code("post url, options = {}"),
+		". It tries to be smart about those options, and if you have one called ",
+		md_code(":body"),
+		", it becomes the body of the request. However, Posterous has a param in their API called ",
+		md_code("\"body\""),
+		", which just confused everybody. Additionally, the postly gem crammed everything in the query parameters, which quickly runs into URL length limits for my admittedly verbose blog posts."
+	]),
+	md_par([
+		"The world would be a better place if everyone would just use ",
+		md_link(["Resourceful"],"resourceful"),
+		". ",
+		md_code("</shameless-plug>")
+	]),
+	md_ref_def("peter_williams", "http://barelyenough.org/", {:title=>nil}),
+	md_ref_def("spikex", "http://twitter.com/spikex", {:title=>nil}),
+	md_ref_def("oldblog", "http://theamazingrando.com/blog", {:title=>nil}),
+	md_ref_def("import", "http://github.com/paul/blog.theamazingrando.com/blob/master/lib/import.rb", {:title=>nil}),
+	md_ref_def("sync", "http://github.com/paul/blog.theamazingrando.com/blob/master/lib/sync.rb", {:title=>nil}),
+	md_ref_def("postly", "http://github.com/twoism/postly", {:title=>nil}),
+	md_ref_def("maruku", "http://maruku.rubyforge.org/", {:title=>nil}),
+	md_ref_def("resourceful", "http://github.com/paul/resourceful", {:title=>nil})
+],{},[])
