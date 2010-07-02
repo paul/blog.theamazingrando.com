@@ -33,7 +33,6 @@ site = Postly::Site.all.find { |s| s.url =~ /blog.theamazingrando.com$/ }
 site_posts = Postly::Post.find(:site_id => site.id)
 
 Dir['posts/**/*.markdown'].each do |file|
-  next unless file =~ /your/
   content = File.open(file, 'r').read
   html = Maruku.new(content).to_html
 
