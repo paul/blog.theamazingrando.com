@@ -22,7 +22,7 @@ Only after I did all this did I figure out that Posterous only exposed a "date",
 
 ## Syncing with Posterous
 
-So the official place for all my posts is my own git repo, where I can track changes, and manage it. I get to write using whatever editor I feel like, instead of a textarea in a browser, and I get to write them in markdown. I have a [script][sync] that I use to publish all my posts to Posterous. The script is rather dumb, and just updates everything that needs updated. I had planned on making it better, but due to some shortcomings in the Posterous API, and in the [postly][] ruby gem, I took the lazy way out. You can see in the script where I had to monkey-patch the postly gem to make it even work at all.
+So the official place for all my posts is my own git repo, where I can track changes, and manage it. I get to write using whatever editor I feel like, instead of a textarea in a browser, and I get to write them in markdown. I have a [script][sync] that I use to publish all my posts to Posterous. The script is rather dumb, and just updates everything that needs updated. I had planned on making it better, but due to some shortcomings in the Posterous API, and in the [postly][] ruby gem, I took the lazy way out. You can see in the script where I had to monkey-patch the postly gem to make it even work at all. Posterous also needs to read my last [blog post][]
 
 I wanted to use Posterous's markdown, but it had its own shortcomings, like it couldn't handle the metadata, or definition lists, like the [maruku][] gem can. So just render it myself, and post the html body to Posterous. This means I'll eventually have to figure out things like syntax highlighting, but since Posterous supports inline gists, maybe I'll just do that.
 
@@ -44,3 +44,5 @@ Overall, I wrote ~100 lines of Ruby to import my old wordpress blog, and sync th
 [maruku]:          http://maruku.rubyforge.org/
 [Resourceful]:     http://github.com/paul/resourceful
 [MongoMachine]:    http://mongomachine.com
+[blog post]:       http://blog.theamazingrando.com/your-web-service-might-not-be-restful-if
+

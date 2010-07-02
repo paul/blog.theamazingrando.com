@@ -21,7 +21,7 @@ class Postly::Post
   end
 
   def self.create(params = {})
-    conform post("/updatepost", defaults.merge(:body => params))
+    conform post("/newpost", defaults.merge(:body => params))
   end
 
 
