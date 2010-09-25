@@ -1,0 +1,25 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activesupport (3.0.0)
+    crack (0.1.8)
+    git (1.2.5)
+    httparty (0.6.1)
+      crack (= 0.1.8)
+    maruku (0.6.0)
+      syntax (>= 1.0.0)
+    nokogiri (1.4.3.1)
+    postly (0.2.2)
+      httparty
+      nokogiri
+    syntax (1.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activesupport
+  git
+  maruku
+  nokogiri
+  postly

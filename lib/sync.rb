@@ -6,6 +6,7 @@ Bundler.setup
 require 'postly'
 require 'maruku'
 require 'nokogiri'
+require 'active_support/core_ext/array/wrap'
 
 Postly.config = './postly.yml'
 
@@ -53,6 +54,7 @@ Dir['posts/**/*.markdown'].each do |file|
     post = Postly::Post.create(:site_id => site.id,
                                :title => title,
                                :body => html,
+                               :private => true,
                                :date => published_date)
   end
 
