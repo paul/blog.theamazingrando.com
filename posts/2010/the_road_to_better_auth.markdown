@@ -13,9 +13,9 @@ My main workaround at this point is to use Chrome for normal browsing and person
 
 Ideally, the browser and sites would integrate and work together to manage everything automatically, but this is a chicken and egg problem. The solution will likely have to be completed in stages.
 
-OpenID and OAuth are attempts at solving this on the server side, but they are complicated. And they need to be, because there's several parties involved, all needing to handshake with each other and prove everyone's identity. I feel a simpler solution, and a much better way to handle this, would be in the browser itself. Even the technical name for the browser, "User Agent", indicates its purpose. I see it as the concierge at an expensive hotel. They have the inside knowledge of the city, and the personal contacts, to get you anything you need. Want blueberry and peanut-butter waffles at 11pm? Call the concierge, and he'll figure out how to get it for you.
+OpenID and OAuth are attempts at solving this on the server side, but they are complicated. And they need to be, because there's several parties involved, all needing to handshake with each other and prove everyone's identity. I feel a simpler solution, and a much better way to handle this, would be in the browser itself. Even the technical name for the browser, "User Agent", indicates its purpose. I see it as the concierge at an expensive hotel. They have the inside knowledge of the city, and the personal contacts, to get you anything you need. Want blueberry and peanut-butter waffles at 11pm? Call the concierge and he'll figure out how to get it for you.
 
-Same for the browser. It's your concierge for the web. You don't need to know HTML and CSS to be able to use a website, the browser renders the text and images into a sensible layout for you to read. If a page moved, you don't have to type in the new location manually, the browser automatically goes there for you. If you need credentials to visit your Facebook page, you don't have to deal with the ugly bouncer directly, the concierge coughs and politely asks you for your password. What I'm proposing is promoting your concierge to you own personal assistant. You shouldn't even need to know there *is* a bouncer, because your assistance has already made arrangements, and you can walk right in.
+Same for the browser. It's your concierge for the web. You don't need to know HTML and CSS to be able to use a website, the browser renders the text and images into a sensible layout for you to read. If a page moved, you don't have to type in the new location manually, the browser automatically goes there for you. If you need credentials to visit your Facebook page, you don't have to deal with the ugly bouncer directly, the concierge coughs and politely asks you for your password. What I'm proposing is promoting your concierge to your own personal assistant. You shouldn't even need to know there *is* a bouncer, because your assistant has already made arrangements and you can walk right in.
 
 Phase 1
 -------
@@ -42,7 +42,7 @@ There's also programs such as [KeePassX][], [1Password][], and [LastPass][], som
 Phase 2
 -------
 
-The next phase would be for the browser to be able to manage account creation, as well. Since the browser can manage my accounts, it would be handy if it would create them, by automatically filling out the sign up form at the site. Browsers already have my name, email, address, etc, from being able to auto-fill forms. It could auto-fill the sign up form with my personal information, or suitably anonymized information if I choose. Create a login, and a random password, with a confirmation if necessary, and save all that with the account manager.
+The next phase would be for the browser to be able to manage account creation. Since the browser can manage my accounts, it would be handy if it would create them, by automatically filling out the sign up form at the site. Browsers already have my name, email, address, etc, from being able to auto-fill forms. It could auto-fill the sign up form with my personal information (or suitably anonymized information if I choose), create a login and a random password, and save all that with the account manager.
 
 Undoubtedly, this would require "rules" for lots of sites, similar to adblock extensions, to know which signup fields are which, and how exactly to fill out the signup form. Perhaps some JSON to indicate field names, or even some javascript.
 
@@ -61,7 +61,7 @@ For example, say we have a signup form (like, say, Facebook's, with non-essentia
       <input value="Sign Up" type="submit">
     </form>
 
-Since names like `"reg_email__"` are rather nonstandard, we'll need some way to map the fields we know for our profile to the fields on the website form. The mappings are probably to complicated to be one-to-one with a simple XML or JSON file, however a JavaScript function to be executed:
+Since names like `"reg_email__"` are rather nonstandard, we'll need some way to map the fields we know for our profile to the fields on the website form. The mappings are probably too complicated to be one-to-one with a simple XML or JSON file, however a JavaScript function could be executed:
 
     function performSignup(profile) {
       $("#firstname").val(profile.first_name);
