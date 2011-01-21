@@ -13,6 +13,10 @@ My main workaround at this point is to use Chrome for normal browsing and person
 
 Ideally, the browser and sites would integrate and work together to manage everything automatically, but this is a chicken and egg problem. The solution will likely have to be completed in stages.
 
+OpenID and OAuth are attempts at solving this on the server side, but they are complicated. And they need to be, because there's several parties involved, all needing to handshake with each other and prove everyone's identity. I feel a simpler solution, and a much better way to handle this, would be in the browser itself. Even the technical name for the browser, "User Agent", indicates its purpose. I see it as the concierge at an expensive hotel. They have the inside knowledge of the city, and the personal contacts, to get you anything you need. Want blueberry and peanut-butter waffles at 11pm? Call the concierge, and he'll figure out how to get it for you.
+
+Same for the browser. It's your concierge for the web. You don't need to know HTML and CSS to be able to use a website, the browser renders the text and images into a sensible layout for you to read. If a page moved, you don't have to type in the new location manually, the browser automatically goes there for you. If you need credentials to visit your Facebook page, you don't have to deal with the ugly bouncer directly, the concierge coughs and politely asks you for your password. What I'm proposing is promoting your concierge to you own personal assistant. You shouldn't even need to know there *is* a bouncer, because your assistance has already made arrangements, and you can walk right in.
+
 Phase 1
 -------
 
@@ -33,10 +37,12 @@ The implementation would be straightforward. Just save all the cookies currently
 
 There have been various attempts to do this, but nothing ever seems completed. I haven't attempted my own, so maybe there's some complication that I'm missing. Mozilla has a proposal for such an extension called [Account Manager][], but there seems to be no real activity since a few weeks after the project was announced back in March 2010. This seems like a real win for users, I can't understand why no browser has this built-in, or even an extension. I'd switch to Opera or Safari in a minute if they offered this, its a killer feature for a browser.
 
+There's also programs such as [KeePassX][], [1Password][], and [LastPass][], some of which include browser plugins that can manage passwords for you. These all seem to be standalone password managers first, with the browser integration coming 2nd, which can sometimes be pretty clunky. Phase one needs to be a browser extension specifically designed to integrate with web site logins.
+
 Phase 2
 -------
 
-The next phase would be for the browser to be able to manage account creation, as well. Since the browser can manage my accounts, it would be handy if it would create them, by automatically filling out the sign up form at the site. Browsers already have my name, email, address, etc, from being able to auto-fill forms. It could auto-fill the sign up form with my personal information, or possibly anonymized information if I choose. Create a login, and a random password, with a confirmation if necessary, and save all that with the account manager.
+The next phase would be for the browser to be able to manage account creation, as well. Since the browser can manage my accounts, it would be handy if it would create them, by automatically filling out the sign up form at the site. Browsers already have my name, email, address, etc, from being able to auto-fill forms. It could auto-fill the sign up form with my personal information, or suitably anonymized information if I choose. Create a login, and a random password, with a confirmation if necessary, and save all that with the account manager.
 
 Undoubtedly, this would require "rules" for lots of sites, similar to adblock extensions, to know which signup fields are which, and how exactly to fill out the signup form. Perhaps some JSON to indicate field names, or even some javascript.
 
@@ -73,17 +79,28 @@ Since names like `"reg_email__"` are rather nonstandard, we'll need some way to 
 
 Some helpers to make that less verbose, and getting contributions to write rules for the most common sites, and now your browser can perform signups for you. If this becomes popular or compelling to websites to implement, a JavaScript browser API could be exposed so that websites could implement the signup function themselves.
 
-    accountManager.setSignup(function(profile) { ... } );
+    <script>
+      accountManager.setSignup(function(profile) { ... } );
+    </script>
 
 Where `setSignup` is the browser API function to call to assign your website's signup function, and `profile` is an object containing the personal information provided by the user.
 
+Phase 3
+-------
+
+Phase 3 involves developing an API between the browser and the web page directly. It can be a simple extension to some of the new HTML5 APIs out there for dealing with video or local storage in javascript. Hopefully (but not likely, given how similar projects have played out before), each browser that implements this would have a similar API that common elements could be used.
 
 
+Conclusion
+----------
+
+In conclusion, authentication for web services sucks, and has for a long time. The right place to manage this is in the browser itself, rather than a complicated handshaking protocol between servers. Writing a browser extension like the one described in Phase 1 is on my TODO list, but I know nothing about browser extensions, and have plenty of other projects to keep me busy. If someone out there is willing to take this on, drop me a line, I'd certainly love to help.
 
 Extra Credit
 ------------
 
- * Store all the data in the cloud, so its not lost in reformats, and can be shared between computers. Even better, have an interchange formate so it can be shared between browsers, and your phone, so you can login to sites from wherever.
+ * Store all the data in the cloud, so its not lost in reformats, and can be shared between computers. Even better, have an interchange format so it can be shared between browsers, and your phone, so you can login to sites from wherever.
+ * An extension to the built-in HTTP Auth methods, something more secure than the MD5 used in Digest Auth. Properly implemented with nonces and cnonces, Digest Auth is still pretty secure, but it will only be a matter of time before MD5 can be brute-forced in a reasonable amount of time. Or maybe just convince everyone that all HTTP should be over SSL, and then we can just use Basic Auth. Once people start using browser authentication managers, no-one will care about styling the login form any more. Maybe the browser could load the favicon, or follow a `<link>` tag to a logo image for the site being logged in to.
 
 
 
@@ -93,4 +110,7 @@ Extra Credit
 [my domain]:               http://theamazingrando.com
 [GMCP]:                    http://chrome.desc.se/
 [Account Manager]:         https://wiki.mozilla.org/Labs/Weave/Identity/Account_Manager
+[KeePassX]:                http://www.keepassx.org/
+[1Password]:               http://agilewebsolutions.com/onepassword
+[LastPass]:                https://lastpass.com/
 
