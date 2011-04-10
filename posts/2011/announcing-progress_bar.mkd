@@ -1,0 +1,26 @@
+Title: Annoucing ProgressBar
+
+# ProgressBar
+
+I was working on a script to sync hundreds of thousands of records
+between two databases, and wanted a simple way to keep track of
+progress. I couldn't find one that was easy to use and did what I
+wanted, so I [wrote my own][github]. Not much more introduction needed, how about
+a simple example?
+
+    $ cat examples/simple.rb
+
+    require 'progres_bar'
+    bar = ProgressBar.new
+
+    100.times do
+      sleep 0.1
+      bar.increment!
+    end
+
+    $ ruby examples/simple.rb
+    [#########################                                      ] [ 39/100] [ 39%] [00:04] [00:06] [  9.12/s]
+
+
+[github]: https://github.com/paul/progress_bar
+
