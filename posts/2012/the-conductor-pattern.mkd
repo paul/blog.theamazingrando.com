@@ -1,6 +1,6 @@
-Title: The Conductor Pattern
+# The Conductor Pattern
 
-# Objects on Rails
+## Objects on Rails
 
 A movement has been growing over the last several months to make our Rails applications more object-oriented. One of the most popular recently has been [Avdi Grimm's Objects on Rails][oor]. In it, he talks about an alternative to the Presenter pattern, which he calls Exhibits (and both of which are subsets of the Decorator pattern). I've been using another form of this, which may or may not be called a Conductor.
 
@@ -14,7 +14,7 @@ In this post, I'm going to show you a couple uses of the Conductor pattern, as w
 [mtnrb-talk]: http://www.confreaks.com/videos/422-mountainrb2010-forms-don-t-have-to-be-this-complicated
 [UoW]: http://martinfowler.com/eaaCatalog/unitOfWork.html
 
-# GoldPlating
+## GoldPlating
 
 In Ruby, writing an implementation of the Conductor library is trivial with the help of ActiveModel. The entire implementation is only 60 LOC. I haven't bothered making a gem of it yet, but [here's a gist][gold-plating]. Just toss it in your Rails `lib/` dir and require it.
 
@@ -53,7 +53,7 @@ end
 
 Here, we have two models, `Account` and `User`. In this example app, a `User` can have access to several `Accounts` which might represent a business entity, similar to how Github Organizations work. When a user signs up, we want to automatically create but their `User` for login, and the initial `Account` they'll belong to. Because attribute names may overlap, `GoldPlating` prefixes them with the model name. `Account#name` becomes `Registration#account_name`.
 
-## Validations
+### Validations
 
 I've also added some validations to the Registration class. Sometimes different forms dealing with the same models have different valid states for those models, which validation contexts attempt to solve. I think having validations on the wrapper object is a much more elegant solution, leaving the validations on the model objects to simply validate whats needed to stick the object in the database, or is required of the model for the business logic in the rest of the app.
 
@@ -61,7 +61,7 @@ It also lets you have separate human-readable error messages closer to the view,
 
 The downside is that you have to duplicate some of your model validations in the conductor, like the validation on `email` above. I don't have an elegant solution for this yet.
 
-## Controller
+### Controller
 
 When writing a registration form that needs to create both objects, the normal Rails method would be to separate out the `params` in the controller, and create one of each object then associate them. This gets tricky, however, when one or the other fails to validate. Also, it puts a lot of logic in the controller. Using this conductor however, our controller is simple:
 
@@ -103,7 +103,7 @@ The controller and view can interact with the `Registration` conductor like any 
 
 [gold-plating]: https://gist.github.com/2565340
 
-# So much easier
+## So much easier
 
 I've been using this Conductor pattern quite liberally throughout my recent projects. Having this wrapper object to contain all the business logic related to presenting multiple objects to a form, and consuming and validating that form's output, greatly simplifies my code. It also makes testing a breeze. I can test all the edge-case behaviour via tests that exercise the conductor, rather than full-stack tests through the full Rails request stack.
 
