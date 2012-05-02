@@ -20,6 +20,7 @@ In Ruby, writing an implementation of the Conductor library is trivial with the 
 
 Here's how to use it:
 
+    ```ruby
     class Registration
       include GoldPlating
 
@@ -48,6 +49,7 @@ Here's how to use it:
       end
 
     end
+    ```
 
 Here, we have two models, `Account` and `User`. In this example app, a `User` can have access to several `Accounts` which might represent a business entity, similar to how Github Organizations work. When a user signs up, we want to automatically create but their `User` for login, and the initial `Account` they'll belong to. Because attribute names may overlap, `GoldPlating` prefixes them with the model name. `Account#name` becomes `Registration#account_name`.
 
@@ -63,6 +65,7 @@ The downside is that you have to duplicate some of your model validations in the
 
 When writing a registration form that needs to create both objects, the normal Rails method would be to separate out the `params` in the controller, and create one of each object then associate them. This gets tricky, however, when one or the other fails to validate. Also, it puts a lot of logic in the controller. Using this conductor however, our controller is simple:
 
+    ```ruby
     class RegistrationController < ApplicationController
       skip_before_filter :require_login
 
@@ -82,9 +85,11 @@ When writing a registration form that needs to create both objects, the normal R
         end
       end
     end
+    ```
 
 The form in the view is, too:
 
+    ```haml
     = form_for @registration, url: signup_path do |form|
 
       = form.text_field :account_name
@@ -92,6 +97,7 @@ The form in the view is, too:
       = form.email_field :user_email
 
       = form.password_field :user_password
+    ```
 
 The controller and view can interact with the `Registration` conductor like any other ActiveModel-compliant object. In fact, this is the entire implementation. GoldPlating handled the object initialization, and assignment of the params to the right objects. GoldPlating also handled saving the objects it wraps, all we had to do was implement a `#save` to create the `Membership` association record between the newly-created `User` and `Account` records.
 
