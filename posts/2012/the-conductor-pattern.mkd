@@ -109,6 +109,8 @@ I've been using this Conductor pattern quite liberally throughout my recent proj
 
 I've found that having a single conductor object for each form is the best way to go. It does lead to some code duplication, which might be alleviated some by including modules of shared methods, but overall the code in the conductor is simple and focused enough that the duplication has not (yet) been a major problem. It really helps to isolate the User-Interface of the forms from the data model, and associated business logic.
 
+Some of the really useful places for conductors have been `Registration`, `UserPreferences`, `PasswordReset`, `ManipulateAuthorization`. You'll notice that all of these involve some sort of `User` model, but each in a different way. Its nice having all the logic for each process encapsulated in a single, distinct place.
+
 Feel free to grab `GoldPlating` from that gist, or if there's enough interest, I can package it up as a gem.
 
 
