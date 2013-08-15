@@ -1,0 +1,23 @@
+<p>Title: DataMapper Echo Adapter</p>
+
+<p>I just wrote a simple adapter that can be used to investigate the DM Adapter API, and debug your own adapter. Its really simple to use:</p>
+
+<pre><code>DataMapper.setup(:default, 
+                 :adapter =&gt; :echo, 
+                 :echo =&gt; {:adapter =&gt; :in_memory})
+</code></pre>
+
+<p>Set the <code>:echo</code> option to and options hash or connection uri that can initialize the adapter you want to wrap. This will print out the method calls, arguments, and return values to STDOUT.</p>
+
+<pre><code>#read
+query: #&lt;DataMapper::Query @repository=:default 
+                           @model=Article 
+                           @fields=[#&lt;DataMapper::Property @model=Article @name=:id&gt;, 
+                                    #&lt;DataMapper::Property @model=Article @name=:title&gt;] 
+                           @links=[] @conditions=[] @order=[] @limit=nil @offset=0 
+                           @reload=false @unique=false&gt;
+ # =&gt; [#&lt;Article @id=1 @title=&quot;Test&quot; @text=&lt;not loaded&gt;&gt;]
+</code></pre>
+
+<p><a href="http://github.com/paul/dm-echo-adapter/tree/master">Its on github</a>
+<a href="http://gist.github.com/77614">Example output</a></p>

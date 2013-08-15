@@ -1,0 +1,32 @@
+<p>Title: Resourceful 0.2.1</p>
+
+<p>I&#39;m pleased to introduce the next release of Resourceful, 0.2.1. This one has tons of bugfixes over 0.2, and is actually being used in production. There&#39;s only one real new feature to speak of is prettier logging output. It shows the runtime for requests, the resulting status code, and if it was retrieved from the cache. Some sample log output:</p>
+
+<pre>
+    GET [http://core.ssbe.localhost/service_descriptors]
+    -> Returned 200 in 0.0146s
+    GET [http://core.ssbe.localhost/service_descriptors]
+      Retrieved from cache
+    -> Returned 200 in 0.0003s
+</pre>
+
+<p>The code to do that is simple, as always:</p>
+
+<pre lang="ruby">
+require 'rubygems'
+require 'resourceful'
+
+http = Resourceful::HttpAccessor.new(:logger => Resourceful::StdOutLogger.new,
+                                     :cache_manager => Resourceful::InMemoryCacheManager.new)
+
+
+res = http.resource("http://core.ssbe.localhost/service_desciptors")
+mime_type = 'application/json'
+
+res.get(:accept => mime_type)
+res.get(:accept => mime_type)
+</pre>
+
+<p>I&#39;ve seen the release of a couple other Rest-HTTP libraries since I started working on Resourceful, <a href="http://railstips.org/2008/7/29/it-s-an-httparty-and-everyone-is-invited">HTTParty</a> and <a href="http://github.com/adamwiggins/rest-client/tree/master">rest-client</a>. They&#39;re worth checking out, but they lack some of the more powerful features of Resourceful, such as the free HTTP Caching demonstrated above.</p>
+
+<p>As always <a href="http://resourceful.lighthouseapp.com/projects/11479-resourceful/">bug reports</a> and <a href="http://github.com/paul/resourceful/tree/master">patches</a> are appreciated.</p>

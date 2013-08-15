@@ -1,0 +1,30 @@
+<p>Title: Application-wide Config loader for Merb Apps</p>
+
+<p>I saw <a href="http://www.stephenbartholomew.co.uk/2008/8/22/simple-application-wide-configuration-in-rails">this post by Stephen Bartholomew</a> and thought that it was a pretty neat idea, so I adapted it for Merb applications. Merb already has the <code>Merb::Config</code> for storing config options, so I just added the config options to that, rather than the AppConfig class used in Steve&#39;s post. That also greatly simplifies its implementation:</p>
+
+<pre><code>require &#39;yaml&#39;
+
+class AppConfig  
+  def self.load
+    config_file = File.join(Merb.root, &quot;config&quot;, &quot;application.yml&quot;)
+
+    if File.exists?(config_file)
+      config = YAML.load(File.read(config_file))[Merb.environment]
+
+      config.keys.each do |key|
+        Merb::Config[key.to_sym] = config[key]
+      end
+    end
+  end
+end
+</code></pre>
+
+<p>Put that in <code>lib/app_config.rb</code>. Then, anywhere in <code>config/init.rb</code>, add:</p>
+
+<pre><code>Merb::BootLoader.after_app_loads do
+  require &#39;app_config&#39;
+  AppConfig.load
+end
+</code></pre>
+
+<p>Finally, add your config options to <code>config/application.yml</code>, using the same <code>development</code>, <code>production</code>, etc environment keys as in the <code>database.yml</code>. I use it to keep the connection params for a couple non-RDBMS <a href="http://datamapper.org">DataMapper</a> adapters I&#39;ve written.</p>

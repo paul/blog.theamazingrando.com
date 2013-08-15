@@ -1,0 +1,22 @@
+<p>Title: Ruby Dir.glob bug</p>
+
+<p>To further elaborate on Yehuda&#39;s <a href="http://twitter.com/wycats/status/1124457823">twit</a>:</p>
+
+<pre><code>[~/tmp][rando@apollo]
+ % mkdir first first/second
+[~/tmp][rando@apollo]
+ % touch first/second/test.txt
+[~/tmp][rando@apollo]
+ % chmod -x first
+[~/tmp][rando@apollo]
+ % ls first/second/*.txt
+ls: cannot access first/second/*.txt: Permission denied
+[~/tmp][rando@apollo]
+ % irb
+irb(main):001:0&gt; Dir.glob(&#39;first/second/*.txt&#39;)
+=&gt; []
+</code></pre>
+
+<p>If you try to glob some things in a directory that has some ancestor missing the eXecute permission, ruby doesn&#39;t give any indication of an error. </p>
+
+<p>This took Yehuda and I about 30 minutes to track down why a merb app wasn&#39;t loading bundled gems under passenger. Apache was running as nobody, and the parent dir of the app was missing the global execute permission.</p>

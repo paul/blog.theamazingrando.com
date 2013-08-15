@@ -1,0 +1,105 @@
+<p>Title: The Road to Better Authorization</p>
+
+<h2>The Problem</h2>
+
+<p>I have several Google accounts: My <a href="mailto:psadauskas@gmail.com">personal email</a>, Google Apps at <a href="http://absolute-performance.com">my employer</a>, and Gmail for <a href="http://theamazingrando.com">my domain</a>. I use my personal email all the time, and have several Google Docs spreadsheets and letters. Our company uses Google Docs and Sites. Its extremely annoying that switching between these accounts is brittle, and unpredictable. The same situation existed on Github between my personal and the company account, before they added &quot;Organizations&quot;.</p>
+
+<p>The other problem is poor integration with the hundreds of accounts I have across various sites. I have a simple password that I use for throwaway, which is still horribly insecure. The alternative is a password manager such as KeePass or 1Password, but browser integration is poor or non-existent.</p>
+
+<p>I use the <a href="http://chrome.desc.se/">Google Mail Checker Plus</a> extension for Chrome, which can automatically redirect me to the Gmail inbox for each account, and from there I can follow links to Docs or Sites. However, all the accounts are &quot;logged in&quot;, and I occasionally experience trouble and get permission denied errors when I click on a document link in my list.</p>
+
+<p>My main workaround at this point is to use Chrome for normal browsing and personal accounts, and Firefox, which I use for development &amp; debugging anyways, has the saved passwords for company accounts. This has worked for awhile, but as I amass various side-projects, and need a 3rd login for some sites (Github and Amazon AWS seem to be the main ones), I don&#39;t want to have to maintain more browser profiles.</p>
+
+<p>Ideally, the browser and sites would integrate and work together to manage everything automatically, but this is a chicken and egg problem. The solution will likely have to be completed in stages.</p>
+
+<p>OpenID and OAuth are attempts at solving this on the server side, but they are complicated. And they need to be, because there&#39;s several parties involved, all needing to handshake with each other and prove everyone&#39;s identity. I feel a simpler solution, and a much better way to handle this, would be in the browser itself. Even the technical name for the browser, &quot;User Agent&quot;, indicates its purpose. I see it as the concierge at an expensive hotel. They have the inside knowledge of the city, and the personal contacts, to get you anything you need. Want blueberry and peanut-butter waffles at 11pm? Call the concierge and he&#39;ll figure out how to get it for you.</p>
+
+<p>Same for the browser. It&#39;s your concierge for the web. You don&#39;t need to know HTML and CSS to be able to use a website, the browser renders the text and images into a sensible layout for you to read. If a page moved, you don&#39;t have to type in the new location manually, the browser automatically goes there for you. If you need credentials to visit your Facebook page, you don&#39;t have to deal with the ugly bouncer directly, the concierge coughs and politely asks you for your password. What I&#39;m proposing is promoting your concierge to your own personal assistant. You shouldn&#39;t even need to know there <em>is</em> a bouncer, because your assistant has already made arrangements and you can walk right in.</p>
+
+<h2>Phase 1</h2>
+
+<p>The first step is a browser extension for managing all my accounts at various sites. On a site where I have several accounts, or a personal account and a shared corporate account, it would be great to have a simple way to switch between them. When I come to a page, but want to view it as a different account, I have to:</p>
+
+<ol>
+<li>Find and click a &quot;Sign Out&quot; link.</li>
+<li>Find the &quot;Sign In&quot; link.</li>
+<li>Clear the &quot;username&quot; field of the form, and replace it with the other account&#39;s username.</li>
+<li>Hope the browser remembers the other account&#39;s password, or look it up and fill it in.</li>
+<li>Navigate back to the original page.</li>
+</ol>
+
+<p>Compare that to a browser extension or built-in feature:</p>
+
+<ol>
+<li>Click &quot;Account Manager&quot; toolbar button, which provides a list of known accounts for the site.</li>
+<li>Select the account from the list.</li>
+</ol>
+
+<p>The implementation would be straightforward. Just save all the cookies currently associated with the domain and tie them to that account, then load the previously stored cookies for the account that was selected, and re-request the page with the new cookies. If the page is using http authentication, the browser only has to change which Authorization header it is providing to the site.</p>
+
+<p>There have been various attempts to do this, but nothing ever seems completed. I haven&#39;t attempted my own, so maybe there&#39;s some complication that I&#39;m missing. Mozilla has a proposal for such an extension called <a href="https://wiki.mozilla.org/Labs/Weave/Identity/Account_Manager">Account Manager</a>, but there seems to be no real activity since a few weeks after the project was announced back in March 2010. This seems like a real win for users, I can&#39;t understand why no browser has this built-in, or even an extension. I&#39;d switch to Opera or Safari in a minute if they offered this, its a killer feature for a browser.</p>
+
+<p>There&#39;s also programs such as <a href="http://www.keepassx.org/">KeePassX</a>, <a href="http://agilewebsolutions.com/onepassword">1Password</a>, and <a href="https://lastpass.com/">LastPass</a>, some of which include browser plugins that can manage passwords for you. These all seem to be standalone password managers first, with the browser integration coming 2nd, which can sometimes be pretty clunky. Phase one needs to be a browser extension specifically designed to integrate with web site logins.</p>
+
+<h2>Phase 2</h2>
+
+<p>The next phase would be for the browser to be able to manage account creation. Since the browser can manage my accounts, it would be handy if it would create them, by automatically filling out the sign up form at the site. Browsers already have my name, email, address, etc, from being able to auto-fill forms. It could auto-fill the sign up form with my personal information (or suitably anonymized information if I choose), create a login and a random password, and save all that with the account manager.</p>
+
+<p>Undoubtedly, this would require &quot;rules&quot; for lots of sites, similar to adblock extensions, to know which signup fields are which, and how exactly to fill out the signup form. Perhaps some JSON to indicate field names, or even some javascript.</p>
+
+<p>For example, say we have a signup form (like, say, Facebook&#39;s, with non-essential tags stripped out):</p>
+
+<pre><code>&lt;form method=&quot;post&quot; id=&quot;reg&quot; name=&quot;reg&quot;&gt;
+  &lt;input type=&quot;text&quot; class=&quot;inputtext&quot; id=&quot;firstname&quot; name=&quot;firstname&quot;&gt;
+  &lt;input type=&quot;text&quot; class=&quot;inputtext&quot; id=&quot;lastname&quot; name=&quot;lastname&quot;&gt;
+  &lt;input type=&quot;text&quot; class=&quot;inputtext&quot; id=&quot;reg_email__&quot; name=&quot;reg_email__&quot;&gt;
+  &lt;input type=&quot;text&quot; class=&quot;inputtext&quot; id=&quot;reg_email_confirmation__&quot; name=&quot;reg_email_confirmation__&quot;&gt;
+  &lt;input type=&quot;password&quot; class=&quot;inputtext&quot; id=&quot;reg_passwd__&quot; name=&quot;reg_passwd__&quot; value=&quot;&quot;&gt;
+  &lt;select class=&quot;select&quot; name=&quot;sex&quot; id=&quot;sex&quot;&gt;&lt;option value=&quot;1&quot;&gt;Female&lt;option value=&quot;2&quot;&gt;Male&lt;/select&gt;
+  &lt;select id=&quot;birthday_month&quot; name=&quot;birthday_month&quot;&gt;...&lt;/select&gt;
+  &lt;select name=&quot;birthday_day&quot; id=&quot;birthday_day&quot;&gt;...&lt;/select&gt;
+  &lt;select name=&quot;birthday_year&quot; id=&quot;birthday_year&quot;&gt;...&lt;/select&gt;
+  &lt;input value=&quot;Sign Up&quot; type=&quot;submit&quot;&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>Since names like <code>&quot;reg_email__&quot;</code> are rather nonstandard, we&#39;ll need some way to map the fields we know for our profile to the fields on the website form. The mappings are probably too complicated to be one-to-one with a simple XML or JSON file, however a JavaScript function could be executed:</p>
+
+<pre><code>function performSignup(profile) {
+  $(&quot;#firstname&quot;).val(profile.first_name);
+  $(&quot;#lastname&quot;).val(profile.last_name);
+  $(&quot;#reg_email__&quot;).val(profile.email);
+  $(&quot;#reg_email_confirmation__&quot;).val(profile.email);
+  $(&quot;#reg_passwd__&quot;).val(profile.generate_random_password());
+  $(&quot;#sex&quot;).val(profile.gender == &quot;male&quot; ? &quot;2&quot; : &quot;1&quot;);
+  $(&quot;#birthday_day&quot;).val(profile.birthday.day);
+  $(&quot;#birthday_month&quot;).val(profile.birthday.month);
+  $(&quot;#birthday_year&quot;).val(profile.birthday.year);
+
+  $(&quot;#reg&quot;).submit();
+}
+</code></pre>
+
+<p>Some helpers to make that less verbose, and getting contributions to write rules for the most common sites, and now your browser can perform signups for you. If this becomes popular or compelling to websites to implement, a JavaScript browser API could be exposed so that websites could implement the signup function themselves.</p>
+
+<pre><code>&lt;script&gt;
+  accountManager.setSignup(function(profile) { ... } );
+&lt;/script&gt;
+</code></pre>
+
+<p>Where <code>setSignup</code> is the browser API function to call to assign your website&#39;s signup function, and <code>profile</code> is an object containing the personal information provided by the user.</p>
+
+<h2>Phase 3</h2>
+
+<p>Phase 3 involves developing an API between the browser and the web page directly. It can be a simple extension to some of the new HTML5 APIs out there for dealing with video or local storage in javascript. Hopefully (but not likely, given how similar projects have played out before), each browser that implements this would have a similar API that common elements could be used.</p>
+
+<h2>Conclusion</h2>
+
+<p>In conclusion, authentication for web services sucks, and has for a long time. The right place to manage this is in the browser itself, rather than a complicated handshaking protocol between servers. Writing a browser extension like the one described in Phase 1 is on my TODO list, but I know nothing about browser extensions, and have plenty of other projects to keep me busy. If someone out there is willing to take this on, drop me a line, I&#39;d certainly love to help.</p>
+
+<h2>Extra Credit</h2>
+
+<ul>
+<li>Store all the data in the cloud, so its not lost in reformats, and can be shared between computers. Even better, have an interchange format so it can be shared between browsers, and your phone, so you can login to sites from wherever.</li>
+<li>An extension to the built-in HTTP Auth methods, something more secure than the MD5 used in Digest Auth. Properly implemented with nonces and cnonces, Digest Auth is still pretty secure, but it will only be a matter of time before MD5 can be brute-forced in a reasonable amount of time. Or maybe just convince everyone that all HTTP should be over SSL, and then we can just use Basic Auth. Once people start using browser authentication managers, no-one will care about styling the login form any more. Maybe the browser could load the favicon, or follow a <code>&lt;link&gt;</code> tag to a logo image for the site being logged in to.</li>
+</ul>

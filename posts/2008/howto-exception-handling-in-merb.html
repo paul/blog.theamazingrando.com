@@ -1,0 +1,69 @@
+<p>Title: HOWTO: Exception Handling in Merb</p>
+
+<p>Our app is very (JSON) web-service heavy, and so having helpful error messages in our web service documents is pretty important. Luckily, Merb makes this, like everything, a metric shitton easier than it is in rails. There are a couple poorly documented things I had to stumble through, so I thought I would write some up on how to do this.</p>
+
+<p>In Merb, if anything raises an exception, it looks for an action with the same name in the Exceptions controller. <code>merb-gen</code> gave you a simple one in <code>app/controllers/exception.rb</code>. Here&#39;s what mine looks like now:</p>
+
+<p><code>app/controllers/exceptions.rb</code></p>
+
+<pre><code>class Exceptions &lt; Application
+  provides :json                                                  # [1]
+
+  # handle NotFound exceptions (404)
+  def not_found
+    return standard_error if content_type == :json                # [2]
+    render
+  end
+
+  # handle NotAcceptable exceptions (406)
+  def not_acceptable
+    return standard_error if content_type == :json
+    render
+  end
+
+  # handle NotAuthorized exceptions (403)
+  def not_authorized
+    return standard_error if content_type == :json
+    render
+  end
+
+  # Everything else (500)
+  def standard_error                                              # [3]
+    # Re-Raise so we get the pretty merb error document instead.
+    raise request.exceptions.first if content_type == :html       # [4]
+
+    @exceptions = request.exceptions
+    @show_details = Merb::Config[:exception_details]
+    render :standard_error                                        # [5]
+  end
+
+end
+</code></pre>
+
+<p>Some things to note about what I&#39;ve done:</p>
+
+<ol>
+<li>Make sure it <code>#provides</code> for the web-service content-type.</li>
+<li>Since I just wanted to use the same view template for every error (see below), I had to explicitly make all web-service calls render that action instead. I could have just removed those methods and deleted the templates, but then any html views in the app would be generic, and I wanted custom ones for 403 and 404.</li>
+<li>Since all errors inherit from <code>StandardError</code>, this will catch everything.</li>
+<li>However, in the case of HTML documents, we want to use the fancy merb one, so re-raise the error so that merb&#39;s default error controller will handle it for us.</li>
+<li>Set up some variables to use in the view, then render that. <em>Be sure to include <code>:standard_error</code> so that the other error handlers know which template to render!</em></li>
+</ol>
+
+<p>And finally, here&#39;s what my view looks like. You can do whatever you want, of course. <code>#j</code> is just a global helper I have that basically does <code>#to_json</code> on whatever you give it, with some special cases for date formatting and indenting in dev vs production.</p>
+
+<p><code>app/views/exceptions/standard_error.json.erb</code>:</p>
+
+<pre><code>&lt;%= j( {
+  :_type        =&gt; &quot;InternalServerError&quot;,
+  :request_uri  =&gt; request.env[&#39;REQUEST_URI&#39;],
+  :parameters   =&gt; params,
+  :exceptions   =&gt; @exceptions.map do |exception|
+    {
+      :name       =&gt; exception.class,
+      :message    =&gt; exception.message,
+      :backtrace  =&gt; @show_details ? exception.backtrace : exception.backtrace.first.to_a
+    }
+  end
+} ) %&gt;
+</code></pre>

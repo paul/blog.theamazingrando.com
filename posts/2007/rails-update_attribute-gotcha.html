@@ -1,0 +1,7 @@
+<p>Title: Rails update_attribute gotcha</p>
+
+<p>Model#update_attribute(:name, &quot;Rando&quot;) does not trigger any validations, <em>even on name</em> and just saves it to the database.</p>
+
+<p>Model#update_attribute<strong>s</strong>(:name =&gt; &quot;Rando&quot;) does run all validations, and returns false if they fail.</p>
+
+<p><a href="http://caboo.se/doc/classes/ActiveRecord/Base.html#M005871">Rails docs</a></p>

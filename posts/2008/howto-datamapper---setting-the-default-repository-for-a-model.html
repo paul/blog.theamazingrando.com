@@ -1,0 +1,17 @@
+<p>Title: HOWTO: DataMapper - Setting the default repository for a model</p>
+
+<p>Had to google for quite a while before I was able to find the solution. Essentially, I have a model that I want to always use a different repository than what I <code>#setup</code> in <code>:default</code>. To do that:</p>
+
+<pre><code>class Person
+  include DataMapper::Resource
+
+  def self.default_repository_name
+    :other
+  end
+
+  property :name, String
+# ...
+end
+</code></pre>
+
+<p>This will make <code>Person.all</code> and all other queries use the <code>:other</code> repository, without having to use the <code>#repository(:other) { }</code> block.</p>

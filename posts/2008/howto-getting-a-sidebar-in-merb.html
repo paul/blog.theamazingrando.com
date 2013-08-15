@@ -1,0 +1,37 @@
+<p>Title: HOWTO: Getting a sidebar in Merb</p>
+
+<p>In several of my pages, I have a side-bar menu-y thingie. I didn&#39;t want to have to rewrite a controller-specific layout each time, but luckily Merb supports something similar to <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/CaptureHelper.html#M001751">Rails&#39;s content_for</a> block that <a href="http://www.theamazingrando.com/blog/?p=7">I wrote about earlier</a>. In Merb, its done using <code>throw_content</code>(<a href="http://merb.rubyforge.org/classes/Merb/ViewContextMixin.html#M000146">API</a>) and <code>catch_content</code>(<a href="http://merb.rubyforge.org/classes/Merb/RenderMixin.html#M000129">API</a>).</p>
+
+<p>Put the <code>catch_content</code> into your application layout view. You probably already have <code>catch_content :for_layout</code> in there, by default. Here&#39;s what mine looks like:</p>
+
+<pre><code>%html
+  %head
+    %meta{:&#39;http-equiv&#39; =&gt; &#39;content-type&#39;, &#39;content&#39; =&gt; &#39;application/xhtml+xml; charset=UTF-8&#39;}
+
+    = css_include_tag &quot;layout&quot;, &quot;style&quot;
+
+    %title Page with Sidebar
+
+  %body
+
+    #side-bar
+      = catch_content :sidebar
+
+    #main
+      = catch_content :for_layout
+
+    #footer
+      .left= copyright
+      .right= last_modified
+</code></pre>
+
+<p>Using haml, I&#39;ve put my sidebar in a <code>div</code> with id <code>#side-bar</code>.</p>
+
+<p>Now in the view, add a <code>throw_content</code> for what you want in the sidebar. In my case, I&#39;m using a partial that gets picked up out of the controller&#39;s view directory automatically.</p>
+
+<pre><code>- throw_content(:sidebar, partial(&#39;sidebar&#39;))
+
+%h1 This page has a sidebar
+</code></pre>
+
+<p>And ta-da! I only have to write the sidebar partial once for each controller, and I don&#39;t have to write an extra layout for each one. I have a fairly uncomplicated layout, and fill out the various parts of it by throwing rendered partials into it. </p>
