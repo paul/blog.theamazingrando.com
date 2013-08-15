@@ -14,6 +14,7 @@ GEM
       syntax (>= 1.0.0)
     minitest (4.7.5)
     multi_json (1.7.9)
+    rake (10.1.0)
     syntax (1.0.0)
     thread_safe (0.1.2)
       atomic
@@ -26,3 +27,4 @@ DEPENDENCIES
   activesupport
   git
   maruku
+  rake
