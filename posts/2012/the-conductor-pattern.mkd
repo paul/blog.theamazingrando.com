@@ -20,34 +20,36 @@ In Ruby, writing an implementation of the Conductor library is trivial with the 
 
 Here's how to use it:
 
-    class Registration
-      include GoldPlating
+```ruby
+class Registration
+  include GoldPlating
 
-      wrap Account, :name
-      wrap User,    :email, :password
+  wrap Account, :name
+  wrap User,    :email, :password
 
-      validates_presence_of :account_name,
-                            :user_email,
-                            :user_password,
-                            :message => "Required"
+  validates_presence_of :account_name,
+                        :user_email,
+                        :user_password,
+                        :message => "Required"
 
-      validates_format_of :user_email,
-                          :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/,
-                          :message => "Not an Email",
-                          :if => lambda { user_email.present? }
+  validates_format_of :user_email,
+                      :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/,
+                      :message => "Not an Email",
+                      :if => lambda { user_email.present? }
 
-      validates_length_of :user_password,
-                          :minimum => 5,
-                          :message => "Too short",
-                          :if => lambda { user_email.present? }
+  validates_length_of :user_password,
+                      :minimum => 5,
+                      :message => "Too short",
+                      :if => lambda { user_email.present? }
 
 
-      def save
-        super &&
-          Membership.create(account: account, user: user)
-      end
+  def save
+    super &&
+      Membership.create(account: account, user: user)
+  end
 
-    end
+end
+```
 
 Here, we have two models, `Account` and `User`. In this example app, a `User` can have access to several `Accounts` which might represent a business entity, similar to how Github Organizations work. When a user signs up, we want to automatically create but their `User` for login, and the initial `Account` they'll belong to. Because attribute names may overlap, `GoldPlating` prefixes them with the model name. `Account#name` becomes `Registration#account_name`.
 
@@ -63,35 +65,39 @@ The downside is that you have to duplicate some of your model validations in the
 
 When writing a registration form that needs to create both objects, the normal Rails method would be to separate out the `params` in the controller, and create one of each object then associate them. This gets tricky, however, when one or the other fails to validate. Also, it puts a lot of logic in the controller. Using this conductor however, our controller is simple:
 
-    class RegistrationController < ApplicationController
-      skip_before_filter :require_login
+```ruby
+class RegistrationController < ApplicationController
+  skip_before_filter :require_login
 
-      def new
-        @registration = Registration.new
-      end
+  def new
+    @registration = Registration.new
+  end
 
-      def create
-        @registration = Registration.new(params[:registration])
+  def create
+    @registration = Registration.new(params[:registration])
 
-        if @registration.valid?
-          @registration.save
-          auto_login @registration.user
-          redirect_back_or_to root_path, :notice => "Registration Successful"
-        else
-          render :new
-        end
-      end
+    if @registration.valid?
+      @registration.save
+      auto_login @registration.user
+      redirect_back_or_to root_path, :notice => "Registration Successful"
+    else
+      render :new
     end
+  end
+end
+```
 
 The form in the view is, too:
 
-    = form_for @registration, url: signup_path do |form|
+```haml
+= form_for @registration, url: signup_path do |form|
 
-      = form.text_field :account_name
+  = form.text_field :account_name
 
-      = form.email_field :user_email
+  = form.email_field :user_email
 
-      = form.password_field :user_password
+  = form.password_field :user_password
+```
 
 The controller and view can interact with the `Registration` conductor like any other ActiveModel-compliant object. In fact, this is the entire implementation. GoldPlating handled the object initialization, and assignment of the params to the right objects. GoldPlating also handled saving the objects it wraps, all we had to do was implement a `#save` to create the `Membership` association record between the newly-created `User` and `Account` records.
 

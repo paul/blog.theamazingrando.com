@@ -4,7 +4,7 @@ source "http://rubygems.org"
 gem "rake"
 
 gem "git"
-gem "maruku"
+gem "redcarpet"
 gem "activesupport"
 
 

@@ -1,10 +1,19 @@
-require 'maruku'
+require 'redcarpet'
 require 'time'
 
+def markdown
+  @markdown ||=
+    Redcarpet::Markdown.new(Redcarpet::Render::HTML,
+                            no_intra_emphasis: true,
+                            fenced_code_blocks: true,
+                            lax_spacing: true,
+                            underline: true,
+                           )
+end
 
 def render_file(file)
   content = File.open(file, 'r').read
-  html    = Maruku.new(content).to_html
+  html    = markdown.render(content)
 
   if match = Regexp.new(/^Title: ([^\n]+)/ ).match(content)
     title = match[1]
