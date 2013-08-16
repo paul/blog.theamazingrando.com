@@ -1,4 +1,6 @@
-<p>Title: HOWTO: Getting a sidebar in Merb</p>
+<!DOCTYPE html><html lang="en"><head><title>HOWTO: Getting a sidebar in Merb</title><meta content="Paul Sadauskas" name="author" /><link href="favicon.png" rel="icon" type="image/png" /><link href="../../assets/blog.css" media="all" rel="stylesheet" type="text/css" /><link href="http://blog.theamazingrando.com" rel="canonical" /></head><body><header id="sidebar"><figure class="avatar"><a href="http://blog.theamazingrando.com"><img src="../../assets/avatar.jpg" /></a></figure><h1><a href="http://blog.theamazingrando.com">The Amazing Blog</a></h1><h2><a href="http://blog.theamazingrando.com">Paul Sadauskas</a></h2><h3><p>I am a professional software engineer in Boulder, CO. I work for
+<a href="http://metrics.librato.com/">Librato</a>, making our
+application approximately 19.8% more awesome.</p></h3><ul id="user"><li class="link github"><a href="https://github.com/paul">github.com/paul</a></li><li class="link email"><a href="mailto:psadauskas@gmail.com">psadauskas@gmail.com</a></li><li class="link twitter"><a href="https://twitter.com/theamazingrando">@theamazingrando</a></li></ul></header><div id="content"><p>Title: HOWTO: Getting a sidebar in Merb</p>
 
 <p>In several of my pages, I have a side-bar menu-y thingie. I didn&#39;t want to have to rewrite a controller-specific layout each time, but luckily Merb supports something similar to <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/CaptureHelper.html#M001751">Rails&#39;s content_for</a> block that <a href="http://www.theamazingrando.com/blog/?p=7">I wrote about earlier</a>. In Merb, its done using <code>throw_content</code>(<a href="http://merb.rubyforge.org/classes/Merb/ViewContextMixin.html#M000146">API</a>) and <code>catch_content</code>(<a href="http://merb.rubyforge.org/classes/Merb/RenderMixin.html#M000129">API</a>).</p>
 
@@ -35,3 +37,4 @@
 </code></pre>
 
 <p>And ta-da! I only have to write the sidebar partial once for each controller, and I don&#39;t have to write an extra layout for each one. I have a fairly uncomplicated layout, and fill out the various parts of it by throwing rendered partials into it. </p>
+</div><footer></footer></body></html>

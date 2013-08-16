@@ -1,4 +1,6 @@
-<p>Title: Ruby rescues are not slow</p>
+<!DOCTYPE html><html lang="en"><head><title>Ruby rescues are not slow</title><meta content="Paul Sadauskas" name="author" /><link href="favicon.png" rel="icon" type="image/png" /><link href="../../assets/blog.css" media="all" rel="stylesheet" type="text/css" /><link href="http://blog.theamazingrando.com" rel="canonical" /></head><body><header id="sidebar"><figure class="avatar"><a href="http://blog.theamazingrando.com"><img src="../../assets/avatar.jpg" /></a></figure><h1><a href="http://blog.theamazingrando.com">The Amazing Blog</a></h1><h2><a href="http://blog.theamazingrando.com">Paul Sadauskas</a></h2><h3><p>I am a professional software engineer in Boulder, CO. I work for
+<a href="http://metrics.librato.com/">Librato</a>, making our
+application approximately 19.8% more awesome.</p></h3><ul id="user"><li class="link github"><a href="https://github.com/paul">github.com/paul</a></li><li class="link email"><a href="mailto:psadauskas@gmail.com">psadauskas@gmail.com</a></li><li class="link twitter"><a href="https://twitter.com/theamazingrando">@theamazingrando</a></li></ul></header><div id="content"><p>Title: Ruby rescues are not slow</p>
 
 <p>I&#39;ve heard several times that you should avoid exceptions because they are slow. They are in Java, so I think that has given them a bad name everywhere. The only real numbers I could find are from <a href="http://www.notsostupid.com/blog/2006/08/31/the-price-of-a-rescue/" title="http://www.notsostupid.com/blog/2006/08/31/the-price-of-a-rescue/">http://www.notsostupid.com/blog/2006/08/31/the-price-of-a-rescue/</a> . His &#39;plain&#39; test is also missing the conditional that would also have to be executed (In this case, to make sure 5 is not 0). His post is also 18 months old, so I updated the &#39;plain&#39; test and re-ran it (Upping the runs to 5,000,000). My plain test now looks like:</p>
 
@@ -23,3 +25,4 @@ safe     3.230000   0.010000   3.240000 (  3.238219)
 rescue   3.270000   0.010000   3.280000 (  3.289843)</pre>
 
 <p>So it would seem, from my completely unscientific testing, that the rescue is actually <em>faster</em> than bounds-checking.</p>
+</div><footer></footer></body></html>
