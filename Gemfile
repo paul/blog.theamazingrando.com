@@ -5,6 +5,15 @@ gem "rake"
 
 gem "git"
 gem "redcarpet"
+gem "slim"
+gem "sass"
+
 gem "activesupport"
 
+group :development do
 
+  gem "guard"
+  gem "guard-shell"
+  gem "rb-fsevent"
+
+end
