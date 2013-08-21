@@ -4,6 +4,7 @@ require 'slim'
 require 'sass'
 require 'tilt'
 require 'pathname'
+require 'nokogiri'
 
 MARKDOWN_OPTS = {
   no_intra_emphasis: true,
@@ -23,10 +24,14 @@ class Post
     @source_file = source_file
   end
 
-  def output_file
+  def path
     filename = File.basename(source_file)
     filename, ext = filename.split('.')
-    output_path = File.join("output", source_file.gsub(/\.#{ext}$/, ".html"))
+    path = File.join(source_file.gsub(/\.#{ext}$/, ".html"))
+  end
+
+  def output_file
+    output_path = File.join("output", path)
   end
 
   def parent_dir
@@ -44,17 +49,28 @@ class Post
   alias render content_html
 
   def title
-    if match = Regexp.new(/^Title: ([^\n]+)/ ).match(content_mkd)
-      title = match[1]
-    elsif match = Regexp.new(/^# ([^\n]+)/).match(content_mkd)
-      title = match[1]
+    h1 = doc.css("h1").first
+    if h1
+      h1.content
     else
-      warn("please set the title on #{file}")
+      warn("please set the title on #{source_file}")
     end
   end
 
+  def synopsis
+    doc.css("p").first.content
+  end
+
+  def doc
+    @doc ||= Nokogiri::HTML(content_html)
+  end
+
   def published_date
-    published_date = Time.parse(`git log -n1 --pretty=format:"%ai" #{file}`)
+    published_date = Time.parse(`git log -n1 --pretty=format:"%ai" #{source_file}`)
+  end
+
+  def href
+    path
   end
 end
 
@@ -62,6 +78,15 @@ def render_post(post)
   layout = "templates/layout.html.slim"
   template = Tilt.new(layout)
   template.render(post) { post.render }
+end
+
+def render_index(posts)
+  layout = "templates/layout.html.slim"
+  template = Tilt.new(layout)
+  index_template = Tilt.new("templates/index.html.slim")
+  template.render(nil, title: "Index") do
+    index_template.render(posts, posts: posts)
+  end
 end
 
 def say_with_time(msg, &block)
@@ -76,7 +101,6 @@ namespace :publish do
 
   desc "Publish everything in ./posts"
   task :all do
-
   end
 
 end
@@ -85,10 +109,9 @@ directory "output/posts"
 
 TEMPLATES = FileList['templates/**/*']
 
-POSTS = FileList['posts/**/*.{md,mkd,markdown}'].map { |f| Post.new(f) }
+POSTS = FileList['posts/**/*.{md,mkd,markdown}'].map { |f| Post.new(f) }.sort_by(&:published_date).reverse
 
 POSTS.each do |post|
-
   directory post.parent_dir
 
   file post.output_file => [post.source_file, *TEMPLATES, post.parent_dir, __FILE__] do
@@ -98,7 +121,14 @@ POSTS.each do |post|
     end
   end
   task 'publish:all' => post.output_file
+end
 
+file "output/index.html" => [*POSTS.map(&:source_file), *TEMPLATES, __FILE__] do
+  say_with_time "index.html" do
+    content = render_index(POSTS)
+    File.open("output/index.html", "w+").write(content)
+  end
+  task 'publish:all' => "output/index.html"
 end
 
 ASSETS = FileList['assets/**/*.{scss,coffee}']

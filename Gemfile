@@ -7,6 +7,7 @@ gem "git"
 gem "redcarpet"
 gem "slim"
 gem "sass"
+gem "nokogiri"
 
 gem "activesupport"
 

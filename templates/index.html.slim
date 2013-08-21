@@ -1,0 +1,13 @@
+- for post in posts do
+  article
+    h1
+      a href=post.href
+        = post.title
+
+    h2
+      'Published
+      = post.published_date.strftime("%A, %B %-d, %Y")
+
+    p == post.synopsis
+
+
