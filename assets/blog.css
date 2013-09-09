@@ -55,6 +55,9 @@ h1, h2 {
     h1 a:hover, h2 a:hover {
       text-decoration: underline; }
 
+article header h2.timestamp {
+  font-size: 16px; }
+
 #sidebar {
   position: fixed;
   right: 0;
@@ -94,20 +97,9 @@ h1, h2 {
       margin-bottom: 12px; }
       #sidebar #user li a {
         text-decoration: none;
-        background-color: #FFFFFF;
-        border: 4px solid #DDD;
-        border-radius: 10px;
-        color: #555;
-        display: inline-block;
-        font-size: 15px;
-        font-weight: 600;
-        line-height: 25px;
-        padding-left: 15px;
-        padding-right: 15px;
-        position: relative;
-        z-index: 5; }
+        color: #555; }
         #sidebar #user li a:hover {
-          background-color: #E0E0E0; }
+          text-decoration: underline; }
 
 #content {
   float: right;
