@@ -17,4 +17,5 @@ group :development do
   gem "guard-shell"
   gem "rb-fsevent"
 
+  gem "thin"
 end
