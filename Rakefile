@@ -58,7 +58,8 @@ class Post
   end
 
   def synopsis
-    doc.css("p").first.content
+    p = doc.css("p").first
+    p ? p.content : ""
   end
 
   def doc
@@ -66,7 +67,7 @@ class Post
   end
 
   def published_date
-    published_date = Time.parse(`git log -n1 --pretty=format:"%ai" #{source_file}`)
+    published_date = Time.parse(`git log --reverse --pretty=format:"%ai" #{source_file} | head -1`)
   end
 
   def href
@@ -123,7 +124,7 @@ POSTS.each do |post|
   task 'publish:all' => post.output_file
 end
 
-file "output/index.html" => [*POSTS.map(&:source_file), *TEMPLATES, __FILE__] do
+file "output/index.html" => ['templates/index.html.slim', *POSTS.map(&:source_file), *TEMPLATES, __FILE__] do
   say_with_time "index.html" do
     content = render_index(POSTS)
     File.open("output/index.html", "w+").write(content)

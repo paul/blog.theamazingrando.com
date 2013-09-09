@@ -1,4 +1,4 @@
-Title: Rails Logging to Syslog using Logging gem
+#Rails Logging to Syslog using Logging gem
 
 When using a mongrel cluster, you can either log to a separate file for each mongrel instance, or you can log them all to the same file, but on a loaded cluster, there's a good chance your logged lines will get interleaved and be unreadable. Luckily, there's another way. The new replacement for log4r <a href="http://logging.rubyforge.org">Logging</a> can take care of this. It has a built-in way of <a href="http://www.ruby-forum.com/topic/142485">not interleaving the lines</a>, but (I think) its using lockfiles to do so, and if so, that's going to be detrimental to performance. The best solution has been around for 25 years, syslog. And with one of the more recent syslog daemons (syslog-ng, or rsyslog), you can set it up to log your mongrel log wherever you like.
 

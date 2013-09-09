@@ -1,4 +1,4 @@
-Title: Ruby Dir.glob bug
+#Ruby Dir.glob bug
 
 To further elaborate on Yehuda's [twit](http://twitter.com/wycats/status/1124457823):
 

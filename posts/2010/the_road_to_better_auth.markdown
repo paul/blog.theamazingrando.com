@@ -1,4 +1,4 @@
-Title: The Road to Better Authorization
+#The Road to Better Authorization
 
 The Problem
 -----------

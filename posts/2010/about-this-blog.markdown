@@ -1,4 +1,4 @@
-Title: About this Blog
+#About this Blog
 
 After nearly a year on hiatus, I'm finally ready to start blogging again. I have several neat projects I've been working on over the last several months, and I need a place to write about them.
 

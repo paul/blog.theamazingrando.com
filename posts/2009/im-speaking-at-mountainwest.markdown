@@ -1,4 +1,4 @@
-Title: I'm Speaking at MountainWest!
+#I'm Speaking at MountainWest!
 
 I'm going to be giving a talk at [Mountain West Ruby Conf](http://mtnwestrubyconf.org/2009/speakers)!
 

@@ -1,4 +1,4 @@
-Title: I spoke at Mountain West!
+#I spoke at Mountain West!
 
 Confreaks posted my talk. Everyone go make fun of that huge nerd up there!
 

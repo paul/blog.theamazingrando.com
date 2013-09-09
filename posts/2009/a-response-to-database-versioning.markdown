@@ -1,4 +1,4 @@
-Title: A Response to "Database Versioning"
+#A Response to "Database Versioning"
 
 I was just going to post a comment in reply to [Adam Wiggins's Database Versioning post](http://adam.blog.heroku.com/past/2009/3/2/database_versioning/), but it ended up being pretty long, so I'll post a response here instead.
 

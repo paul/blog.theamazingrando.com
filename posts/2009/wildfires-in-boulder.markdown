@@ -1,4 +1,4 @@
-Title: Wildfires in Boulder
+#Wildfires in Boulder
 
 Here's the view out my kitchen window, most mornings:<br />
 <a href="http://picasaweb.google.com/lh/photo/if5JeHUe16PKKCpjWYj44g?feat=embedwebsite"><img src="http://lh6.ggpht.com/_WEBSr9gkXQM/RPsquxnPABI/AAAAAAAAACQ/dbaIpaY55MU/s400/IMG_0096.JPG" /></a>

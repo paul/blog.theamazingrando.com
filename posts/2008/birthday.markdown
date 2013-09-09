@@ -1,4 +1,4 @@
-Title: Birthday!
+#Birthday!
 
     paul = Person.get(:name => "Paul")
     paul.age += 1

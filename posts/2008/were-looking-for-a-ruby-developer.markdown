@@ -1,4 +1,4 @@
-Title: We're looking for a Ruby Developer
+#We're looking for a Ruby Developer
 
 We're looking for another Ruby & Web developer at my company, [Absolute Performance](http://absolute-performance.com). Here's the job description. [Email me](mailto:psadauskas@gmail.com) and/or [my boss](mailto:ewc@absolute-performance.com) if you're interested, and want to work in beautiful Boulder, CO, at an awesome company.
 

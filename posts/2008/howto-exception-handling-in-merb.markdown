@@ -1,4 +1,4 @@
-Title: HOWTO: Exception Handling in Merb
+#HOWTO: Exception Handling in Merb
 
 Our app is very (JSON) web-service heavy, and so having helpful error messages in our web service documents is pretty important. Luckily, Merb makes this, like everything, a metric shitton easier than it is in rails. There are a couple poorly documented things I had to stumble through, so I thought I would write some up on how to do this.
 

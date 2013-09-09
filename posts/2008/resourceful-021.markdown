@@ -1,4 +1,4 @@
-Title: Resourceful 0.2.1
+#Resourceful 0.2.1
 
 I'm pleased to introduce the next release of Resourceful, 0.2.1. This one has tons of bugfixes over 0.2, and is actually being used in production. There's only one real new feature to speak of is prettier logging output. It shows the runtime for requests, the resulting status code, and if it was retrieved from the cache. Some sample log output:
 

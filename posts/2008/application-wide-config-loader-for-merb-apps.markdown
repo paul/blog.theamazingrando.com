@@ -1,4 +1,4 @@
-Title: Application-wide Config loader for Merb Apps
+#Application-wide Config loader for Merb Apps
 
 I saw [this post by Stephen Bartholomew](http://www.stephenbartholomew.co.uk/2008/8/22/simple-application-wide-configuration-in-rails) and thought that it was a pretty neat idea, so I adapted it for Merb applications. Merb already has the `Merb::Config` for storing config options, so I just added the config options to that, rather than the AppConfig class used in Steve's post. That also greatly simplifies its implementation:
 

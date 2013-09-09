@@ -1,4 +1,4 @@
-Title: Idealized Migration DSL
+#Idealized Migration DSL
 
 There's a <a href="http://groups.google.com/group/datamapper/browse_thread/thread/1b24e6f3d7675add">discussion</a> in the datamapper group about how to do migrations. I've thrown together an idealized DSL for how the migrations themselves should look.
 

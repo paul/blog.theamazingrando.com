@@ -1,4 +1,4 @@
-Title: DM Migrations (now with 100% more helpers!)
+#DM Migrations (now with 100% more helpers!)
 
 Added some helpers to the DataMapper Migrations I've been writing. These helpers just build up some SQL, and feed it into #execute.
 

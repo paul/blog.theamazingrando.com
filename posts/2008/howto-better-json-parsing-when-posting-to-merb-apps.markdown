@@ -1,4 +1,4 @@
-Title: HOWTO: Better JSON parsing when POSTing to Merb Apps
+#HOWTO: Better JSON parsing when POSTing to Merb Apps
 
 Where I work, we have fairly extensive, JSON-based web services in all out applications. As a quick example, here's what you would get if you were to `GET` `http://config.ssbe.example.com/configurations/90` with the mime-type `application/vnd.absperf.sscj1+json`:
 

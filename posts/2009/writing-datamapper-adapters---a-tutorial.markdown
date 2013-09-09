@@ -1,4 +1,4 @@
-Title: Writing DataMapper Adapters - A Tutorial
+#Writing DataMapper Adapters - A Tutorial
 
 Introduction
 ------------

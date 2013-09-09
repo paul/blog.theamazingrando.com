@@ -1,4 +1,4 @@
-Title: HOWTO - Get a list of a class's subclasses
+#HOWTO - Get a list of a class's subclasses
 
 
 I recently came across a situation where I had an AbstractClass, an I wanted to know all of the classes that had inherited from it. There were lots of implementations on the web, but that weren't exactly what I wanted, or they used ObjectSpace to get ALL the classes, and see if the interesting one was in its ancestors.

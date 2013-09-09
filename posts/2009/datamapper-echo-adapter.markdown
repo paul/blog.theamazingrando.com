@@ -1,4 +1,4 @@
-Title: DataMapper Echo Adapter
+#DataMapper Echo Adapter
 
 I just wrote a simple adapter that can be used to investigate the DM Adapter API, and debug your own adapter. Its really simple to use:
 

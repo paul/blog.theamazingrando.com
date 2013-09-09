@@ -1,4 +1,4 @@
-Title: Merbcamp
+#Merbcamp
 
 Here's my own personal store of interesting crap I picked up in merbcamp. I'll add to this as the talks go on.
 

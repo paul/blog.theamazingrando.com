@@ -1,4 +1,4 @@
-Title: Resourceful - Adding default options
+#Resourceful - Adding default options
 
 I just commited a change that allows you to specify some default headers to attach to all requests made on a resource. Best shown in an example, I'll use the sample code I gave in my [last post][]:
 

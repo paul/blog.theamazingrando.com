@@ -1,4 +1,4 @@
-Title: Rails update_attribute gotcha
+#Rails update_attribute gotcha
 
 Model#update_attribute(:name, "Rando") does not trigger any validations, <em>even on name</em> and just saves it to the database.
 

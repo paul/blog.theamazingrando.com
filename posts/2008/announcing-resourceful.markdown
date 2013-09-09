@@ -1,4 +1,4 @@
-Title: Announcing Resourceful
+#Announcing Resourceful
 
 <a href="http://resourceful.rubyforge.org/">Resourceful</a> is an advanced http library for Ruby that does all the fancy stuff that makes HTTP an amazing protocol. I'm pleased to announce the <a href="http://github.com/paul/resourceful/commits/rel_0.2">initial release</a> of Resourceful, 0.2. It already has some pretty cool features, with more to come. 
 

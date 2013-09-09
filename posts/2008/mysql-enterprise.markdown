@@ -1,4 +1,4 @@
-Title: MySQL Enterprise
+#MySQL Enterprise
 
 I just came across this link <a href="http://jcole.us/blog/archives/2008/04/14/just-announced-mysql-to-launch-new-features-only-in-mysql-enterprise/">about some new MySQL features will be for Enterprise customers only</a>. The feature they mention here is online backups. I think I'm just going to stop using MySQL for any new projects.
 

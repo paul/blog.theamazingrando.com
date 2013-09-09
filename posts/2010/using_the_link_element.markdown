@@ -1,4 +1,4 @@
-Title: Dear Microsoft: Please Do Pinned Menus Like This Instead
+#Dear Microsoft: Please Do Pinned Menus Like This Instead
 
 With the IE9 betas beginning to come out, Microsoft have introduced an interesting new feature they're calling [pinned sites][]. For more details about how it works, you can check out the [Ars Technica preview][ars preview]. Essentially, you put several ms-vendor specific `meta` tags in the html of your header that describe the menu. The example given on the Ars preview uses this markup:
 

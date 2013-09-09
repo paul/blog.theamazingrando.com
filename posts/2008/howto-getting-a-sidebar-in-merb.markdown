@@ -1,4 +1,4 @@
-Title: HOWTO: Getting a sidebar in Merb
+#HOWTO: Getting a sidebar in Merb
 
 In several of my pages, I have a side-bar menu-y thingie. I didn't want to have to rewrite a controller-specific layout each time, but luckily Merb supports something similar to [Rails's content_for][content_for] block that [I wrote about earlier][content_for blog post]. In Merb, its done using `throw_content`([API][throw_content]) and `catch_content`([API][catch_content]).
 
