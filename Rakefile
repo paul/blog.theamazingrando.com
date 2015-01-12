@@ -124,7 +124,7 @@ POSTS.each do |post|
   task 'publish:all' => post.output_file
 end
 
-file "output/index.html" => ['templates/index.html.slim', *POSTS.map(&:source_file), *TEMPLATES, __FILE__] do
+file "output/index.html" => ['templates/index.html.slim', 'templates/layout.html.slim', *POSTS.map(&:source_file), *TEMPLATES, __FILE__] do
   say_with_time "index.html" do
     content = render_index(POSTS)
     File.open("output/index.html", "w+").write(content)
