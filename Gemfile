@@ -1,21 +1,18 @@
+# If you do not have OpenSSL installed, change
+# the following line to use 'http://'
+source 'https://rubygems.org'
 
-source "http://rubygems.org"
+# For faster file watcher updates on Windows:
+gem 'wdm', '~> 0.1.0', platforms: [:mswin, :mingw]
 
-gem "rake"
+# Windows does not come with time zone data
+gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby]
 
-gem "git"
-gem "redcarpet"
-gem "slim"
-gem "sass"
-gem "nokogiri"
+# Middleman Gems
+gem "middleman", "~> 4.1"
+gem "middleman-blog"
 
-gem "activesupport"
+gem 'redcarpet', '~> 3.3', '>= 3.3.3'
 
-group :development do
-
-  gem "guard"
-  gem "guard-shell"
-  gem "rb-fsevent"
-
-  gem "thin"
-end
+# For feed.xml.builder
+gem "builder", "~> 3.0"
