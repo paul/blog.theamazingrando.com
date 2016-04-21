@@ -7,6 +7,7 @@
 
     <title>Blog Title<%= ' - ' + current_article.title unless current_article.nil? %></title>
     <%= stylesheet_link_tag :tufte %>
+    <%= stylesheet_link_tag :highlight %>
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
   </head>
   <body>

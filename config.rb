@@ -50,6 +50,10 @@ activate :blog do |blog|
   # blog.page_link = "page/{num}"
 end
 
+set :markdown_engine, :redcarpet
+set :markdown, :fenced_code_blocks => true, :smartypants => true
+activate :syntax
+
 page "/feed.xml", layout: false
 # Reload the browser automatically whenever files change
 # configure :development do
