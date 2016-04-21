@@ -22,7 +22,7 @@ module Middleman::CoreExtensions
 
     def extract_data(resource)
       full_path = resource.file_descriptor[:full_path].to_s
-      html_text = resource.render
+      html_text = resource.render(layout: false)
       doc = Nokogiri::HTML(html_text)
 
       h1 = doc.css("h1").first
@@ -33,7 +33,7 @@ module Middleman::CoreExtensions
                 "None"
               end
 
-      published_date_str = `git log --reverse --pretty=format:"%ai" #{full_path} | head -1`
+      published_date_str = `git log --follow --pretty=format:"%ai" #{full_path} | tail -1`
       published_date = published_date_str.blank? ? Time.now : Time.parse(published_date_str)
 
       first_paragraph = doc.css("p").first
