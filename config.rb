@@ -1,3 +1,7 @@
+
+require "lib/middleman-git_matter"
+activate :git_matter
+
 ###
 # Page options, layouts, aliases and proxies
 ###
@@ -21,13 +25,13 @@ page '/*.txt', layout: false
 ###
 
 activate :blog do |blog|
-  blog.permalink = "{category}/{title}.html"
+  blog.permalink = "{title}.html"
   # This will add a prefix to all links, template references and source paths
   blog.prefix = "/"
 
   # blog.permalink = "{year}/{month}/{day}/{title}.html"
   # Matcher for blog source files
-  # blog.sources = "{year}-{month}-{day}-{title}.html"
+  blog.sources = "posts/{title}.html"
   blog.taglink = "tagged/{tag}.html"
   # blog.layout = "layout"
   # blog.summary_separator = /(READMORE)/
@@ -38,7 +42,7 @@ activate :blog do |blog|
   # blog.default_extension = ".markdown"
 
   blog.tag_template = "tag.html"
-  blog.calendar_template = "calendar.html"
+  # blog.calendar_template = "calendar.html"
 
   # Enable pagination
   # blog.paginate = true
