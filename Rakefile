@@ -5,6 +5,6 @@ task :build do
 end
 
 desc "Deploy to s3"
-task :deploy => :build do
+task :deploy do
   sh "middleman s3_sync"
 end

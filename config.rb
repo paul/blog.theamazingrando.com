@@ -68,12 +68,13 @@ page "/feed.xml", layout: false
 # end
 
 # Build-specific configuration
+activate :gzip
 configure :build do
   # Minify CSS on build
-  # activate :minify_css
+  activate :minify_css
 
   # Minify Javascript on build
-  # activate :minify_javascript
+  activate :minify_javascript
 end
 
 activate :s3_sync do |s3_sync|
@@ -89,6 +90,7 @@ activate :s3_sync do |s3_sync|
   s3_sync.acl                        = 'public-read'
   s3_sync.encryption                 = false
   s3_sync.prefix                     = ''
+  s3_sync.prefer_gzip                = true
   s3_sync.version_bucket             = false
   s3_sync.index_document             = 'index.html'
   s3_sync.error_document             = '404.html'
