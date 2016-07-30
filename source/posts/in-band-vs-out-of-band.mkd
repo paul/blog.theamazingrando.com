@@ -12,7 +12,15 @@ payload itself, while "Out-of-Band" will refer to everything else you need to
 know to consume that API, such as documentation or institutional knowledge.
 
 Ideally, Out-of-Band knowledge should be minimized in an API, because it
-requires more effort on the part of the client to consume the API.
+requires more effort on the part of the client to consume the API. Any
+Out-of-Band knowledge must be documented (or guessed!), and ends up being
+hard-coded into the client implementations. This makes it very difficult, if
+not completely impossible, to change in the future. One of the primary goals of
+the API it to be resilient to change, otherwise we'd all be content with
+scraping the HTML.  Similarly to how changes to your HTML content or layout
+don't break the clients consuming it (browsers), so should clients of your API
+be resilient to changes to your JSON. It is the Out-of-Band knowledge that
+prevents this from happening.
 
 A non-comprehensive list of things you have to know to consume any API, whether
 that knowledge is In-Band or Out-of-Band might include:
