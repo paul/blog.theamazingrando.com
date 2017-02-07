@@ -1,3 +1,9 @@
+---
+category: Tips & Tricks
+tags:
+ - Rails
+---
+
 #Rails tip: Additional content for a layout
 
 If you need to add additional content to your layout, you can have named content_for blocks. Great for including additional page-specific javascript files.

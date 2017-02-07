@@ -2,6 +2,9 @@
 require "lib/middleman-git_matter"
 activate :git_matter
 
+require "lib/middleman-categories"
+activate :categories
+
 ###
 # Page options, layouts, aliases and proxies
 ###
@@ -44,6 +47,12 @@ activate :blog do |blog|
   blog.tag_template = "tag.html"
   # blog.calendar_template = "calendar.html"
 
+  blog.custom_collections = {
+    category: {
+      link: '/categories/{category}.html',
+      template: '/category.html'
+    }
+  }
   # Enable pagination
   # blog.paginate = true
   # blog.per_page = 10
@@ -56,9 +65,9 @@ activate :syntax
 
 page "/feed.xml", layout: false
 # Reload the browser automatically whenever files change
-# configure :development do
-#   activate :livereload
-# end
+configure :development do
+  activate :livereload
+end
 
 # Methods defined in the helpers block are available in templates
 # helpers do

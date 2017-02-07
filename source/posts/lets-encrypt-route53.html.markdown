@@ -1,3 +1,11 @@
+---
+category: Gems
+tags:
+ - Ruby
+ - AWS
+ - Let's Encrypt
+---
+
 
 # Let's Encrypt + Route53 + Ruby = Yay!
 

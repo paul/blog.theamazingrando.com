@@ -1,3 +1,10 @@
+---
+category: HowTo
+tags:
+ - Ruby
+ - Merb
+---
+
 #HOWTO: Better JSON parsing when POSTing to Merb Apps
 
 Where I work, we have fairly extensive, JSON-based web services in all out applications. As a quick example, here's what you would get if you were to `GET` `http://config.ssbe.example.com/configurations/90` with the mime-type `application/vnd.absperf.sscj1+json`:
@@ -30,7 +37,7 @@ To that end, I implemented a custom JSON parser in a before filter in my Applica
       end
 
       def parse_supplied_sscj1
-        begin 
+        begin
           jobj = JSON.parse(request.raw_post)                         #[3]
           raise UnprocessableEntity unless jobj.is_a?(Hash)           #[4]
 
@@ -121,7 +128,7 @@ Now, I have that pesky `parent_configuration_href` attribute still coming in. I 
 So, here we have something similar to the `#ignore_attributes`, except now we have a block to be called on the attribute we want to change. In this case, I match the `configurations` part of the URI, and capture the `id`. Then , in my `#parse_supplied_sscj1` method, I replace the old value with the new one:
 
     def parse_supplied_sscj1
-      begin 
+      begin
         jobj = JSON.parse(request.raw_post)
         raise UnprocessableEntity unless jobj.is_a?(Hash)
 

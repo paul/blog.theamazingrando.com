@@ -13,6 +13,7 @@ gem "middleman", "~> 4.1"
 gem "middleman-blog"
 gem "middleman-syntax"
 gem 'middleman-s3_sync'
+gem "middleman-livereload"
 
 gem 'redcarpet', '~> 3.3', '>= 3.3.3'
 

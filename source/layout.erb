@@ -7,7 +7,7 @@
 
     <title>The Amazing Blog<%= ' - ' + current_article.title unless current_article.nil? %></title>
     <%= stylesheet_link_tag :layout %>
-    <%= stylesheet_link_tag :tufte %>
+    <%# <%= stylesheet_link_tag :tufte %1> %>
     <%= stylesheet_link_tag :highlight %>
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "The Amazing Blog Feed" %>
   </head>
@@ -16,11 +16,64 @@
       <h1>
         <%= link_to "The Amazing Blog", "/" %>
       </h1>
+
+      <h2>
+        <a href="https://github.com/paul/blog.theamazingrando.com"> Source on GitHub </a>
+      </h2>
     </header>
 
-    <div id="main" role="main">
-      <%= yield %>
+    <div id="content" role="main">
+      <main>
+        <%= yield %>
+      </main>
+
+      <nav>
+        <h1>About the Author</h1>
+        <p>
+          I am a professional software engineer in Boulder, CO. I love making
+          tools for users and fellow developers that are elegant, robust, and
+          reliable.
+        </p>
+
+        <div class="nav-section">
+          <ul>
+            <li>GitHub:&nbsp;<a href="https://github.com/paul">@paul</a></li>
+            <li>Email:&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+            <li>Twitter:&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+
+          </ul>
+        </div>
+
+        <h1>Categories</h1>
+        <div class="nav-section">
+          <ul class="categories">
+            <% categories(blog.articles).each do |category, articles| %>
+              <li>
+                <a href="<%= category_path(category) %>"><%= category %></a>&nbsp;(<%= articles.length %>)
+
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <h1>Tags</h1>
+        <div class="nav-section">
+          <ul class="tags">
+            <% blog.tags.sort.each do |tag, articles| %>
+              <li>
+                <a href="<%= tag_path(tag) %>"><%= tag %></a>&nbsp;(<%= articles.length %>)
+
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+      </nav>
     </div>
+
+    <footer>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a> <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">The Amazing Blog</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">Paul Sadauskas</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+    </footer>
 
   </body>
   <script>

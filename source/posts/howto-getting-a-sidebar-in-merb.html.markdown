@@ -1,3 +1,10 @@
+---
+category: HowTo
+tags:
+ - Ruby
+ - Merb
+---
+
 #HOWTO: Getting a sidebar in Merb
 
 In several of my pages, I have a side-bar menu-y thingie. I didn't want to have to rewrite a controller-specific layout each time, but luckily Merb supports something similar to [Rails's content_for][content_for] block that [I wrote about earlier][content_for blog post]. In Merb, its done using `throw_content`([API][throw_content]) and `catch_content`([API][catch_content]).
@@ -34,7 +41,7 @@ Now in the view, add a `throw_content` for what you want in the sidebar. In my c
     %h1 This page has a sidebar
 
 
-And ta-da! I only have to write the sidebar partial once for each controller, and I don't have to write an extra layout for each one. I have a fairly uncomplicated layout, and fill out the various parts of it by throwing rendered partials into it. 
+And ta-da! I only have to write the sidebar partial once for each controller, and I don't have to write an extra layout for each one. I have a fairly uncomplicated layout, and fill out the various parts of it by throwing rendered partials into it.
 
 [content_for]: http://api.rubyonrails.org/classes/ActionView/Helpers/CaptureHelper.html#M001751
 [content_for blog post]: http://www.theamazingrando.com/blog/?p=7

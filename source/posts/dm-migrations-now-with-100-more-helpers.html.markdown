@@ -1,3 +1,9 @@
+---
+category: DataMapper
+tags:
+ - DataMapper
+---
+
 #DM Migrations (now with 100% more helpers!)
 
 Added some helpers to the DataMapper Migrations I've been writing. These helpers just build up some SQL, and feed it into #execute.
@@ -5,7 +11,7 @@ Added some helpers to the DataMapper Migrations I've been writing. These helpers
 <pre lang="ruby">
 migration 1, :create_people_table do
   up do
-    create_table :people do 
+    create_table :people do
       column :name,   :string
       column :gender, :string
     end

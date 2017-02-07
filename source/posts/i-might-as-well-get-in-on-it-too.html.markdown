@@ -1,3 +1,9 @@
+---
+category: Meta
+tags:
+ - meta
+---
+
 #I might as well get in on it, too
 
 Modified for zshell:

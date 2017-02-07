@@ -1,3 +1,10 @@
+---
+category: Gems
+tags:
+ - Ruby
+ - Progress Bar
+---
+
 #Annoucing ProgressBar
 
 # ProgressBar

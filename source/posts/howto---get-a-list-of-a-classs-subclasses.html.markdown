@@ -1,3 +1,9 @@
+---
+category: Tips & Tricks
+tags:
+ - Ruby
+---
+
 #HOWTO - Get a list of a class's subclasses
 
 

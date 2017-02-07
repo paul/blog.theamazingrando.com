@@ -1,3 +1,10 @@
+---
+category: DataMapper
+tags:
+ - DataMapper
+ - Ruby
+---
+
 #Spec'ing Migrations (A Tutorial)
 
 I realized I haven't blogged about (IMHO) the neatest feature of DataMapper's migrations yet. One of the more harrowing experiences for me in Rails is upgrading a production server with live data, and hoping your migration handles all the existing data correctly. You can dump the database, and attempt the migration on a clone, and hand-examine the data to make sure it was correct, but that feels very non-ruby-like to me. With the spec groups and matchers available in DataMapper migrations, though, you can spec your migrations and be certain that it will work correctly, and translate all your edge-case data correctly.

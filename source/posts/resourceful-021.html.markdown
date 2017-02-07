@@ -1,3 +1,9 @@
+---
+category: Gems
+tags:
+ - Resourceful
+---
+
 #Resourceful 0.2.1
 
 I'm pleased to introduce the next release of Resourceful, 0.2.1. This one has tons of bugfixes over 0.2, and is actually being used in production. There's only one real new feature to speak of is prettier logging output. It shows the runtime for requests, the resulting status code, and if it was retrieved from the cache. Some sample log output:
@@ -37,4 +43,4 @@ As always [bug reports][res-lh] and [patches][res-src] are appreciated.
 
 [res-lh]: http://resourceful.lighthouseapp.com/projects/11479-resourceful/
 [res-src]: http://github.com/paul/resourceful/tree/master
-    
+

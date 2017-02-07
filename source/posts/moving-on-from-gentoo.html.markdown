@@ -1,3 +1,10 @@
+---
+category: Linux
+tags:
+ - Gentoo
+ - Linux
+---
+
 #Moving on from Gentoo...
 
 <strong>Updated:</strong> I added a few more paragraphs that I had originally commented on in response to Mr. Berkholz's comment.

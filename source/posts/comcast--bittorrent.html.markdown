@@ -1,3 +1,9 @@
+---
+category: Tips & Tricks
+tags:
+ - tips
+---
+
 #Comcast & Bittorrent
 
 Comcast user? Bummed that they're ruining your bittorrent? No problem. They way the kill your connection is by sending unsolicited TCP reset packets to your bittorrent client, making it think that the person you're downloading from has closed the connection. If you're using a good firewall/router, you can write a rule that will block it. I'm using <a href="http://www.polarcloud.com/tomato">Tomato</a> firmware for my Linksys WRT54G, and added the following line to my firewall scripts:

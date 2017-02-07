@@ -1,13 +1,119 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
 
 header {
+  border-bottom: 1px solid #AAA;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
   h1 {
-    margin-top: 1rem;
-    font-size: 2rem;
+    font-size: 1.8em;
+    font-variant: small-caps;
+    margin: 0 0 0 1rem;
+  }
+
+  h2 {
+    margin: 0 1rem 0 0;
+    text-align: right;
+    font-size: 0.8em;
+    line-height: 1.8rem;
+    color: #999;
+
+    a {
+      color: #999;
+    }
+  }
+}
+
+footer {
+  border-top: 1px solid #AAA;
+  width: 100%;
+  margin-top: 3rem;
+  padding: 1rem;
+  &, a {
+    color: #999;
+  }
+
+}
+
+#content {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+
+main {
+  flex: 1 1 60rem;
+  max-width: 60rem;
+  margin-right: 1rem;
+
+  h1 {
+    font-variant: small-caps;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  pre.highlight {
+    padding: 0.5rem;
+    border: 1px solid #DDD;
+  }
+}
+
+nav {
+  flex: 0 1 16rem;
+  border-left: 1px solid #CCC;
+  padding-left: 1rem;
+
+  h1 {
+    font-size: 1.4rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  p, .nav-section {
+    margin-left: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    &, & li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  ul.tags {
+    &, & li { display: inline }
   }
 }
 
 article {
   h1, h2 {
     display: inline;
+  }
+
+  h2 {
+    color: #888;
+    font-size: 1.2em;
   }
 }

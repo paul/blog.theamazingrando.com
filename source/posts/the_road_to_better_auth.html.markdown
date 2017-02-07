@@ -1,3 +1,10 @@
+---
+category: HTTP
+tags:
+ - Hypermedia
+ - Authentication
+---
+
 #The Road to Better Authorization
 
 The Problem

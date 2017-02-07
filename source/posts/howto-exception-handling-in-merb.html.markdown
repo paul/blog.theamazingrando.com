@@ -1,3 +1,10 @@
+---
+category: HowTo
+tags:
+ - Ruby
+ - Merb
+---
+
 #HOWTO: Exception Handling in Merb
 
 Our app is very (JSON) web-service heavy, and so having helpful error messages in our web service documents is pretty important. Luckily, Merb makes this, like everything, a metric shitton easier than it is in rails. There are a couple poorly documented things I had to stumble through, so I thought I would write some up on how to do this.
@@ -8,7 +15,7 @@ In Merb, if anything raises an exception, it looks for an action with the same n
 
     class Exceptions < Application
       provides :json                                                  # [1]
-      
+
       # handle NotFound exceptions (404)
       def not_found
         return standard_error if content_type == :json                # [2]
