@@ -60,7 +60,7 @@ activate :blog do |blog|
 end
 
 set :markdown_engine, :redcarpet
-set :markdown, :fenced_code_blocks => true, :smartypants => true
+set :markdown, tables: true, fenced_code_blocks: true, autolink: true
 activate :syntax
 
 page "/feed.xml", layout: false

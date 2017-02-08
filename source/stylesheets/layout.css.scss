@@ -56,8 +56,8 @@ footer {
 }
 
 main {
-  flex: 1 1 60rem;
-  max-width: 60rem;
+  flex: 1 1 50rem;
+  max-width: 50rem;
   margin-right: 1rem;
 
   h1 {
@@ -70,6 +70,31 @@ main {
   pre.highlight {
     padding: 0.5rem;
     border: 1px solid #DDD;
+  }
+
+  $table-border-width: 1px;
+  $table-border-color: #EEE;
+  table {
+    max-width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #DDD;
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.3rem;
+      vertical-align: top;
+      border: $table-border-width solid $table-border-color;
+    }
+
+    thead th {
+      vertical-align: bottom;
+      border-bottom: (2 * $table-border-width) solid $table-border-color;
+    }
+
+    tbody + tbody {
+      border-top: (2 * $table-border-width) solid $table-border-color;
+    }
   }
 }
 
@@ -116,4 +141,5 @@ article {
     color: #888;
     font-size: 1.2em;
   }
+
 }

@@ -17,6 +17,7 @@ gem "middleman-syntax"
 gem 'middleman-s3_sync'
 gem "mime-types" # Dunno why this is my problem, fog complains without it
 gem "middleman-livereload"
+gem "kramdown"
 
 gem 'redcarpet', '~> 3.3', '>= 3.3.3'
 
