@@ -1,8 +1,18 @@
+---
+category: HTTP
+tags:
+ - Hypermedia
+---
+
+# In-Band vs. Out-of-Band
+
+A good way to look at the advantages of a hypermedia-based API vs an "HTTP-RPC"
+style one is to consider the differences between "In-Band" and "Out-of-Band"
+information. A hypermedia API focuses on getting as much information in-band as
+possible, reducing the burden on clients to deal with changes.
 
 *Note: I originally considered this to help my team decide what path to take
 when building V2 of our API, but decided it deserved a wider audience*
-
-# In-Band vs. Out-of-Band
 
 "In-Band" is anything that is transmitted within the primary transmission
 channel. "Out-of-Band" refers to any communications that occur outside of that.
