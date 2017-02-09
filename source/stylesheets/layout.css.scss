@@ -3,6 +3,10 @@ html, body {
   padding: 0;
 }
 
+// * {
+//   box-sizing: border-box;
+// }
+
 body {
    font-family: -apple-system,
                 BlinkMacSystemFont,
@@ -59,11 +63,23 @@ footer {
 
 }
 
+@media (max-width: 1024px) {
+  #content {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 1024px) {
+  #content {
+    flex-direction: row;
+  }
+}
+
 #content {
   margin-top: 2rem;
   display: flex;
-  flex-direction: row;
   justify-content: center;
+  padding: 20px;
 
 }
 
