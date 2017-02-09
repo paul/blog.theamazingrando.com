@@ -4,7 +4,7 @@ tags:
  - Hypermedia
 ---
 
-# In-Band vs. Out-of-Band
+# In-Band vs. Out-of-Band: The Advantages of Hypermedia APIs
 
 A good way to look at the advantages of a hypermedia-based API vs an "HTTP-RPC"
 style one is to consider the differences between "In-Band" and "Out-of-Band"
