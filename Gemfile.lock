@@ -158,6 +158,7 @@ PLATFORMS
 
 DEPENDENCIES
   builder (~> 3.0)
+  haml
   kramdown
   middleman (~> 4.1)
   middleman-blog

@@ -28,10 +28,11 @@ page '/*.txt', layout: false
 ###
 
 activate :blog do |blog|
-  blog.permalink = "{title}.html"
+  blog.permalink = "posts/{title}.html"
   # This will add a prefix to all links, template references and source paths
   # blog.prefix = "/"
 
+  blog.layout = "article"
   # blog.permalink = "{year}/{month}/{day}/{title}.html"
   # Matcher for blog source files
   blog.sources = "posts/{title}.html"
@@ -70,11 +71,18 @@ configure :development do
 end
 
 # Methods defined in the helpers block are available in templates
-# helpers do
-#   def some_helper
-#     "Helping"
-#   end
-# end
+helpers do
+  def time_element(date)
+    content_tag(:time, datetime: date.iso8601) do
+      date.strftime("%A, %B #{date.day.ordinalize} %Y")
+    end
+  end
+
+  GITHUB_ROOT = "https://github.com/paul/blog.theamazingrando.com/blob/master/source/"
+  def github_source(resource)
+    GITHUB_ROOT + resource.path
+  end
+end
 
 # Build-specific configuration
 activate :gzip

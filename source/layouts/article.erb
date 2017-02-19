@@ -1,0 +1,15 @@
+
+<% wrap_layout :layout do %>
+  <article>
+    <header>
+      <h1><%= link_to current_article.title, current_article %></h1>
+      <p class="meta">
+        Published: <%= time_element(current_article.date) %></br>
+        Updated: <%= time_element(current_article.data[:updated_at]) %></br>
+        <%= link_to "Article source on GitHub", github_source(current_article) %>
+      </p>
+    </header>
+
+    <%= current_article.data[:content] %>
+  </article>
+<% end %>

@@ -20,6 +20,7 @@ gem "middleman-livereload"
 gem "kramdown"
 
 gem 'redcarpet', '~> 3.3', '>= 3.3.3'
+gem "haml"
 
 # For feed.xml.builder
 gem "builder", "~> 3.0"

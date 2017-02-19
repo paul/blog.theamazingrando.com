@@ -33,15 +33,24 @@ module Middleman::CoreExtensions
                 "None"
               end
 
-      published_date_str = `git log --follow --pretty=format:"%ai" #{full_path} | tail -1`
-      published_date = published_date_str.blank? ? Time.now : Time.parse(published_date_str)
+      first_draft_str = `git log --follow --pretty=format:"%ai" #{full_path} | tail -1`
+      first_draft = first_draft_str.blank? ? Time.now : Time.parse(first_draft_str)
+
+      updated_at_str = `git log --follow --pretty=format:"%ai" #{full_path} | head -1`
+      updated_at = updated_at_str.blank? ? Time.now : Time.parse(updated_at_str)
 
       first_paragraph = doc.css("p").first
 
+      content = doc.dup
+      content.css("h1:first-of-type").remove
+
       {
         title: title,
-        date: published_date,
-        first_paragraph: first_paragraph
+        date: first_draft,
+        first_draft_at: first_draft,
+        updated_at: updated_at,
+        first_paragraph: first_paragraph,
+        content: content
       }
     end
 
