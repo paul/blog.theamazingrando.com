@@ -66,12 +66,28 @@ footer {
 @media (max-width: 1024px) {
   #content {
     flex-direction: column;
+
+    main {
+      flex: 1 1 auto;
+    }
+
+    nav {
+      flex: 1 1 auto;
+    }
   }
 }
 
 @media (min-width: 1024px) {
   #content {
     flex-direction: row;
+
+    main {
+      flex: 1 1 50rem;
+    }
+
+    nav {
+      flex: 0 1 16rem;
+    }
   }
 }
 
@@ -84,7 +100,6 @@ footer {
 }
 
 main {
-  flex: 1 1 50rem;
   max-width: 50rem;
   margin-right: 1rem;
 
@@ -127,7 +142,6 @@ main {
 }
 
 nav {
-  flex: 0 1 16rem;
   border-left: 1px solid #CCC;
   padding-left: 1rem;
 
