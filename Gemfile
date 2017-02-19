@@ -13,6 +13,7 @@ gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby]
 # Middleman Gems
 gem "middleman", "~> 4.1"
 gem "middleman-blog"
+gem 'middleman-search_engine_sitemap'
 gem "middleman-syntax"
 gem 'middleman-s3_sync'
 gem "mime-types" # Dunno why this is my problem, fog complains without it

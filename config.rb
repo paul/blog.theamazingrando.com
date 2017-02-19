@@ -5,6 +5,18 @@ activate :git_matter
 require "lib/middleman-categories"
 activate :categories
 
+# https://github.com/Aupajo/middleman-search_engine_sitemap
+# You can override the priority or change frequency for a particular page by using frontmatter:
+
+# ---
+# title: Blog
+# priority: 1.0
+# change_frequency: daily
+# ---
+set :url_root, "http://blog.theamazingrando.com"
+activate :search_engine_sitemap, default_priority: 0.5,
+                                 default_change_frequency: "monthly"
+
 ###
 # Page options, layouts, aliases and proxies
 ###
