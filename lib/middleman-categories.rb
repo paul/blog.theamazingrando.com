@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Middleman::CoreExtensions
   class Categories < ::Middleman::Extension
-
     helpers do
       def categories(articles)
         articles.group_by { |a| a.data["category"] }.sort
@@ -10,4 +11,3 @@ module Middleman::CoreExtensions
     ::Middleman::Extensions.register(:categories, self)
   end
 end
-

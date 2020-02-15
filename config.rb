@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require "lib/middleman-git_matter"
 activate :git_matter
@@ -24,9 +25,9 @@ activate :search_engine_sitemap, default_priority: 0.5,
 # Per-page layout changes:
 #
 # With no layout
-page '/*.xml', layout: false
-page '/*.json', layout: false
-page '/*.txt', layout: false
+page "/*.xml", layout: false
+page "/*.json", layout: false
+page "/*.txt", layout: false
 
 # With alternative layout
 # page "/path/to/file.html", layout: :otherlayout
@@ -62,8 +63,8 @@ activate :blog do |blog|
 
   blog.custom_collections = {
     category: {
-      link: '/categories/{category}.html',
-      template: '/category.html'
+      link: "/categories/{category}.html",
+      template: "/category.html"
     }
   }
   # Enable pagination
@@ -107,8 +108,8 @@ configure :build do
 end
 
 activate :s3_sync do |s3_sync|
-  s3_sync.bucket                     = 'blog.theamazingrando.com' # The name of the S3 bucket you are targeting. This is globally unique.
-  s3_sync.region                     = 'us-east-1'     # The AWS region for your bucket.
+  s3_sync.bucket                     = "blog.theamazingrando.com" # The name of the S3 bucket you are targeting. This is globally unique.
+  s3_sync.region                     = "us-east-1" # The AWS region for your bucket.
   # s3_sync.aws_access_key_id          = 'AWS KEY ID'
   # s3_sync.aws_secret_access_key      = 'AWS SECRET KEY'
   s3_sync.delete                     = false # We delete stray files by default.
@@ -116,11 +117,11 @@ activate :s3_sync do |s3_sync|
   s3_sync.prefer_gzip                = true
   s3_sync.path_style                 = true
   s3_sync.reduced_redundancy_storage = false
-  s3_sync.acl                        = 'public-read'
+  s3_sync.acl                        = "public-read"
   s3_sync.encryption                 = false
-  s3_sync.prefix                     = ''
+  s3_sync.prefix                     = ""
   s3_sync.prefer_gzip                = true
   s3_sync.version_bucket             = false
-  s3_sync.index_document             = 'index.html'
-  s3_sync.error_document             = '404.html'
+  s3_sync.index_document             = "index.html"
+  s3_sync.error_document             = "404.html"
 end

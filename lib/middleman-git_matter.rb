@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 module Middleman::CoreExtensions
   class GitMatter < ::Middleman::Extension
     # Try to run after routing but before directory_indexes
     self.resource_list_manipulator_priority = 20
-
 
     def manipulate_resource_list(resources)
       resources.each do |resource|
@@ -15,7 +16,6 @@ module Middleman::CoreExtensions
 
         resource.add_metadata page: post_data
       end
-
     end
 
     protected
@@ -57,4 +57,3 @@ module Middleman::CoreExtensions
     ::Middleman::Extensions.register(:git_matter, self)
   end
 end
-

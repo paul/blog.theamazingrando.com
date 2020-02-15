@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 desc "Build the site"
 task :build do
