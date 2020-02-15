@@ -1,15 +1,26 @@
 
 <% wrap_layout :layout do %>
-  <article>
+  <section>
     <header>
-      <h1><%= link_to current_article.title, current_article %></h1>
-      <p class="meta">
-        Published: <%= time_element(current_article.date) %></br>
-        Updated: <%= time_element(current_article.data[:updated_at]) %></br>
-        <%= link_to "Article source on GitHub", github_source(current_article) %>
-      </p>
+      <h2><%= link_to current_article.title, current_article %></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <%= time_element(current_article.date) %>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <%= time_element(current_article.data[:updated_at]) %></br>
+        <li>
+        <li class="icon brands fa-github">
+          <%= link_to "Article source on GitHub", github_source(current_article) %>
+        </li>
+      </ul>
+      <ul class="meta">
+        <% current_article.tags.each do |tag| %>
+          <li class="icon fa-tag"><%= tag %><li>
+        <% end %>
+      </ul>
     </header>
 
     <%= current_article.data[:content] %>
-  </article>
+  </section>
 <% end %>

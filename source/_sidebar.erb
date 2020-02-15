@@ -1,0 +1,31 @@
+<section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+      <% blog.tags.sort.each do |tag, articles| %>
+        <li>
+          <a href="<%= tag_path(tag) %>"><%= tag %></a>&nbsp;(<%= articles.length %>)
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</section>
