@@ -1,0 +1,36 @@
+body {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen-Sans,
+    Ubuntu,
+    Cantarell,
+    "Helvetica Neue",
+    sans-serif;
+  color: #2b3737;
+}
+
+pre, code {
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    Courier,
+    monospace;
+  background-color: #f8f8f8;
+}
+
+div.highlight {
+  margin-bottom: 3em;
+
+  pre {
+    overflow-y: auto;
+  }
+}
+
+.box.page-content h2 {
+  font-size: 1.8em;
+}
