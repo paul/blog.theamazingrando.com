@@ -1,0 +1,12 @@
+---
+customize_by_frontmatter: true
+url: http://blog.theamazingrando.com
+human_url: blog.theamazingrando.com
+name: The Amazing Blog
+description: Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas
+
+keywords: software, ruby, linux
+pull_image: "/avatar.jpg"
+logo_image_name: avatar.jpg
+logo_image_path: http://blog.theamazingrando.com/avatar.jpg
+twitter_handle: "@theamazingrando"

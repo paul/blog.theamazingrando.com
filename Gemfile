@@ -27,3 +27,5 @@ gem "redcarpet", "~> 3.3", ">= 3.3.3"
 
 # For feed.xml.builder
 gem "builder", "~> 3.0"
+
+gem "middleman-meta-tags", "~> 0.4.0"

@@ -3,3 +3,5 @@ layout: false
 ---
 User-agent: *
 Disallow:
+
+Sitemap: http://blog.theamazingrando.com/sitemap.xml

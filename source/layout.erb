@@ -6,6 +6,24 @@
 
     <title>The Amazing Blog<%= ' - ' + current_article.title unless current_article.nil? %></title>
 
+    <%= auto_display_meta_tags %>
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "<%= current_article&.title || "The Amazing Blog" %>",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
     <%= stylesheet_link_tag :txt %>
     <%= stylesheet_link_tag :highlight %>
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "The Amazing Blog Feed" %>

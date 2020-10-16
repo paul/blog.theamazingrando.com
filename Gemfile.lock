@@ -100,6 +100,8 @@ GEM
       em-websocket (~> 0.5.1)
       middleman-core (>= 3.3)
       rack-livereload (~> 0.3.15)
+    middleman-meta-tags (0.4.0)
+      middleman-core (>= 3.0.0)
     middleman-s3_sync (4.0.3)
       ansi (~> 1.5.0)
       fog-aws (>= 0.1.1)
@@ -166,6 +168,7 @@ DEPENDENCIES
   middleman (~> 4.3)
   middleman-blog
   middleman-livereload
+  middleman-meta-tags (~> 0.4.0)
   middleman-s3_sync
   middleman-search_engine_sitemap
   middleman-syntax

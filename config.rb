@@ -18,6 +18,8 @@ set :url_root, "http://blog.theamazingrando.com"
 activate :search_engine_sitemap, default_priority: 0.5,
                                  default_change_frequency: "monthly"
 
+activate :meta_tags
+
 ###
 # Page options, layouts, aliases and proxies
 ###
