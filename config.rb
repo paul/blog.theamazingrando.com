@@ -93,9 +93,10 @@ helpers do
     end
   end
 
-  GITHUB_ROOT = "https://github.com/paul/blog.theamazingrando.com/blob/master/source/"
+  GITHUB_ROOT = "https://github.com/paul/blog.theamazingrando.com/blob/master/"
   def github_source(resource)
-    GITHUB_ROOT + resource.path
+    path = Pathname(resource.source_file).relative_path_from(File.dirname(__FILE__))
+    GITHUB_ROOT + path.to_s
   end
 end
 
