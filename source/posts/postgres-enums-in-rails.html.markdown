@@ -208,7 +208,7 @@ Now our model looks like this:
 
 ```ruby
 class Message
-  enum state: %i[ queued dispatched delivered ]
+  pg_enum state: %i[ queued dispatched delivered ]
 end
 ```
 
