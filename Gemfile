@@ -23,7 +23,7 @@ gem "middleman-syntax"
 gem "mime-types" # Dunno why this is my problem, fog complains without it
 
 gem "haml"
-gem "redcarpet", "~> 3.3", ">= 3.3.3"
+gem "redcarpet", "~> 3.5"
 
 # For feed.xml.builder
 gem "builder", "~> 3.0"

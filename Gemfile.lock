@@ -140,7 +140,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redcarpet (3.5.0)
+    redcarpet (3.5.1)
     rouge (3.18.0)
     ruby-progressbar (1.10.1)
     sassc (2.3.0)
@@ -174,7 +174,7 @@ DEPENDENCIES
   middleman-syntax
   mime-types
   rake
-  redcarpet (~> 3.3, >= 3.3.3)
+  redcarpet (~> 3.5)
   tzinfo-data
   wdm (~> 0.1.0)
 
