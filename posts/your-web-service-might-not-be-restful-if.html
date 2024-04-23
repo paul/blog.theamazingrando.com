@@ -1,0 +1,452 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Your Web Service Might Not Be RESTful If...</title>
+
+    <title>Your Web Service Might Not Be RESTful If...</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Your Web Service Might Not Be RESTful If..." />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Your Web Service Might Not Be RESTful If..." />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Your Web Service Might Not Be RESTful If...",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Your Web Service Might Not Be RESTful If...
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/your-web-service-might-not-be-restful-if.html">Your Web Service Might Not Be RESTful If...</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2009-07-20T10:11:45Z">Monday, July 20th 2009</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/your-web-service-might-not-be-restful-if.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Hypermedia<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>The other day, I gave a brief talk about our HTTP Library, <a href="http://github.com/paul/resourceful">Resourceful</a>. After a few minutes of going over the features,
+it became apparent to me that very few people have taken the time to appreciate the finer points of HTTP. Everyone who
+calls themself a web application developer needs to take a few hours to read <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC2616: Hypertext Transfer Protocol -- HTTP/1.1</a>.
+Its not very long, and increadibly readable for a spec. Print it out, and read a few sections when you go for your
+morning "reading library" break. Unfortunately, a great many people got confused by it, and ended up reimplementing a lot
+of http in another layer, and thats how we ended up with SOAP and XML-RPC. There's a good parable about
+<a href="http://serialseb.blogspot.com/2009/06/fighting-for-rest-or-tale-of-ice-cream.html">how this all went of the rails for awhile</a>, until some people re-discovered a section in  Roy T. Fielding's
+disseration, "<a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">Representational State Transfer (REST)</a>".</p>
+
+<p>Needless to say, REST is making a huge comeback, at least in the agile startup communities. It's fast, lightweight, and
+easy to put together. Ruby on Rails even has excellent support for getting up and running quicky. Sadly, though, it's
+not quite right, and as a result, developers have misconstrued REST yet again, and its making things harder than they
+really need to be, and also leading them down a path that leads to lots of headaches in the future. If you're interested
+in learning more about REST, there's plenty of excellent resources on the <a href="http://rest.blueoxen.net/cgi-bin/wiki.pl?FrontPage">REST Wiki</a>, particularly
+<a href="http://rest.blueoxen.net/cgi-bin/wiki.pl?RestInPlainEnglish">REST In Plain English</a>.</p>
+
+<p>For some of my examples, I'm going to pick on the <a href="http://www.pivotaltracker.com/help/api">Pivotal Tracker "RESTful" API</a>. Sorry guys, I needed to
+pick someone, and I love your product (I use it every day), but you're part of the reason for this post. I wanted to
+write a client for your service, but its really much harder than it needs to be. The service violates many of the constraints
+of REST, and therefore naming it "RESTful" is incorrect. You're not the only ones, though, so don't feel bad, nearly
+EVERY API that claims to be RESTful isn't. For a look at one that gets it (mostly) right, check out <a href="http://developer.netflix.com/docs">Netflix</a>.</p>
+
+<h1>If Your Web Services Do Any of These Things, You're Doing it Wrong</h1>
+
+<ol>
+<li>Clients have to read documentation to know the locations of top-level resources.</li>
+<li>Clients have to concatenate strings to get to the next resource.</li>
+<li>You have an "API/Key/Token" in a header or a url.</li>
+<li>You have a version string in a url.</li>
+</ol>
+
+<h2>1. Have a Minimum of Starting Points</h2>
+
+<p>If you look at the <a href="http://www.pivotaltracker.com/help/api#api_actions">Available Actions on Pivotal Tracker's API page</a>, you'll see they list several
+actions that can be performed. This isn't REST, this is XML-RPC. Nearly everybody gets this one wrong. Due to the
+amount of confusion, Roy Fielding <a href="http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven">published a post</a> to stop people abusing the term "RESTful" and to try
+and clarify what a real RESTful API is. His final point is:</p>
+
+<blockquote>
+<p>A REST API should be entered with no prior knowledge beyond the initial URI (bookmark) and set of standardized media
+types that are appropriate for the intended audience (i.e., expected to be understood by any client that might use
+the API).</p>
+</blockquote>
+
+<p>The point here is that there should be only one resource that is the starting point for any interaction with the
+service. This is called a "well-known" resource, and is never, <em>ever</em> allowed to change locations. If it does change,
+you break every single client out there. By publishing a dozen or more well-known resources in their API docs, Tracker
+is no longer permitted to change any of them. This increases the maintenance burden, because now they have to maintain
+all these resources for the lifetime of the application, or deprecate any third-party clients.</p>
+
+<p>If they had instead added a single resource that described the locations of these other resources, they would have much
+more flexibility in the future. An example of the content of such a resource:</p>
+<div class="highlight"><pre class="highlight xml"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;services&gt;</span>
+  <span class="nt">&lt;service&gt;</span>
+    <span class="nt">&lt;name&gt;</span>AllProjects<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;href&gt;</span>http://www.pivotaltracker.com/services/projects<span class="nt">&lt;/href&gt;</span>
+  <span class="nt">&lt;/service&gt;</span>
+  <span class="nt">&lt;service&gt;</span>
+    <span class="nt">&lt;name&gt;</span>AllActivities<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;href&gt;</span>http://www.pivotaltracker.com/services/activites<span class="nt">&lt;/href&gt;</span>
+  <span class="nt">&lt;/service&gt;</span>
+<span class="nt">&lt;/services&gt;</span>
+</code></pre></div>
+<p><em>Note: Yes, they list several other actions on their API. However, each of them violates another one of the REST
+constraints, so I have ommitted them for the time being.</em></p>
+
+<p>Now every client just needs to know the name of the resource they're looking for, eg "AllActivites", and they can
+continue as before. If, for some perfectly valid reason, Pivotal decides to change the name of "Activites" to, say,
+"Actions", they only have to modify the <code>href</code> of the "AllActivities" service description, add a "AllActions"
+service, and every single client using it by the name instead of a hardcoded href continues to work flawlessly, or
+at least as well as it did before. Less maintenance burden on the service developers, and no burden at all for
+the developer of a well-written client.</p>
+
+<h2>2. Don't Make a Client Construct URIs</h2>
+
+<p>In that very same bullet point, Roy continues...</p>
+
+<blockquote>
+<p>From that point on, all application state transitions must be driven by client selection of server-provided choices
+that are present in the received representations...</p>
+</blockquote>
+
+<p>If you look at the <a href="http://www.pivotaltracker.com/help/api#api_actions">Tracker API docs Available API Actions</a> for projects, you'll see "Single
+project" and "All my projects". We already covered how to handle the "AllProjects" resource, an in the example above,
+we remove the "Single project" resource entirely. So how do you get to the resource for a single project? Simple, you
+follow its link in the "AllProjects" resource.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;projects type="array"&gt;
+      &lt;project&gt;
+        &lt;href&gt;http://www.pivotaltracker.com/services/v2/projects/1&lt;/href&gt;
+
+        &lt;id&gt;1&lt;/id&gt;
+        &lt;name&gt;Sample Project&lt;/name&gt;
+        &lt;iteration_length type="integer"&gt;2&lt;/iteration_length&gt;
+        &lt;week_start_day&gt;Monday&lt;/week_start_day&gt;
+        &lt;point_scale&gt;0,1,2,3&lt;/point_scale&gt;
+
+        &lt;stories_href&gt;http://www.pivotaltracker.com/services/v2/projects/1/stories?{-join|&amp;|filter,limit,offset}&lt;/stories_href&gt;
+        &lt;iterations_href&gt;http://www.pivotaltracker.com/services/v2/projects/1/iterations&lt;/iterations_href&gt;
+        &lt;activities_href&gt;http://www.pivotaltracker.com/services/v2/projects/1/activities&lt;/activities_href&gt;
+      &lt;/project&gt;
+      &lt;!-- ... --&gt;
+    &lt;/projects&gt;
+</code></pre></div>
+<p>For a client to find a single project, they would know its name. They would GET the list of services, find "AllProjects"
+by name, GET the "href" provided, and look for the project "Sample Project" by name. They could then use the href attribute
+to obtain the single resource for the project. Additionally, we also have links to all the actions in the docs that required a
+<code>PROJECT_ID</code> in the url. To get the iterations or activities for a project, a client has to only locate the project, and
+follow the links.</p>
+
+<p>You should also notice the part of the <code>stories_href</code> enclosed in <code>{braces}</code>. This is known as a <a href="http://bitworking.org/projects/URI-Templates/">URI Template</a>,
+and is very handy. If you noticed in pivotals API docs, they had three ways of getting stories: All stories, stories by
+a filter, and stories by a limit and offset. I took the liberty of combining these into single href, using the template
+to describe the query parameters. A ruby client, using the <code>Addressable::URI</code> library, could fill out that uri like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>template = Addressable::Template(stories_href)
+template.expand({
+  "filter" =&gt; 'label:"needs feedback" type:bug'
+})
+</code></pre></div>
+<p>All these extra requests might seem like a rather long way of going about it, however, the advantages are immense:</p>
+
+<p>Should Tracker become huge, and everybody and their grandmother starts using it to keep track of their development projects,
+Tracker could outstrip the load of a single database. Since it appears they are using <code>AUTOINCREMENT id</code> columns for the
+project id, sharding the <code>projects</code> table is going to be hard. However, if they were to start using <code>UUID</code> columns for
+project ids, then sharding is a whole lot less complicated. However, if they change the project id in the API, everyone's
+clients break. If clients were to instead follow the href, they can do whatever they want to the id, and existing
+clients will have no trouble at all following.</p>
+
+<p>But wait, it gets better. What happens if the service still isn't fast enough, for any number of perfectly plausible
+reasons? Because they're using hrefs, they can put <em>anything they want</em> there. Say they decide to shard the application
+servers, so every project with an odd-numbered id goes to <code>www1.pivotaltracker.com</code>, and everything even-numbered goes
+to <code>www2.pivotaltracker.com</code>. They just have to update the links, and everyone's client continues working.</p>
+
+<p>If all resources are specified like this, then a client can get to every resource from that one starting point. You are
+free to move, rename, and add resources as you desire, without making things complicated for your API clients. Less
+maintenance burden on you, and none on your users.</p>
+
+<h2>Don't put an "API Token" in a custom header, or in the URIs</h2>
+
+<p>While there's nothing technically un-RESTful about this, its still annoying to your clients. And unless you have a
+full-time security expert on your staff, you probably did it wrong, and its not nearly as secure as you think it is.
+It's also vulnerable to man-in-the-middle attacks and replay attacks, unless you use SSL. And if you <strong>do</strong> use SSL,
+then you've thrown away one of the major advantages of HTTP, which is caching. Just about every HTTP server and
+proxy are able to handle caching, and if they operate to spec, they're not allowed to cache SSL documents. I'll get
+more into caching in a future blog post, just realize that it can be immensely beneficial to the performance of your
+application, and you're going to want to do everything you can to facilitate that.</p>
+
+<p>Luckily, you have a third option: HTTP Digest Authentication. Its been vetted by security professionals and time, and
+is almost certainly more secure than some secret key you've come up with. There are many varieties of Digest auth. The
+one most useful for RESTful web services uses an algorithm of "MD5-sess" and Quality of Protextion (qop) of "auth". The
+MD5-sess algorithm allows for 3rd-party authentication services, and not requiring the server to maintain a plaintext
+copy of the users' passwords. A qop of "auth" protects against chosen-plaintext cryptanalysis attacks, by having a
+counter incremented by the client, and a client-generated nonce. For a quick overview, Wikipedia has a <a href="http://en.wikipedia.org/wiki/Digest_access_authentication">good article</a>,
+and be sure to check out the spec, <a href="http://www.ietf.org/rfc/rfc2617.txt">RFC2617</a>. Here's a simple example to see whats going on. Client requests are
+denoted by <code>&gt;</code>, with server responses <code>&lt;</code>. This obviously isn't the whole content, just the interesting bits.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>&gt; GET /
+
+&lt; HTTP/1.1 401 Authorization Required
+&lt; WWW-Authenticate: Digest
+                    qop="auth",
+                    realm="My RESTful Application",
+                    opaque="55dd3242dd79740cefb67528b983bc8e",
+                    algorithm=MD5-sess,
+                    nonce="MjAwOS0wNy0xOSAyMDozMToyOToxODQ2NjA6MjAxZjRiMjVjZjRiYTc0MDEwNWIwY2U2NWIxMGNjNj"
+
+&gt; GET /
+&gt; Authorization: Digest
+                 username="admin",
+                 qop="auth",
+                 realm="My RESTful Application",
+                 algorithm="MD5-sess",
+                 opaque="55dd3242dd79740cefb67528b983bc8e",
+                 nonce="MjAwOS0wNy0xOSAyMDozMToyOToxODQ2NjA6MjAxZjRiMjVjZjRiYTc0MDEwNWIwY2U2NWIxMGNjNj",
+                 uri="/",
+                 nc=00000001,
+                 cnonce="Mjg5MDIz",
+                 response="1b8e5cdcd8d49ca65e3d6142567e44cf"
+
+&lt; HTTP/1.1 200 OK
+&lt; Authentication-Info: qop=auth,
+                       nc=00000001,
+                       cnonce="Mjg5MDIz",
+                       nextnonce=00000002
+</code></pre></div>
+<p>Digest auth works when the client make an initial request without any authentication info. The server responds with a
+401, and provides a few parameters to the client in the <code>WWW-Authenticate</code> header. The <code>realm</code> is a string used to
+identify the application.  The client uses MD5 to hash together their <code>username</code>, the <code>realm</code> and their <code>password</code>.
+This is referred to as <code>HA1</code>. When the user was created, the server did the same, and <code>HA1</code> is what is stored in the
+database.</p>
+
+<p>The client then generates a random string (the "client nonce" or <code>cnonce</code>) and increments a counter ("nonce counter" <code>nc</code>).
+It hashes method as an uppercase string ("GET") and the URI ("/") together to produce <code>HA2</code>. Finally, it hashes <code>HA1</code>,
+<code>HA2</code>, the <code>nonce</code>, <code>nc</code>, <code>cnonce</code>, and <code>qop</code> all together to arrive at <code>response</code>. It packages this all up into the
+<code>Authorization</code> header, and makes the request again. The server has all the information it needs (it stored the <code>HA1</code>
+instead of the plaintext password) to hash the same parameters itself. If it arrives at the same <code>response</code>, then it
+knows the client knows the password for the user, and allows it to proceed.</p>
+
+<p>Optionally, the server can provide an <code>Authentication-Info</code> header attached to the response. This provides enough
+information for the client to automatically authenticate for the next request, without having to get a 401 again.
+An alternative would be to just keep using the same <code>nonce</code> over and over, but this may be subject to replay attacks.
+The downside of this, though, is that the client cannot pipeline requests.</p>
+
+<h2>Don't put the API version in the URI</h2>
+
+<p>Several web services (including Tracker's) have uris that look like <code>http://myapp.com/v1/projects</code> or
+<code>http://myapp.com/projects?v=2</code>. While this is perfectly RESTful, it seems a bit odd. From a pedantically REST-view,
+<code>/v1/projects/1234</code> and <code>/v2/projects/1234</code> are the locations of totally different resources, when, in fact, they are
+simply different <strong>representations</strong> of the same resource. From a more practical standpoint, say a client is written
+when only version one of a service is available, and it stores ("bookmarks") some of these resources. Some time later,
+the application team decides they need to release some incompatible changes to their API, so they increment the version.
+Some time after that, the client upgrades to support the new version. However, the upgrade is not as clean as it might
+be, because they still have the saved locations pointing to the old version. The client either needs to support <em>both</em>
+versions, or write a tool that does, so it can migrate the url to their new locations. They could munge the urls, but
+if one of the incompatible changes was going from integer ids to UUIDs, they have no choice.</p>
+
+<p>Luckily, HTTP has a built-in solution to this problem: Content Negotiation. It makes use of two headers, <code>Accept</code> on
+the client side, and <code>Content-Type</code> on the server side. The Tracker services serve everything back with a <code>Content-Type</code>
+of <code>application/xml</code>. Its not just any old XML, however, it is a specific form of XML, the schema of which is described
+in their API docs. This is the situation for which the use of mimetypes is intended. If every form of image out there
+just used a mime-type of <code>image</code>, we'd have a much harder time of things. Luckily, there's more than that, with <code>image/gif</code>,
+<code>image/png</code>, and <code>image/jpeg</code>, which all represent different encodings of images. Following the same idea, Tracker could
+instead use something like <code>application/vnd.pivotal.tracker.v1+xml</code>. Yes, its still XML, but its Pivotal Tracker Version
+1 flavor of XML. Then when Pivotal decides its time for incompatible changes, they only have to add an additional content
+type, <code>application/vnd.pivotal.tracker.v2+xml</code>.</p>
+
+<p>Following this idea, now a project always lives at <code>/projects/1234</code>. This is better, because while <code>v1</code> and <code>v2</code> of a
+project probably aren't different, their representations are. When a client updates versions, their links don't break,
+nor do they have to support two or more versions.</p>
+
+<p>I've only just brushed the surface of this topic. For more, <a href="http://barelyenough.org">Peter Williams</a> has an excellent discussion of it
+<a href="http://barelyenough.org/blog/2008/05/versioning-rest-web-services/">here</a>, <a href="http://barelyenough.org/blog/2008/05/versioning-rest-web-services-tricks-and-tips/">here</a>, and <a href="http://barelyenough.org/blog/2008/05/resthttp-service-versioning-reponse-to-jean-jacques-dubray/">here</a>. (disclaimer &amp;emdash; Peter is a former coworker and
+personal friend. This section and his posts are about a solution we came up with for a project.)</p>
+
+<h1>Now You Don't Have Any Excuses</h1>
+
+<p>I hope that this post serves as a good description of why you shouldn't be designing web services the way every body
+else does. It seems that everyone is just copying everyone else, without really understanding the pros and cons of the
+implementations. I hope this sparks some discussion, because I don't know that these are even the best way to be doing
+it, I just know from the experience of writing both applications and consumers, they way everyone is doing it now is
+much more difficult than it needs to be.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

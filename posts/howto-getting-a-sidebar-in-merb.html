@@ -1,0 +1,243 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - HOWTO: Getting a sidebar in Merb</title>
+
+    <title>HOWTO: Getting a sidebar in Merb</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="HOWTO: Getting a sidebar in Merb" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="HOWTO: Getting a sidebar in Merb" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "HOWTO: Getting a sidebar in Merb",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              HOWTO: Getting a sidebar in Merb
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/howto-getting-a-sidebar-in-merb.html">HOWTO: Getting a sidebar in Merb</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2008-09-16T00:46:54Z">Tuesday, September 16th 2008</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/howto-getting-a-sidebar-in-merb.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Ruby<li>
+          <li class="icon fa-tag">Merb<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>In several of my pages, I have a side-bar menu-y thingie. I didn't want to have to rewrite a controller-specific layout each time, but luckily Merb supports something similar to <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/CaptureHelper.html#M001751">Rails's content_for</a> block that <a href="http://www.theamazingrando.com/blog/?p=7">I wrote about earlier</a>. In Merb, its done using <code>throw_content</code>(<a href="http://merb.rubyforge.org/classes/Merb/ViewContextMixin.html#M000146">API</a>) and <code>catch_content</code>(<a href="http://merb.rubyforge.org/classes/Merb/RenderMixin.html#M000129">API</a>).</p>
+
+<p>Put the <code>catch_content</code> into your application layout view. You probably already have <code>catch_content :for_layout</code> in there, by default. Here's what mine looks like:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>%html
+  %head
+    %meta{:'http-equiv' =&gt; 'content-type', 'content' =&gt; 'application/xhtml+xml; charset=UTF-8'}
+
+    = css_include_tag "layout", "style"
+
+    %title Page with Sidebar
+
+  %body
+
+    #side-bar
+      = catch_content :sidebar
+
+    #main
+      = catch_content :for_layout
+
+    #footer
+      .left= copyright
+      .right= last_modified
+</code></pre></div>
+<p>Using haml, I've put my sidebar in a <code>div</code> with id <code>#side-bar</code>.</p>
+
+<p>Now in the view, add a <code>throw_content</code> for what you want in the sidebar. In my case, I'm using a partial that gets picked up out of the controller's view directory automatically.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>- throw_content(:sidebar, partial('sidebar'))
+
+%h1 This page has a sidebar
+</code></pre></div>
+<p>And ta-da! I only have to write the sidebar partial once for each controller, and I don't have to write an extra layout for each one. I have a fairly uncomplicated layout, and fill out the various parts of it by throwing rendered partials into it.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

@@ -1,0 +1,255 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Idealized Migration DSL</title>
+
+    <title>Idealized Migration DSL</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Idealized Migration DSL" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Idealized Migration DSL" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Idealized Migration DSL",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Idealized Migration DSL
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/idealized-migration-dsl.html">Idealized Migration DSL</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2008-01-08T02:12:47Z">Tuesday, January 8th 2008</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/idealized-migration-dsl.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">DataMapper<li>
+          <li class="icon fa-tag">Ruby<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>There's a <a href="http://groups.google.com/group/datamapper/browse_thread/thread/1b24e6f3d7675add">discussion</a> in the datamapper group about how to do migrations. I've thrown together an idealized DSL for how the migrations themselves should look.</p>
+
+<p>Here's the thinking about this, based on how our 2-man web dev team, plus occasionally a few other developers, work on them:</p>
+
+<ul>
+<li>
+We don't down-migrate in development. We just drop, create &amp; re-migrate the database. In production, we also never have had to down migrate (yet).
+</li>
+<li>
+Occasionally, two developers working in entirely different parts of the system will make a new migration. In default rails, this will create a numbering conflict, and its a pain for the dev that checked in last. Since the two migrations touched different tables, and sometimes even different databases, the versioning isn't helpful. There's plugins to help, using int timestamps, but they're annoying, too. Migrations should be tracked by name, and the system should be smart enough to run any that haven't been run. Versions should be allowed to overlap, with the understanding that overlapping version numbers will be run in any order
+</li>
+<li>
+When using the helpers, like create_table, add_column, etc, the system should be able to figure out the down migration on its own.
+</li>
+<li>
+More often then not, our migrations are written in raw SQL. The helpers are only good for the simplest cases, and we usually want something more complex.
+</li>
+<li>
+These absolutely have to be able to support multiple databases with a minimum of headache.
+</li>
+</ul>
+
+<h2>Example Migrations</h2>
+
+<pre lang="ruby">
+migration 1, :create_people_table do
+  up do
+    execute "CREATE TABLE people (id serial, name varchar)"
+  end
+  down do
+    execute "DROP TABLE people"
+  end
+end
+
+migration 2, :add_age_to_people do
+  up do
+    execute "ALTER TABLE people ADD COLUMN age int"
+  end
+  down do
+    execute "ALTER TABLE people DROP COLUMN age"
+  end
+end
+</pre>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

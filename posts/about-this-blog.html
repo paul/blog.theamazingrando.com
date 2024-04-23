@@ -1,0 +1,246 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - About this Blog</title>
+
+    <title>About this Blog</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="About this Blog" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="About this Blog" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "About this Blog",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              About this Blog
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/about-this-blog.html">About this Blog</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2010-07-02T05:16:13Z">Friday, July 2nd 2010</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/about-this-blog.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Ruby<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>After nearly a year on hiatus, I'm finally ready to start blogging again. I have several neat projects I've been working on over the last several months, and I need a place to write about them.</p>
+
+<h2>Why I stopped using Wordpress</h2>
+
+<p>My <a href="http://theamazingrando.com/blog">self-hosted Wordpress blog</a> on my Slicehost served me well over the last few years. With a hodge podge of plugins and hacks, I was able to write my posts in markdown. I was still stuck writing them in the textarea of the browser, or copy-pasting them from my real editor to the browser, but it worked well enough. Eventually, though, I was updating Wordpress for security vulnerabilities more often than I was posting, and it was collecting a ton of spam comments. I decided that I didn't want to be in charge of that extra stuff any more.</p>
+
+<p>I made several attempts to port my blog over to something else. I had a few simple goals:</p>
+
+<ul>
+<li>The canonical place for my posts is git. Version control of the posts is definitely the way to go.</li>
+<li>I just want to write content, not moderate spam, or manage plugins.</li>
+<li>I don't want to maintain blogging software.</li>
+</ul>
+
+<p>I looked for several solutions, but nothing really fit the bill. Posterous's announcement that they supported markdown got the wheels turning, though. Credit for the final bits go to <a href="http://barelyenough.org/">Peter Williams</a> and <a href="http://twitter.com/spikex">@spikex</a>, who got me started about how to manage drafts that I don't want published.</p>
+
+<h2>Importing Wordpress</h2>
+
+<p>First, however, I had to get all my old posts out of Wordpress and into a git repo. I hacked together <a href="http://github.com/paul/blog.theamazingrando.com/blob/master/lib/import.rb">this little script</a> which parsed the Wordpress XML dump. It goes over the posts and creates a branch for each, adds the markdown for the post, then merges the branch into master. I did this so that I could get a bit of metadata about the posts in the git repo. The first commit for a post would be the "created" date, and the commit when it was merged into master would be the "published" date.</p>
+
+<p>Only after I did all this did I figure out that Posterous only exposed a "date", but this worked well together with another shortcoming: the lack of metadata on the post itself. I originally wanted a way to handle updating existing posts, but I had no metadata to find the post again. So for the post's "date", I used the most-recent commit date, at the time of the sync. As long as I keep the post "Title" unique, I'll be able to find the post again, and update the content, but not the date.</p>
+
+<h2>Syncing with Posterous</h2>
+
+<p>So the official place for all my posts is my own git repo, where I can track changes, and manage it. I get to write using whatever editor I feel like, instead of a textarea in a browser, and I get to write them in markdown. I have a <a href="http://github.com/paul/blog.theamazingrando.com/blob/master/lib/sync.rb">script</a> that I use to publish all my posts to Posterous. The script is rather dumb, and just updates everything that needs updated. I had planned on making it better, but due to some shortcomings in the Posterous API, and in the <a href="http://github.com/twoism/postly">postly</a> ruby gem, I took the lazy way out. You can see in the script where I had to monkey-patch the postly gem to make it even work at all. Posterous also needs to read my last <a href="http://blog.theamazingrando.com/your-web-service-might-not-be-restful-if">blog post</a></p>
+
+<p>I wanted to use Posterous's markdown, but it had its own shortcomings, like it couldn't handle the metadata, or definition lists, like the <a href="http://maruku.rubyforge.org/">maruku</a> gem can. So just render it myself, and post the html body to Posterous. This means I'll eventually have to figure out things like syntax highlighting, but since Posterous supports inline gists, maybe I'll just do that.</p>
+
+<h2>Finally</h2>
+
+<p>So, in conclusion, its not perfect, but it'll do. I'll probably write a follow-up post, about what the Posterous API needs to add, since their own docs say its incomplete, and they don't know what to do with it. It also exposed some flaws in the HTTParty gem, which I hadn't had exposure to until now. Its not really a bug, but rather a design decision, in that the request method only has two params: <code>post url, options = {}</code>. It tries to be smart about those options, and if you have one called <code>:body</code>, it becomes the body of the request. However, Posterous has a param in their API called <code>"body"</code>, which just confused everybody. Additionally, the postly gem crammed everything in the query parameters, which quickly runs into URL length limits for my admittedly verbose blog posts.</p>
+
+<p>The world would be a better place if everyone would just use <a href="http://github.com/paul/resourceful">Resourceful</a>. <code>&lt;/shameless-plug&gt;</code></p>
+
+<p>Overall, I wrote ~100 lines of Ruby to import my old wordpress blog, and sync the whole thing up to Posterous. I don't have to host or maintain anything, so its a definite win. I hope it gives my more time to write about all the cool shit I've been working on over the last few months, and well as my new project, <a href="http://mongomachine.com">MongoMachine</a>. Stay tuned!</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

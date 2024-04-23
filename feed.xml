@@ -1,0 +1,1215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>The Amazing Blog</title>
+  <subtitle></subtitle>
+  <id>http://blog.theamazingrando.com/</id>
+  <link href="http://blog.theamazingrando.com/"/>
+  <link href="http://blog.theamazingrando.com/feed.xml" rel="self"/>
+  <updated>2023-03-08T11:06:15-07:00</updated>
+  <author>
+    <name>Paul Sadauskas</name>
+  </author>
+  <entry>
+    <title>Rails File Naming Conventions</title>
+    <link rel="alternate" href="http://blog.theamazingrando.com/posts/rails-naming-conventions.html"/>
+    <id>http://blog.theamazingrando.com/posts/rails-naming-conventions.html</id>
+    <published>2023-03-08T11:06:15-07:00</published>
+    <updated>2024-04-23T10:51:44-06:00</updated>
+    <author>
+      <name>Paul Sadauskas</name>
+    </author>
+    <summary type="html">&lt;p&gt;One of the best things about Rails, that it gets right over so many other frameworks like React, is its &lt;em&gt;Directory Naming Conventions&lt;/em&gt;. You can jump into any Rails app written in the last 15 years and no immediately where to go to start exploring. Where's the routes? Database Models? Controllers and Views? Every app keeps them in the same place, so once you learn it, you can easily transfer that knowledge to another project.&lt;/p&gt;</summary>
+    <content type="html">&lt;h1&gt;Rails File Naming Conventions&lt;/h1&gt;
+
+&lt;p&gt;One of the best things about Rails, that it gets right over so many other frameworks like React, is its &lt;em&gt;Directory Naming Conventions&lt;/em&gt;. You can jump into any Rails app written in the last 15 years and no immediately where to go to start exploring. Where&amp;#39;s the routes? Database Models? Controllers and Views? Every app keeps them in the same place, so once you learn it, you can easily transfer that knowledge to another project.&lt;/p&gt;
+
+&lt;p&gt;That&amp;#39;s for types of objects that come with Rails though (Models, Controllers, Jobs, etc...). Modern best-practices have a variety of extra Service Objects  like Queries, Adapters, Commands, and more. Where do you put those? Unfortunately, its not as clear.&lt;/p&gt;
+
+&lt;p&gt;This post represents my personal opinion on the subject, informed by my experiences since the early days, working on a number of different Rails apps, large and small. Even some subtle things can have a huge impact in developer happiness and friction. But, this is just like my opinion man, yours may differ, so feel free to steal my ideas and use the ones you like best.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s some general guidelines I try to follow:&lt;/p&gt;
+
+&lt;h2&gt;Avoid being too flat.&lt;/h2&gt;
+
+&lt;p&gt;Too many directories and files under a single parent causes the tree view in editors and file browsers to scroll, making things hard to find.&lt;/p&gt;
+
+&lt;h2&gt;But also avoid being nested too deep.&lt;/h2&gt;
+
+&lt;p&gt;All that hunting and clicking in a tree view is annoying, too.&lt;/p&gt;
+
+&lt;h2&gt;Keep the fuzzy-finder in mind.&lt;/h2&gt;
+
+&lt;p&gt;One app I used had third-party API clients in a single folder under app, so for example &lt;code&gt;app/clients/salesforce.rb&lt;/code&gt;. But whenever I wanted to open what my brain called the &amp;quot;Salesforce Client&amp;quot; I would type something like &lt;code&gt;sfcli&lt;/code&gt; into my editor&amp;#39;s fuzzy-finder, and it wouldn&amp;#39;t find it. I never ever managed to remember on the first try that I had to type &lt;code&gt;clisf&lt;/code&gt; instead.&lt;/p&gt;
+
+&lt;h2&gt;Group Service Objects by &amp;quot;business purpose&amp;quot; instead of &amp;quot;type&amp;quot;.&lt;/h2&gt;
+
+&lt;p&gt;Most apps I&amp;#39;ve seen that introduce Service Objects for the first time blindly follow the Rails pattern. It seems obvious, if models go in &lt;code&gt;app/models&lt;/code&gt; and controllers go in &lt;code&gt;app/controllers&lt;/code&gt;, then I should put my Queries in &lt;code&gt;app/queries&lt;/code&gt;, right? However, I find that if you instead put Service Objects together by what they &lt;em&gt;do&lt;/em&gt; instead of what they &lt;em&gt;are&lt;/em&gt;, there&amp;#39;s a number of advantages. &lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s give an example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;app/  
+├─ aspects/  
+│　├─ authorization.rb  
+│　└─ authorization/  
+│　　　├─ auth0_client.rb  
+│　　　├─ authenticate_user.rb  
+│　　　├─ clean_stale_sessions_job.rb  
+│　　　├─ handle_omniauth_callback.rb  
+│　　　├─ signup_form.rb  
+│　　　├─ stale_sessions_query.rb  
+│　　　└─ verify_user_token.rb  
+├─ controllers/  
+│　└─ sessions_controller.rb  
+├─ jobs/  
+└─ models/  
+　　├─ user.rb  
+　　├─ account.rb  
+　　└─ membership.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here&amp;#39;s a hypothetical layout for handling Authorization. I like to keep Models and Controllers in the Rails-standard locations, because Rails gets picky about the naming of them, and its because where newly-onboarded devs expect to look. &lt;/p&gt;
+
+&lt;p&gt;Under &lt;code&gt;app&lt;/code&gt;, I add a new top-level directly called &lt;code&gt;aspects&lt;/code&gt;. I used to call this &lt;code&gt;components&lt;/code&gt;, but if your app uses ViewComponent, it takes over &lt;code&gt;app/components&lt;/code&gt; and things get confusing. &lt;code&gt;aspects&lt;/code&gt; is shorter, but I&amp;#39;m not fully settled on this term yet. Each directory under here represents a &amp;quot;Business Aspect&amp;quot; of your application. Like in this case we have Authorization, but this could be like &amp;quot;Integrations&amp;quot;, &amp;quot;Billing&amp;quot;, &amp;quot;Admin&amp;quot;, or &amp;quot;UserSettings&amp;quot;. If you imagine an app like GMail&amp;#39;s UI, we might have additional Aspects for &amp;quot;Inbox&amp;quot;, &amp;quot;Filters&amp;quot; and &amp;quot;Attachments&amp;quot;.&lt;/p&gt;
+
+&lt;p&gt;In this case, for our Authorization Aspect, we have an API Client (&lt;code&gt;auth0_client.rb&lt;/code&gt;), some Commands (&lt;code&gt;authenticate_user.rb&lt;/code&gt;, &lt;code&gt;handle_omniauth_callback.rb&lt;/code&gt;), a FormObject (&lt;code&gt;signup_form.rb&lt;/code&gt;), a Job (&lt;code&gt;clean_stale_sessions_job.rb&lt;/code&gt;) and a Query (&lt;code&gt;stale_sessions_query.rb&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;I also create a top-level &lt;code&gt;authorization.rb&lt;/code&gt;, which explicitly defines the &lt;code&gt;module Authorization&lt;/code&gt; namespace. If you&amp;#39;re using &lt;a href="https://dry-rb.org/gems/dry-container/0.7"&gt;Dry::Container&lt;/a&gt;, it also gives you a nice place to define a &lt;code&gt;Authorization::Container&lt;/code&gt; and &lt;code&gt;AutoInject&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s what I like about having things grouped together like this:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Easy to find/fuzzy-find&lt;/strong&gt;. If I&amp;#39;m working on Authorization, I can expand the &lt;code&gt;app/aspects/authorization&lt;/code&gt; folder in my tree view to see all the related files. I can type prefix all my fuzzy-finder searches with &lt;code&gt;auth&lt;/code&gt; to quickly scope the search.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Easier to cleanup&lt;/strong&gt;. I find this particular important for Queries. If we decide we don&amp;#39;t need to cleanup sessions any more, we delete the &lt;code&gt;Authorization::CleanSessionsJob&lt;/code&gt;. Since the &lt;code&gt;Authorization::StaleSessionsQuery&lt;/code&gt; is right there with it, we have an indication of the scope, and know its safe to delete too. If it lived in &lt;code&gt;app/queries/stale_sessions.rb&lt;/code&gt;, it would be much less obvious what code is using it, and if it was safe to delete. Additionally, especially in the early days of a startup, you&amp;#39;re trying different things, some of which don&amp;#39;t pan out. Its easy to &lt;code&gt;rm -rf app/aspects/salesforce_integration&lt;/code&gt; to nuke the whole thing at once, instead of having to track down all the files and inevitably leaving leftovers scattered around.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Easier to test.&lt;/strong&gt; I can run the tests for a single component all at once. If I do a bunch of refactorings to the Commands in &lt;code&gt;app/aspects/authorization&lt;/code&gt;, I can run all the relevant tests with &lt;code&gt;rspec spec/aspects/authorization&lt;/code&gt;. I don&amp;#39;t have to wait for the entire suite to run, which speeds up the red/green cycle, nor do I have to pass &lt;code&gt;rspec&lt;/code&gt; a bunch of different filenames, which is annoying when I&amp;#39;m moving or renaming files as part of the refactor.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I&amp;#39;ve been iterating on this pattern for several different jobs and applications, with various team sizes, and I&amp;#39;m pretty happy with the tradeoffs that come from structuring app code this way. I&amp;#39;m always curious to learn how others approach it, if you&amp;#39;ve got some unique ideas you really like, let me know!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Using Postgres Enum in Rails ActiveRecord</title>
+    <link rel="alternate" href="http://blog.theamazingrando.com/posts/postgres-enums-in-rails.html"/>
+    <id>http://blog.theamazingrando.com/posts/postgres-enums-in-rails.html</id>
+    <published>2020-10-16T15:13:31-06:00</published>
+    <updated>2020-10-29T08:06:02-06:00</updated>
+    <author>
+      <name>Paul Sadauskas</name>
+    </author>
+    <summary type="html">&lt;p&gt;In this post, I will provide some code to make working with an Enum data type
+in Postgres easier within your ActiveRecord models. Skip to the end for the
+code, or stick around for some verbose pontificating.&lt;/p&gt;</summary>
+    <content type="html">&lt;h1&gt;Using Postgres Enum in Rails ActiveRecord&lt;/h1&gt;
+
+&lt;p&gt;In this post, I will provide some code to make working with an Enum data type
+in Postgres easier within your ActiveRecord models. Skip to the end for the
+code, or stick around for some verbose pontificating.&lt;/p&gt;
+
+&lt;h2&gt;ActiveRecord Enums&lt;/h2&gt;
+
+&lt;p&gt;ActiveRecord comes with a &lt;a href="https://edgeapi.rubyonrails.org/classes/ActiveRecord/Enum.html"&gt;handy feature to specify a certain field is an
+Enum&lt;/a&gt;, or
+&amp;quot;Enumerated set of values&amp;quot;. However, the documentation emphasizes the simple
+way to use it that is fraught with peril. They even note the danger in the
+docs:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Note that when an array is used, the implicit mapping from the values to
+database integers is derived from the order the values appear in the array.
+In the example, :active is mapped to 0 as it&amp;#39;s the first element, and
+:archived is mapped to 1. In general, the i-th element is mapped to i-1 in
+the database.&lt;/p&gt;
+
+&lt;p&gt;Therefore, once a value is added to the enum array, its position in the array
+must be maintained, and new values should only be added to the end of the
+array. To remove unused values, the explicit hash syntax should be used.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If you use the Array form in your model, like this, it implicitly uses the
+position of the item in that array for the integer value for the column in the
+database:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;
+  &lt;span class="n"&gt;enum&lt;/span&gt; &lt;span class="ss"&gt;state: &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="ss"&gt;:queued&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;     &lt;span class="c1"&gt;# 0&lt;/span&gt;
+    &lt;span class="ss"&gt;:dispatched&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;# 1&lt;/span&gt;
+    &lt;span class="ss"&gt;:delivered&lt;/span&gt;   &lt;span class="c1"&gt;# 2&lt;/span&gt;
+  &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This writes rows to the DB that look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt; id |  state   |         created_at
+----+----------+----------------------------
+  1 |        0 | 2020-10-14 21:34:40.036597
+  2 |        2 | 2020-10-14 21:34:40.056437
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, if you make &lt;em&gt;any change&lt;/em&gt; to the enum aside from adding a new value to
+the end of the Array, then the integer values of the fields change as well.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;
+  &lt;span class="n"&gt;enum&lt;/span&gt; &lt;span class="ss"&gt;state: &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="ss"&gt;:queued&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;     &lt;span class="c1"&gt;# 0&lt;/span&gt;
+    &lt;span class="ss"&gt;:dispatched&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;# 1&lt;/span&gt;
+    &lt;span class="ss"&gt;:failed&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;     &lt;span class="c1"&gt;# 2&lt;/span&gt;
+    &lt;span class="ss"&gt;:delivered&lt;/span&gt;   &lt;span class="c1"&gt;# 3&lt;/span&gt;
+  &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;By inserting &lt;code&gt;:failed&lt;/code&gt; in the middle of the Array, ActiveRecord will now
+consider &lt;code&gt;2&lt;/code&gt; to be &amp;quot;failed&amp;quot; where previously it was &amp;quot;delivered&amp;quot;, and so Message
+id:2 in our table that used to be &amp;quot;delivered&amp;quot; is now &amp;quot;failed&amp;quot;. 💣&lt;/p&gt;
+
+&lt;p&gt;However, not all is lost! ActiveRecord Enums may also be defined as a Hash
+instead of an Array. That looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;
+  &lt;span class="n"&gt;enum&lt;/span&gt; &lt;span class="ss"&gt;state: &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="ss"&gt;queued:     &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="ss"&gt;dispatched: &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="ss"&gt;delivered:  &lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, when we add a new value to the enum, we can put it wherever we want in
+that hash, as long as we don&amp;#39;t change the numbers.&lt;/p&gt;
+
+&lt;p&gt;Its still kinda tedious and annoying, though, that we have to track these
+numbers ourselves. It would be nice if we could just store those values
+directly as strings in the DB, but that would result in a much larger table,
+wasting storage on all those same strings over and over again.&lt;/p&gt;
+
+&lt;h2&gt;Leveraging Postgres&lt;/h2&gt;
+
+&lt;p&gt;The reason why Rails chooses to use Integers as values for its enums is because
+it has to support the lowest-common feature set of the databases it supports,
+and not all of them support Enums natively. Postgres, however, is &lt;a href="https://www.postgresql.org/docs/current/datatype-enum.html"&gt;one that
+does&lt;/a&gt;, and so if
+your app will only ever talk to Postgres, then you can take
+advantage of them.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s a simple migration to add an enum, we have to drop to raw SQL to
+accomplish it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CreateMessagingTables&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Migration&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;6.0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+  &lt;span class="n"&gt;reversible&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;dir&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+    &lt;span class="n"&gt;dir&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;up&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+      &lt;span class="n"&gt;execute&lt;/span&gt; &lt;span class="s2"&gt;"CREATE TYPE message_state_type AS ENUM ('queued', 'dispatched', 'delivered')"&lt;/span&gt;
+
+      &lt;span class="n"&gt;create_table&lt;/span&gt; &lt;span class="ss"&gt;:messages&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+        &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;column&lt;/span&gt; &lt;span class="ss"&gt;:state&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:message_state_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;null: &lt;/span&gt;&lt;span class="kp"&gt;false&lt;/span&gt;
+      &lt;span class="k"&gt;end&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+
+    &lt;span class="n"&gt;dir&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;down&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+      &lt;span class="n"&gt;drop_table&lt;/span&gt; &lt;span class="ss"&gt;:messages&lt;/span&gt;
+      &lt;span class="n"&gt;execute&lt;/span&gt; &lt;span class="s2"&gt;"DROP TYPE message_state_type"&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That&amp;#39;s gross and annoying, though, so lets extract a helper:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="c1"&gt;# lib/migration_utils.rb&lt;/span&gt;
+
+&lt;span class="k"&gt;module&lt;/span&gt; &lt;span class="nn"&gt;MigrationUtils&lt;/span&gt;
+  &lt;span class="k"&gt;module&lt;/span&gt; &lt;span class="nn"&gt;CreateEnum&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create_enum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="n"&gt;reversible&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;dir&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+        &lt;span class="n"&gt;dir&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;up&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+          &lt;span class="n"&gt;say_with_time&lt;/span&gt; &lt;span class="s2"&gt;"create_enum(:&lt;/span&gt;&lt;span class="si"&gt;#{&lt;/span&gt;&lt;span class="nb"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;)"&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+            &lt;span class="n"&gt;suppress_messages&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+              &lt;span class="n"&gt;execute&lt;/span&gt; &lt;span class="s2"&gt;"CREATE TYPE &lt;/span&gt;&lt;span class="si"&gt;#{&lt;/span&gt;&lt;span class="nb"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt; AS ENUM (&lt;/span&gt;&lt;span class="si"&gt;#{&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;map&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;quote&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;.join(', ')})"&lt;/span&gt;
+            &lt;span class="k"&gt;end&lt;/span&gt;
+          &lt;span class="k"&gt;end&lt;/span&gt;
+        &lt;span class="k"&gt;end&lt;/span&gt;
+
+        &lt;span class="n"&gt;dir&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;down&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+          &lt;span class="n"&gt;say_with_time&lt;/span&gt; &lt;span class="s2"&gt;"drop_enum(:&lt;/span&gt;&lt;span class="si"&gt;#{&lt;/span&gt;&lt;span class="nb"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;)"&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+            &lt;span class="n"&gt;execute&lt;/span&gt; &lt;span class="s2"&gt;"DROP TYPE &lt;/span&gt;&lt;span class="si"&gt;#{&lt;/span&gt;&lt;span class="nb"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;
+          &lt;span class="k"&gt;end&lt;/span&gt;
+        &lt;span class="k"&gt;end&lt;/span&gt;
+      &lt;span class="k"&gt;end&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Then use it in a migration&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# db/migrations/0000000000_create_messages.rb&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CreateMessagingTables&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Migration&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;6.0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+  &lt;span class="kp"&gt;include&lt;/span&gt; &lt;span class="no"&gt;MigrationUtils&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;CreateEnum&lt;/span&gt;
+
+  &lt;span class="n"&gt;change&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+    &lt;span class="n"&gt;create_enum&lt;/span&gt; &lt;span class="ss"&gt;:message_state_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sx"&gt;%w[queued dispatched delivered]&lt;/span&gt;
+
+    &lt;span class="n"&gt;create_table&lt;/span&gt; &lt;span class="ss"&gt;:messages&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+      &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;column&lt;/span&gt; &lt;span class="ss"&gt;:state&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:message_state_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;null: &lt;/span&gt;&lt;span class="kp"&gt;false&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now we can use Postgres Enum in Rails!&lt;/p&gt;
+
+&lt;p&gt;Instead of Integers, Postgres will expose the enum values as Strings, so we need to update the Hash in our model:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;
+  &lt;span class="n"&gt;enum&lt;/span&gt; &lt;span class="ss"&gt;state: &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="ss"&gt;queued:     :queued&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="ss"&gt;dispatched: :dispatched&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="ss"&gt;delivered:  :delivered&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The values of the hash must match those of the postgres enum, but the keys can
+be whatever you like (but why would you do that to yourself?). Since for our
+app, the keys always match the values, we wrote a little helper to remove some
+boilerplate:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;ApplicationRecord&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Base&lt;/span&gt;
+  &lt;span class="nb"&gt;self&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;abstract_class&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;true&lt;/span&gt;
+
+  &lt;span class="c1"&gt;# Provides a bit of syntactic sugar around Rails' built-in enums to map&lt;/span&gt;
+  &lt;span class="c1"&gt;# them to postgres enums which expect string values instead of integer&lt;/span&gt;
+  &lt;span class="c1"&gt;# values. Basically this saves you from having to pass in:&lt;/span&gt;
+  &lt;span class="c1"&gt;# {&lt;/span&gt;
+  &lt;span class="c1"&gt;#   foo: "foo",&lt;/span&gt;
+  &lt;span class="c1"&gt;#   bar: "bar",&lt;/span&gt;
+  &lt;span class="c1"&gt;#   baz: "baz"&lt;/span&gt;
+  &lt;span class="c1"&gt;# }&lt;/span&gt;
+  &lt;span class="c1"&gt;# to the Rails enum DSL method.&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nc"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;pg_enum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attribute&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;options&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{})&lt;/span&gt;
+    &lt;span class="n"&gt;enum&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="n"&gt;attribute&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="no"&gt;Hash&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;map&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;to_sym&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;to_s&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;}]&lt;/span&gt; &lt;span class="p"&gt;}.&lt;/span&gt;&lt;span class="nf"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;options&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now our model looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;
+  &lt;span class="n"&gt;pg_enum&lt;/span&gt; &lt;span class="ss"&gt;state: &lt;/span&gt;&lt;span class="sx"&gt;%i[ queued dispatched delivered ]&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can find all the code for this, along with helpers to add and remove fields
+in the migration, at &lt;a href="https://gist.github.com/paul/675d7a3cafca3c05f08a5a1f2aaf19f4"&gt;this
+gist&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Using Dry::Container for Dependency Injection</title>
+    <link rel="alternate" href="http://blog.theamazingrando.com/posts/containers-for-dependency-injection.html"/>
+    <id>http://blog.theamazingrando.com/posts/containers-for-dependency-injection.html</id>
+    <published>2020-05-06T16:30:42-06:00</published>
+    <updated>2020-10-16T15:13:39-06:00</updated>
+    <author>
+      <name>Paul Sadauskas</name>
+    </author>
+    <summary type="html">&lt;p&gt;The point of this post isn't to convince you of the usefulness of &lt;a href="https://dry-rb.org/gems/dry-container/0.8/#introduction"&gt;Dependency
+Injection&lt;/a&gt; there's been plenty of &lt;a href="https://visualstudiomagazine.com/articles/2014/05/01/how-to-refactor-for-dependency-injection.aspx"&gt;pixels spilled about it already&lt;/a&gt;.
+Instead, I want to talk about using &lt;a href="https://dry-rb.org/gems/dry-container/0.8/"&gt;Dry::Container&lt;/a&gt; to
+alleviate some of the pain points that DI introduces.&lt;/p&gt;</summary>
+    <content type="html">&lt;h1&gt;Using Dry::Container for Dependency Injection&lt;/h1&gt;
+
+&lt;p&gt;The point of this post isn&amp;#39;t to convince you of the usefulness of &lt;a href="https://dry-rb.org/gems/dry-container/0.8/#introduction"&gt;Dependency
+Injection&lt;/a&gt; there&amp;#39;s been plenty of &lt;a href="https://visualstudiomagazine.com/articles/2014/05/01/how-to-refactor-for-dependency-injection.aspx"&gt;pixels spilled about it already&lt;/a&gt;.
+Instead, I want to talk about using &lt;a href="https://dry-rb.org/gems/dry-container/0.8/"&gt;Dry::Container&lt;/a&gt; to
+alleviate some of the pain points that DI introduces.&lt;/p&gt;
+
+&lt;p&gt;The first problem is when one object calls another, and both are using DI. For
+example, say you have a Command object that calls and Adapter object that
+finally calls the Client object. You end up with long chains of DI objects
+being injected into objects at a higher level, and it quickly becomes unwieldy,
+particularly for testing. Imagine we have something like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyCommand&lt;/span&gt;
+  &lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:adapter&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;adapter: &lt;/span&gt;&lt;span class="no"&gt;MyAdapter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="vi"&gt;@adapter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;adapter&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# do stuff&lt;/span&gt;
+    &lt;span class="n"&gt;adapter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;do_something&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyAdapter&lt;/span&gt;
+  &lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:client&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;client: &lt;/span&gt;&lt;span class="no"&gt;MyClient&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="vi"&gt;@client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;do_something&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# do stuff&lt;/span&gt;
+    &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;make_request&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyClient&lt;/span&gt;
+  &lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:http&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="no"&gt;HttpClient&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;timeout: &lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="vi"&gt;@http&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;make_request&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;auth&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pass&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nf"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;json: &lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In an integration test, you want to set up a mock client for the Client object
+to use, so it doesn&amp;#39;t make any real requests.  A typical solution is involves
+complicated test setup:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="c1"&gt;# my_command_spec.rb&lt;/span&gt;
+
+&lt;span class="no"&gt;RSpec&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;describe&lt;/span&gt; &lt;span class="no"&gt;MyCommand&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:http&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;    &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;instance_spy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;HttpClient&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+
+  &lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:client&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="no"&gt;MyClient&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:adapter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="no"&gt;MyAdapter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;client: &lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:command&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;described_class&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;adapter: &lt;/span&gt;&lt;span class="n"&gt;adapter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+
+  &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="s2"&gt;"should make an http call"&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+    &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:send_message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nf"&gt;to&lt;/span&gt; &lt;span class="n"&gt;have_received&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:post&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nf"&gt;with&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"http://myapp.example/send_message"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                              &lt;span class="ss"&gt;json: &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s2"&gt;"text"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"Hello!"&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In our integration test for &lt;code&gt;MyCommand&lt;/code&gt;, we have to set up a whole lot of other
+intermediate objects, just so we can inject the spy in at the lowest level. It
+seems strange that the test for this high-level business object needs to care
+about the low-level details about how the client is calling our HttpClient.
+Additionally, we probably have different things using the Adapter or MyCommand
+themselves, and the tests for those will need the same setup. Then, if we do
+any refactorings around how the Command -&amp;gt; Adapter -&amp;gt; Client pattern is set up,
+we&amp;#39;ll have to come fix the setup for all these tests, which becomes tedious and
+error-prone.&lt;/p&gt;
+
+&lt;p&gt;Another alternative would be to set up all the intermediate objects to allow
+&lt;code&gt;http&lt;/code&gt; to be injected, and pass it all the way through to the thing that cares
+about it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyCommand&lt;/span&gt;
+  &lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:adapter&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;adapter: &lt;/span&gt;&lt;span class="no"&gt;MyAdapter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;client: &lt;/span&gt;&lt;span class="no"&gt;MyClient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="no"&gt;HttpClient&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;timeout: &lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="vi"&gt;@adapter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;adapter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;client: &lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyAdapter&lt;/span&gt;
+  &lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:client&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;client: &lt;/span&gt;&lt;span class="no"&gt;MyClient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="no"&gt;HttpClient&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;timeout: &lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="vi"&gt;@client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyClient&lt;/span&gt;
+  &lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:http&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="no"&gt;HttpClient&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;timeout: &lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="vi"&gt;@http&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This isn&amp;#39;t great either, because now all the outer objects have to
+pass through a thing they don&amp;#39;t care about at all. Its also easy to loose track
+of them, which object needs which dependency. Also, if &lt;code&gt;MyCommand&lt;/code&gt;&amp;#39;s job is to
+decide which of 5 Adapters it needs to send the message, it has to have 5
+different clients injected.&lt;/p&gt;
+
+&lt;p&gt;The other issue I have with Dependency Injection is that once you start using
+it, it makes sense to use it for &lt;em&gt;everything&lt;/em&gt;. The problem with that, however,
+is that you quickly run into very long and noisy &lt;code&gt;#initialize&lt;/code&gt; methods:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyCommand&lt;/span&gt;
+  &lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:http&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:instrumenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:error_handler&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="no"&gt;HttpClient&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;timeout: &lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                &lt;span class="ss"&gt;logger: &lt;/span&gt;&lt;span class="no"&gt;Rails&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="ss"&gt;instrumenter: &lt;/span&gt;&lt;span class="no"&gt;ActiveSupport&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Notifications&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="ss"&gt;error_handler: &lt;/span&gt;&lt;span class="no"&gt;Honeybadger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="vi"&gt;@http&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;
+    &lt;span class="vi"&gt;@logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="vi"&gt;@instrumenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="vi"&gt;@error_handler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;instrumenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;error_handler&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I found that nearly every object I had was injecting that triplet of &lt;code&gt;[:logger,
+:instrumenter, :error_handler]&lt;/code&gt;, which got fairly tedious. While this maybe
+could be resolved with a small object like what&amp;#39;s used for &lt;a href="https://refactoring.guru/smells/primitive-obsession"&gt;Primitive
+Obsession&lt;/a&gt;, I don&amp;#39;t have a
+good name for that object.&lt;/p&gt;
+
+&lt;p&gt;These two problems are particularly exacerbated when you need to pass through a
+mock logger or instrumenter, and test the calls made to that. Now you need to
+inject a whole lot of unrelated things, some of which the object doesn&amp;#39;t care
+about, and it gets messy quickly.&lt;/p&gt;
+
+&lt;h2&gt;Dry::Container&lt;/h2&gt;
+
+&lt;p&gt;First, lets take a look at what a Dry::Container looks like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;module&lt;/span&gt; &lt;span class="nn"&gt;MyApp&lt;/span&gt;
+  &lt;span class="k"&gt;module&lt;/span&gt; &lt;span class="nn"&gt;Container&lt;/span&gt;
+    &lt;span class="kp"&gt;extend&lt;/span&gt; &lt;span class="no"&gt;Dry&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Container&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Mixin&lt;/span&gt;
+
+    &lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:error_handler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="no"&gt;Honeybadger&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:instrumenter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="no"&gt;ActiveSupport&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Notifications&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:logger&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="no"&gt;Rails&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;logger&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:clients&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+      &lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:http&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;   &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="no"&gt;HttpClient&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;timeout: &lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:github&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="no"&gt;Octokit&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;login: &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;github_user&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;password: &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;github_password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:heroku&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="no"&gt;PlatformAPI&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;token: &lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;heroku_token&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To use the values within a Container, its fairly simple, you can treat the
+container like a Hash:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;http = MyApp::Container["clients.http"]
+http.get("https://myapp.example/")
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can inject them into our objects be referencing them through the container,
+rather than directly:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyClient&lt;/span&gt;
+  &lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:http&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;http: &lt;/span&gt;&lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Container&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;"clients.http"&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+    &lt;span class="vi"&gt;@http&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;make_request&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;auth&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pass&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nf"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;json: &lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This, when coupled with &lt;a href="https://dry-rb.org/gems/dry-container/0.8/testing/#stub"&gt;dry-container&amp;#39;s stub
+feature&lt;/a&gt;, lets us
+avoid complex test setup or deep injection:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="c1"&gt;# in spec_helper.rb or something:&lt;/span&gt;
+&lt;span class="nb"&gt;require&lt;/span&gt; &lt;span class="s1"&gt;'dry/container/stub'&lt;/span&gt;
+&lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Container&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;enable_stubs!&lt;/span&gt;
+
+&lt;span class="c1"&gt;# In your test:&lt;/span&gt;
+&lt;span class="no"&gt;RSpec&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;describe&lt;/span&gt; &lt;span class="no"&gt;MyCommand&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;let&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:http&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;instance_spy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;HttpClient&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+
+  &lt;span class="n"&gt;around&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;example&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+    &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Container&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;stub&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"clients.http"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;example&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;run&lt;/span&gt;
+    &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Container&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;unstub&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"clients.http"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="s2"&gt;"should make an http call"&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+    &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:send_message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nf"&gt;to&lt;/span&gt; &lt;span class="n"&gt;have_received&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;:post&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nf"&gt;with&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"http://myapp.example/send_message"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                                              &lt;span class="ss"&gt;json: &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="s2"&gt;"text"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"Hello!"&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Aside&lt;/em&gt;: In our app, we have that wrapped in a helper:
+&lt;code&gt;stub_container(MyContainer, http: fake_client) { ... }&lt;/code&gt;. Inside the block its
+stubbed, then un-stubbed when the block ends.&lt;/p&gt;
+
+&lt;h3&gt;Auto-inject&lt;/h3&gt;
+
+&lt;p&gt;A separate gem, &lt;a href="https://dry-rb.org/gems/dry-auto_inject/0.6/"&gt;Dry::AutoInject&lt;/a&gt;
+can work with our containers to help eliminate the boilerplate when injecting
+many dependencies into a class. You can set it up in your container:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;module&lt;/span&gt; &lt;span class="nn"&gt;MyApp&lt;/span&gt;
+  &lt;span class="no"&gt;Import&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Dry&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;AutoInject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;Container&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then, in your objects:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyCommand&lt;/span&gt;
+  &lt;span class="kp"&gt;include&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Import&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;:logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:instrumenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:error_handler&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+  &lt;span class="kp"&gt;include&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Import&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;"clients.http"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;instrumenter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;instrument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"MyCommand.call"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+      &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"doing stuff"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"https://myapp.example/"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It looks a bit strange, but essentially &lt;code&gt;include MyApp::Import[:foo]&lt;/code&gt; is a macro that generates code like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="nb"&gt;attr_reader&lt;/span&gt; &lt;span class="ss"&gt;:foo&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;foo: &lt;/span&gt;&lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Container&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;:foo&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+  &lt;span class="vi"&gt;@foo&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When you have a lot of dependencies to inject, it really cuts down on the
+boilerplate. One thing to make a note of, however, if you have non-DI args
+passed to your &lt;code&gt;#initialize&lt;/code&gt; method, you have to remember to call &lt;code&gt;super&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyCommand&lt;/span&gt;
+  &lt;span class="kp"&gt;include&lt;/span&gt; &lt;span class="no"&gt;MyApp&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Import&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;:logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:instrumenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:error_handler&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;:,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;deps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="vi"&gt;@user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;
+    &lt;span class="k"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;deps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Hopefully you find this helpful, we certainly have. Dependency Injection is a
+powerful tool that makes organizing and testing code a much cleaner experience,
+and dry-container and dry-auto_inject are a nice bit of polish over some of the
+tedious or boilerplate parts that come with it.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>In-Band vs. Out-of-Band: The Advantages of Hypermedia APIs</title>
+    <link rel="alternate" href="http://blog.theamazingrando.com/posts/in-band-vs-out-of-band.html"/>
+    <id>http://blog.theamazingrando.com/posts/in-band-vs-out-of-band.html</id>
+    <published>2016-07-30T11:58:39-06:00</published>
+    <updated>2017-02-09T11:54:01-07:00</updated>
+    <author>
+      <name>Paul Sadauskas</name>
+    </author>
+    <summary type="html">&lt;p&gt;A good way to look at the advantages of a hypermedia-based API vs an "HTTP-RPC"
+style one is to consider the differences between "In-Band" and "Out-of-Band"
+information. A hypermedia API focuses on getting as much information in-band as
+possible, reducing the burden on clients to deal with changes.&lt;/p&gt;</summary>
+    <content type="html">&lt;h1&gt;In-Band vs. Out-of-Band: The Advantages of Hypermedia APIs&lt;/h1&gt;
+
+&lt;p&gt;A good way to look at the advantages of a hypermedia-based API vs an &amp;quot;HTTP-RPC&amp;quot;
+style one is to consider the differences between &amp;quot;In-Band&amp;quot; and &amp;quot;Out-of-Band&amp;quot;
+information. A hypermedia API focuses on getting as much information in-band as
+possible, reducing the burden on clients to deal with changes.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note: I originally considered this to help my team decide what path to take
+when building V2 of our API, but decided it deserved a wider audience&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;quot;In-Band&amp;quot; is anything that is transmitted within the primary transmission
+channel. &amp;quot;Out-of-Band&amp;quot; refers to any communications that occur outside of that.&lt;/p&gt;
+
+&lt;p&gt;In the case of JSON APIs, I&amp;#39;ll use &amp;quot;In-Band&amp;quot; to refer to the data in the JSON
+payload itself, while &amp;quot;Out-of-Band&amp;quot; will refer to everything else you need to
+know to consume that API, such as documentation or institutional knowledge.&lt;/p&gt;
+
+&lt;p&gt;Ideally, Out-of-Band knowledge should be minimized in an API, because it
+requires more effort on the part of the client to consume the API. Any
+Out-of-Band knowledge must be documented (or guessed!), and ends up being
+hard-coded into the client implementations. This makes it very difficult, if
+not completely impossible, to change in the future. One of the primary goals of
+the API it to be resilient to change, otherwise we&amp;#39;d all be content with
+scraping the HTML.  Similarly to how changes to your HTML content or layout
+don&amp;#39;t break the clients consuming it (browsers), so should clients of your API
+be resilient to changes to your JSON. It is the Out-of-Band knowledge that
+prevents this from happening.&lt;/p&gt;
+
+&lt;p&gt;A non-comprehensive list of things you have to know to consume any API, whether
+that knowledge is In-Band or Out-of-Band might include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The data itself.&lt;/li&gt;
+&lt;li&gt;The types of data in the payload.&lt;/li&gt;
+&lt;li&gt;How to fetch more data.&lt;/li&gt;
+&lt;li&gt;How to change some of the data on this resource.&lt;/li&gt;
+&lt;li&gt;How to create a new instance of this resource.&lt;/li&gt;
+&lt;li&gt;When creating or updating, which fields are optional.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;HTTP/RPC&lt;/h2&gt;
+
+&lt;p&gt;Lets take a look at a typical JSON API:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight javascript"&gt;&lt;code&gt;&lt;span class="c1"&gt;// GET /api/v1/posts/1&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;title&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;In-Band vs Out-of-Band&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;author_id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;summary&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;Hypermedia is great!&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;tags&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;json&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;api&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;hypermedia&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;created_at&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;2016-08-01T04:20:00Z&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The information that is In-Band vs Out-of-Band is pretty simple:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;In-Band&lt;/th&gt;
+&lt;th&gt;Out-of-Band&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Fields &amp;amp; Values&lt;/td&gt;
+&lt;td&gt;Everything Else&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;Unfortunately, this JSON API leaves a lot of questions unanswered, and the
+developer consuming it will have to spend a lot of time consulting the
+documentation. Some pretty typical questions you&amp;#39;ll be asking, which require
+Out-of-Band knowledge:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;How do I found out who the author is? I see that &lt;code&gt;author_id=1&lt;/code&gt;, do I need
+to GET &lt;code&gt;/api/v1/authors/1&lt;/code&gt;? Or &lt;code&gt;/users/1&lt;/code&gt;?&lt;/li&gt;
+&lt;li&gt;I see this post has tags. How do I get a list of all posts also tagged with
+one of these tags?&lt;/li&gt;
+&lt;li&gt;This post has a numeric &lt;code&gt;id&lt;/code&gt;. If I store this post locally in a database,
+should I set ID to an integer? Or will it sometimes be a mongo id? Or a
+UUID?&lt;/li&gt;
+&lt;li&gt;If I want to amend or update some of these fields, do I need to return the
+full payload, or just the ones I want to change? Do I PUT it to this same
+URL, or POST it somewhere else, like &lt;code&gt;./revisions&lt;/code&gt;?&lt;/li&gt;
+&lt;li&gt;When creating a new post, do I POST it somewhere else? Which of these
+fields are required? Are there limits to the length of the title or
+summary?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Hopefully, this information is answered in the 100% complete and accurate
+documentation, but sadly that not always the case. If we&amp;#39;re needing to create a
+client for this API ourselves, we&amp;#39;re going to need to write a great deal of
+code to capture that Out-of-Band knowledge in the client itself, to make our
+client easier to use. If the creator of this API has provided us with a client,
+the we&amp;#39;ll still need to read that documentation to know which fields we can
+expect from that client, and which to provide, and how to go about fetching the
+author given its &lt;code&gt;id&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In any case, this is far from ideal, but it is the status quo. Luckily, the
+Hypermedia movement has gained enough traction that several major APIs are
+using it, &lt;a href="https://developer.github.com/v3/"&gt;such as GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Hypermedia APIs&lt;/h2&gt;
+
+&lt;p&gt;Which Out-of-Band knowledge is made In-Band by throwing some hypermedia into
+the payload? Lets copy the example from a popular hypermedia API specification,
+&lt;a href="jsonapi.org"&gt;JSON-API&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight javascript"&gt;&lt;code&gt;&lt;span class="c1"&gt;// GET /api/v1/posts/1&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;article&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;1&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;attributes&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;title&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;JSON API paints my bikeshed!&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;
+  &lt;span class="p"&gt;},&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;relationships&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;author&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;links&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;self&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://example.com/articles/1/relationships/author&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;related&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://example.com/articles/1/author&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;
+      &lt;span class="p"&gt;},&lt;/span&gt;
+      &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;data&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;people&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;9&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;comments&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;links&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;self&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://example.com/articles/1/relationships/comments&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;related&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://example.com/articles/1/comments&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;
+      &lt;span class="p"&gt;},&lt;/span&gt;
+      &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;data&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+      &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;comments&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;5&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+      &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;comments&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;12&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="p"&gt;},&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;links&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;self&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://example.com/articles/1&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;In-Band&lt;/th&gt;
+&lt;th&gt;Out-of-Band&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Fields &amp;amp; Values&lt;/td&gt;
+&lt;td&gt;Required attributes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Where to find author &amp;amp; comments&lt;/td&gt;
+&lt;td&gt;Types of attributes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Where to update this post&lt;/td&gt;
+&lt;td&gt;Method to use to update&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;This is clearly an improvement of HTTP/RPC, there is quite a bit more knowledge
+In-Band, and this is what basic Hypermedia provides us. However, it still
+doesn&amp;#39;t provide us with some basic knowledge about how to consume this API.
+Most notably, it says nothing about the attributes themselves:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;What kind of data can we expect? Are they basic numbers or strings, or can
+we expect something encoded in them, like timestamps or embedded html tags?&lt;/li&gt;
+&lt;li&gt;Can we always expect all these fields on a document of type &amp;quot;article&amp;quot;? Will
+some show up that aren&amp;#39;t in this example, or does this example have any
+that other responses might not?&lt;/li&gt;
+&lt;li&gt;If I want to create or update an &amp;quot;article&amp;quot;, which fields must I provide,
+and which are optional?&lt;/li&gt;
+&lt;li&gt;If I need to update this &amp;quot;article&amp;quot;, I can guess that I use the &amp;quot;self&amp;quot; link
+provided, but should I &lt;code&gt;POST&lt;/code&gt; or &lt;code&gt;PUT&lt;/code&gt;? Does this endpoint support &lt;code&gt;PATCH&lt;/code&gt;?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Its not just JSON-API, most JSON Hypermedia proposals (HAL, Collection+JSON) do
+not provide a means to answer these questions In-Band, and as such, will have
+to be documented Out-of-Band. Also, most of these Hypermedia standards are far
+more verbose than the plain HTTP/RPC, which can dissuade developers from
+considering the advantages.&lt;/p&gt;
+
+&lt;p&gt;While this is far superior to plan HTTP/RPC, we can still do better.&lt;/p&gt;
+
+&lt;h2&gt;JSON+LD&lt;/h2&gt;
+
+&lt;p&gt;This usual reaction when someone brings up &amp;quot;RDF&amp;quot; and &amp;quot;Semantic Web&amp;quot; is to run
+screaming before the horrors of a cryptic W3C spec is rolled out.
+&lt;a href="http://json-ld.org/"&gt;JSON+LD&lt;/a&gt;, however, is a breath of fresh air compared to the
+convolution of the technologies it is based upon. Let&amp;#39;s take a look at an
+example of a JSON+LD document:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight javascript"&gt;&lt;code&gt;&lt;span class="c1"&gt;// GET http://dbpedia.org/resource/John_Lennon&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@context&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://json-ld.org/contexts/person.jsonld&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://dbpedia.org/resource/John_Lennon&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;name&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;John Lennon&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;born&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;1940-10-09&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;spouse&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://dbpedia.org/resource/Cynthia_Lennon&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Simple, right? Even a lay-web developer can understand this document. But how
+does this move the Out-of-Band knowledge in JSON-API to In-Band JSON+LD? The
+secret lies in that &lt;code&gt;@context&lt;/code&gt; attribute. When we fetch that URL (&amp;quot;dereference&amp;quot;
+in Semantic Web terminology) we get this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight javascript"&gt;&lt;code&gt;&lt;span class="c1"&gt;// GET http://json-ld.org/contexts/person.jsonld&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@context&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;Person&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;          &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://xmlns.com/foaf/0.1/Person&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;xsd&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;             &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://www.w3.org/2001/XMLSchema#&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;name&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;            &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://xmlns.com/foaf/0.1/name&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;nickname&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;        &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://xmlns.com/foaf/0.1/nick&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;affiliation&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;     &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/affiliation&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;depiction&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;       &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://xmlns.com/foaf/0.1/depiction&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;image&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;           &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://xmlns.com/foaf/0.1/img&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;born&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;            &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/birthDate&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;xsd:dateTime&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;died&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;            &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/deathDate&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;xsd:dateTime&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;child&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;           &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/children&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;parent&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;          &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/parent&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;sibling&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;         &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/sibling&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;spouse&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;          &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/spouse&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;telephone&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;       &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/telephone&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="c1"&gt;// It goes on for awhile with more attributes, about 30 total&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Whew, that&amp;#39;s a lot of stuff. However, from this, we can see clearly what all
+the possible attributes we can expect to be returned from this endpoint.
+Further, we know what types they are (&lt;code&gt;born&lt;/code&gt; is a schema.org birthDate, and is
+parsed as &lt;code&gt;xsd:dateTime&lt;/code&gt;), and which can be links to something else (the ones
+that have &lt;code&gt;&amp;quot;@type&amp;quot;: &amp;quot;@id&amp;quot;&lt;/code&gt;).&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;In-Band&lt;/th&gt;
+&lt;th&gt;Out-of-Band&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Fields &amp;amp; Values&lt;/td&gt;
+&lt;td&gt;Required attributes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Where to find the spouse&lt;/td&gt;
+&lt;td&gt;Method to use to update&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Where to update this person&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Possible attributes&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Types of attributes&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;We still don&amp;#39;t know which attributes are required if we want to update the
+resource, or what method to use, but we know a great deal more about the fields
+and data types we can expect to be returned to us that we might need to handle.
+The basic JSON-LD document is also much more readable for a human than the
+JSON-API document, which is a big win in my book, and worth doing for that
+characteristic alone. Furthermore, the JSON+LD document is also easier for
+&lt;em&gt;computers&lt;/em&gt; to read, through a process called expansion. This process follows a
+simple algortihm to expand the source document based upon the context document
+it links to, and there are libraries to do so in most common languages. Let&amp;#39;s
+run our document through the expansion process using the &lt;a href="http://json-ld.org/playground/"&gt;tool on the
+JSON+LD&lt;/a&gt; site:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight javascript"&gt;&lt;code&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+  &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://dbpedia.org/resource/John_Lennon&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/birthDate&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+      &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@type&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://www.w3.org/2001/XMLSchema#dateTime&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@value&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;1940-10-09&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;
+      &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;],&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://xmlns.com/foaf/0.1/name&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+      &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@value&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;John Lennon&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;],&lt;/span&gt;
+    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://schema.org/spouse&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+      &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;@id&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://dbpedia.org/resource/Cynthia_Lennon&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;]&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It is much more verbose, but now a computer can pull out the attribute that
+stores the person&amp;#39;s &amp;quot;name&amp;quot;, no matter what you decided to call it in your API
+document, whether it is &amp;quot;Name&amp;quot; or &amp;quot;full&lt;em&gt;name&amp;quot; or &amp;quot;person&lt;/em&gt;name&amp;quot; or whatever you
+can come up with. As long as you add to the context a line like &lt;code&gt;&amp;quot;name&amp;quot;:
+&amp;quot;http://xmlns.com/foaf/0.1/name&amp;quot;&lt;/code&gt;, then a computer can expand the document from
+the context, and go look up the canonical &amp;quot;name&amp;quot; attribute. Similarly, it can
+use the &lt;code&gt;@type&lt;/code&gt; attribute on the birthDate field to know to parse that string
+as an XMLSchema datatime to get a real date out of it.&lt;/p&gt;
+
+&lt;p&gt;But, there&amp;#39;s still some knowledge that has to be provided Out-Of-Band, mainly
+which attributes to we have to provide when creating a person, and which HTTP
+methods to use to it. That&amp;#39;s where Hydra comes in.&lt;/p&gt;
+
+&lt;h2&gt;Hydra&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href="http://www.markus-lanthaler.com/hydra/"&gt;Hydra&lt;/a&gt; is a draft W3C spec that adds a vocabulary for transmitting
+JSON-LD documents over a HTTP API. A Hydra api document looks exactly like the nice, simple JSON+LD example. The only change it makes is to add a &lt;code&gt;vocab&lt;/code&gt; field to the context document:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight javascript"&gt;&lt;code&gt;    &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;vocab&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="s2"&gt;http://www.markus-lanthaler.com/hydra/event-api/vocab&lt;/span&gt;&lt;span class="dl"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Dereferencing this document gives us a very large document, describing all the
+resources and endpoints provided by this API. (It doesn&amp;#39;t have to be a single
+large document, you can break it up per-resource if you have a very large API
+surface.) Let&amp;#39;s take a look at a subset of that document:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;    {
+      "@id": "http://xmlns.com/foaf/0.1/Person",
+      "@type": "hydra:Class",
+      "hydra:title": "Person",
+      "hydra:description": null,
+      "supportedOperation": [
+        {
+          "@id": "_:person_replace",
+          "@type": "http://schema.org/UpdateAction",
+          "method": "PUT",
+          "label": "Replaces an existing Person entity",
+          "description": null,
+          "expects": "http://xmlns.com/foaf/0.1/Person",
+          "returns": "http://xmlns.com/foaf/0.1/Person",
+          "statusCodes": [
+            {
+              "code": 404,
+              "description": "If the Person entity wasn't found."
+            }
+          ]
+        },
+        {
+          "@id": "_:person_delete",
+          "@type": "http://schema.org/DeleteAction",
+          "method": "DELETE",
+          "label": "Deletes a Person entity",
+          "description": null,
+          "expects": null,
+          "returns": "http://www.w3.org/2002/07/owl#Nothing",
+          "statusCodes": [ ]
+        },
+        {
+          "@id": "_:person_retrieve",
+          "@type": "hydra:Operation",
+          "method": "GET",
+          "label": "Retrieves a Person entity",
+          "description": null,
+          "expects": null,
+          "returns": "http://xmlns.com/foaf/0.1/Person",
+          "statusCodes": [ ]
+        }
+      ],
+      "supportedProperty": [
+        {
+          "property": "http://schema.org/name",
+          "hydra:title": "name",
+          "hydra:description": "The person's name",
+          "required": true,
+          "readonly": false,
+          "writeonly": false
+        },
+        {
+          "property": "http://schema.org/birthDate",
+          "hydra:title": "born",
+          "hydra:description": "Date the person was born",
+          "required": true,
+          "readonly": false,
+          "writeonly": false
+        },
+        {
+          "property": "http://schema.org/spouse",
+          "hydra:title": "spouse",
+          "hydra:description": "Ther person's spouse, if any",
+          "required": false,
+          "readonly": false,
+          "writeonly": false
+        }
+      ]
+    }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is a much larger document, but is pretty self-explanatory. Hydra is
+providing the &lt;code&gt;supportedOperation&lt;/code&gt; and &lt;code&gt;supportedProperty&lt;/code&gt; fields, which answer
+the last two Out-of-Band questions we had remaining.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;supportedOperation&lt;/code&gt; lists all the HTTP verbs we can perform on this resource,
+what they expect to be provided, what status codes they may return, and the
+types of document it will give back. We can see that by performing a GET, we&amp;#39;ll
+get a Person object back. We can do a DELETE to remove the object, and we don&amp;#39;t
+have to provide anything, and don&amp;#39;t expect anything back. We can do a PUT to
+update the person, and its expecting a Person document, and will give us one
+back, or a 404 if the person doesn&amp;#39;t exist.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;supportedProperty&lt;/code&gt; answers the question about which fields are required. We
+can see that if we want to update this person, we&amp;#39;ll need to provide a name and
+their birthdate in the &amp;quot;born&amp;quot; field, but the spouse field is optional.&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;In-Band&lt;/th&gt;
+&lt;th&gt;Out-of-Band&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Fields &amp;amp; Values&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Where to find the spouse&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Where &amp;amp; How to update this person&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Possible attributes&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Types of attributes&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Which attributes are required&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;What HTTP verbs are allowed&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;Finally, we have an API with very little Out-of-Band knowledge required to
+consume it, or to write a client. In fact, if there&amp;#39;s a Hydra client already
+available for your preferred language, it will probably automatically work with
+any Hydra API you can come up with, we won&amp;#39;t have to waste time writing
+specific libraries in every language for every random API out there.&lt;/p&gt;
+
+&lt;p&gt;Additionally, Hydra and JSON+LD can be added to nearly every existing HTTP/RPC
+JSON API out there, simply by adding the &lt;code&gt;@context&lt;/code&gt; field to link to the
+context and Hydra vocab. It can even be done without modifying the document
+itself, by adding an &lt;a href="http://www.hydra-cg.com/spec/latest/core/#discovering-a-hydra-powered-web-api"&gt;HTTP Link header&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Hydra spec is getting the finishing touches now, and there&amp;#39;s a few
+beginnings of client libraries out there already. It could definently use some
+wider attention, but in the meantime, JSON+LD is already a standard used by
+Google and Microsoft, and very well-supported. You can port or write your APIs
+in the JSON+LD style now, and get 90% of the advantages, and start enabling
+Hydra as it gets finalized. We could certainly use your help, come join us on the &lt;a href="https://lists.w3.org/Archives/Public/public-hydra/"&gt;Hydra mailing list&lt;/a&gt; or in the &lt;a href="http://slack.httpapis.com/"&gt;HTTP-APIs Slack channel&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Let's Encrypt + Route53 + Ruby = Yay!</title>
+    <link rel="alternate" href="http://blog.theamazingrando.com/posts/lets-encrypt-route53.html"/>
+    <id>http://blog.theamazingrando.com/posts/lets-encrypt-route53.html</id>
+    <published>2016-04-20T23:15:20-06:00</published>
+    <updated>2017-02-09T11:50:34-07:00</updated>
+    <author>
+      <name>Paul Sadauskas</name>
+    </author>
+    <summary type="html">&lt;p&gt;A few months ago, Let's Encrypt &lt;a href="https://community.letsencrypt.org/t/dns-challenge-is-in-staging/8322"&gt;rolled out a feature to verify domains over
+DNS&lt;/a&gt;. Their automatic configuration tool doesn't support all
+the use cases yet, including my particular scenario: multiple load-balanced EC2
+instances behind a single ELB, using Route53 for DNS. I &lt;a href="https://github.com/paul/letsencrypt-route53"&gt;wrote a
+tool&lt;/a&gt; to simplify updating Route53 DNS Records with the
+challenge, as well as updating the ELB with the resulting certificate. Check
+out the &lt;a href="https://github.com/paul/letsencrypt-route53"&gt;README&lt;/a&gt; and &lt;a href="https://github.com/paul/letsencrypt-route53"&gt;code&lt;/a&gt;, or read
+on for why I wrote it.&lt;/p&gt;</summary>
+    <content type="html">&lt;h1&gt;Let&amp;#39;s Encrypt + Route53 + Ruby = Yay!&lt;/h1&gt;
+
+&lt;p&gt;A few months ago, Let&amp;#39;s Encrypt &lt;a href="https://community.letsencrypt.org/t/dns-challenge-is-in-staging/8322"&gt;rolled out a feature to verify domains over
+DNS&lt;/a&gt;. Their automatic configuration tool doesn&amp;#39;t support all
+the use cases yet, including my particular scenario: multiple load-balanced EC2
+instances behind a single ELB, using Route53 for DNS. I &lt;a href="https://github.com/paul/letsencrypt-route53"&gt;wrote a
+tool&lt;/a&gt; to simplify updating Route53 DNS Records with the
+challenge, as well as updating the ELB with the resulting certificate. Check
+out the &lt;a href="https://github.com/paul/letsencrypt-route53"&gt;README&lt;/a&gt; and &lt;a href="https://github.com/paul/letsencrypt-route53"&gt;code&lt;/a&gt;, or read
+on for why I wrote it.&lt;/p&gt;
+
+&lt;p&gt;Previously, the way to prove you owned a particular domain was to have a web
+server host a file that Lets Encrypt provided, which they would then query and
+confirm the results. This works great, and they even provide a client that will
+automagically configure your nginx or apache webserver to host the file. Having
+a magic tool touch my webserver config makes me nervous, however. Additionally,
+I have multiple web servers behind an ELB load balancer, and it was not clear
+to me how that update would work, since all the servers would have to have the
+same file in the same location at the same time, lest the Lets Encrypt
+verification check get routed to a server that didn&amp;#39;t have it. I&amp;#39;m sure they&amp;#39;ve
+thought of this, but that many moving parts behind a magic tool made me
+concerned for potential downtime.&lt;/p&gt;
+
+&lt;p&gt;However, the DNS challenge gets around the load-balanced web server problem by letting you set the challenge as a &lt;code&gt;TXT&lt;/code&gt; record on the DNS server hosting your domain. The tool I&amp;#39;ve written which automates this process also takes care of a lot of the other steps needed to update your ELB and clean up after itself.&lt;/p&gt;
+
+&lt;h2&gt;Let&amp;#39;s Encrypt DNS Challenges&lt;/h2&gt;
+
+&lt;p&gt;These are the steps needed to obtain a certificate from Let&amp;#39;s Encrypt, and update your ELB with it:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Tell LetsEncrypt.org that you&amp;#39;d like to protect the domain at
+&lt;code&gt;myawesomeblog.example&lt;/code&gt; using a DNS challenge.&lt;/li&gt;
+&lt;li&gt;They provide a challenge record, which provides a name and value. You then
+create new DNS &lt;code&gt;TXT&lt;/code&gt; record in the Route53 hosted zone with those
+parameters.&lt;/li&gt;
+&lt;li&gt;Wait for Route53 to roll out those changes. This takes several tens of
+seconds to a couple minutes.&lt;/li&gt;
+&lt;li&gt;Notify Lets Encrypt that you&amp;#39;ve made the changes. They query the DNS server
+to check that the value they expect is there.&lt;/li&gt;
+&lt;li&gt;If they succeed, you can then generate a certificate signing request (CSR)
+for the domain.&lt;/li&gt;
+&lt;li&gt;Submit the CSR to LetsEncrypt. In return, they will provide
+you with a real actual signed certificate for your domain.&lt;/li&gt;
+&lt;li&gt;Upload that certificate to IAM&amp;#39;s certificate management service.&lt;/li&gt;
+&lt;li&gt;Update the ELB&amp;#39;s 443 listener to use the IAM certificate. This can also take
+a few seconds, so wait for that to finish.&lt;/li&gt;
+&lt;li&gt;Delete any old certificates from IAM, we won&amp;#39;t be needing them any more, and
+it&amp;#39;s good to be tidy.&lt;/li&gt;
+&lt;li&gt;Finally, delete the TXT record.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Whew, that&amp;#39;s a lot of bookkeeping. There&amp;#39;s another step I left out, too: You
+need to make a private key, and provide it to the LetsEncrypt client on
+subsequent certificate requests. And since it is a private key, it is a good idea
+to keep it encrypted, and your updating process will need access to it. My
+solution was to encrypt it using AWS&amp;#39; built-in &lt;a href="https://aws.amazon.com/kms/"&gt;Key Management Service&lt;/a&gt;,
+which allows my EC2 instances that will be performing the steps to decrypt the
+private key without needing the decryption token directly.&lt;/p&gt;
+
+&lt;p&gt;This was a lot of learning for me, and I&amp;#39;ve captured everything I&amp;#39;ve learned as
+a Ruby script: &lt;a href="https://github.com/paul/letsencrypt-route53"&gt;github.com/paul/letsencrypt-route53&lt;/a&gt;. I
+don&amp;#39;t think it&amp;#39;s worthy of being a gem, in fact, you should probably not even
+copy it verbatim. Feel free to take it and modify it to fit your own needs, it
+should provide a nice starting point.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve also included a script that checks the certificate expiry for a domain,
+and an example rake task. It should be trivial to incorporate into an
+ActiveJob, or cron task, or however else you feel like updating your
+certificates.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m also excited to hear how people are using this, so please feel to contact
+me on twitter or email, or open an Issue or PR on that repo if I screwed up
+something obvious.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>The Conductor Pattern</title>
+    <link rel="alternate" href="http://blog.theamazingrando.com/posts/the-conductor-pattern.html"/>
+    <id>http://blog.theamazingrando.com/posts/the-conductor-pattern.html</id>
+    <published>2012-05-01T00:26:07-06:00</published>
+    <updated>2017-02-09T11:50:34-07:00</updated>
+    <author>
+      <name>Paul Sadauskas</name>
+    </author>
+    <summary type="html">&lt;p&gt;A movement has been growing over the last several months to make our Rails applications more object-oriented. One of the most popular recently has been &lt;a href="http://objectsonrails.com/"&gt;Avdi Grimm's Objects on Rails&lt;/a&gt;. In it, he talks about an alternative to the Presenter pattern, which he calls Exhibits (and both of which are subsets of the Decorator pattern). I've been using another form of this, which may or may not be called a Conductor.&lt;/p&gt;</summary>
+    <content type="html">&lt;h1&gt;The Conductor Pattern&lt;/h1&gt;
+
+&lt;h2&gt;Objects on Rails&lt;/h2&gt;
+
+&lt;p&gt;A movement has been growing over the last several months to make our Rails applications more object-oriented. One of the most popular recently has been &lt;a href="http://objectsonrails.com/"&gt;Avdi Grimm&amp;#39;s Objects on Rails&lt;/a&gt;. In it, he talks about an alternative to the Presenter pattern, which he calls Exhibits (and both of which are subsets of the Decorator pattern). I&amp;#39;ve been using another form of this, which may or may not be called a Conductor.&lt;/p&gt;
+
+&lt;p&gt;Most of these patterns come from the Java world, and Smalltalk before that. They have very specific rules about how they can be used (read-only, wrap methods on a single object, etc). In the Ruby world, however, its flexible object model and powerful metaprogramming features mean we can be a little more lazy about those rules. The Conductor pattern is an implementation of what Martin Fowler&amp;#39;s PoEAA calls a &lt;a href="http://martinfowler.com/eaaCatalog/unitOfWork.html"&gt;Unit of Work&lt;/a&gt;. Specifically, it wraps one or more models, and can be bidirectional, so it can decorate attributes of the models as well as update them.&lt;/p&gt;
+
+&lt;p&gt;I gave a talk a couple years ago at Mountain.rb entitled &lt;a href="http://www.confreaks.com/videos/422-mountainrb2010-forms-don-t-have-to-be-this-complicated"&gt;Forms Don&amp;#39;t Have to be this Complicated&lt;/a&gt;. In it, I spoke about how terrible Rails is at managing forms, particularly ones that deal with several related objects. I outlined a couple solutions, none of which were very good. I have recently been using this Conductor pattern for these complicated forms, and it seems to have alleviated most of the pain. The ability to wrap multiple models means it can handle the nested associations, and being bidirectional makes it perfect for forms.&lt;/p&gt;
+
+&lt;p&gt;In this post, I&amp;#39;m going to show you a couple uses of the Conductor pattern, as well as a library I wrote that implements it.&lt;/p&gt;
+
+&lt;h2&gt;GoldPlating&lt;/h2&gt;
+
+&lt;p&gt;In Ruby, writing an implementation of the Conductor library is trivial with the help of ActiveModel. The entire implementation is only 60 LOC. I haven&amp;#39;t bothered making a gem of it yet, but &lt;a href="https://gist.github.com/2565340"&gt;here&amp;#39;s a gist&lt;/a&gt;. Just toss it in your Rails &lt;code&gt;lib/&lt;/code&gt; dir and require it.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;#39;s how to use it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Registration&lt;/span&gt;
+  &lt;span class="kp"&gt;include&lt;/span&gt; &lt;span class="no"&gt;GoldPlating&lt;/span&gt;
+
+  &lt;span class="n"&gt;wrap&lt;/span&gt; &lt;span class="no"&gt;Account&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:name&lt;/span&gt;
+  &lt;span class="n"&gt;wrap&lt;/span&gt; &lt;span class="no"&gt;User&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;    &lt;span class="ss"&gt;:email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:password&lt;/span&gt;
+
+  &lt;span class="n"&gt;validates_presence_of&lt;/span&gt; &lt;span class="ss"&gt;:account_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                        &lt;span class="ss"&gt;:user_email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                        &lt;span class="ss"&gt;:user_password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                        &lt;span class="ss"&gt;:message&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"Required"&lt;/span&gt;
+
+  &lt;span class="n"&gt;validates_format_of&lt;/span&gt; &lt;span class="ss"&gt;:user_email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                      &lt;span class="ss"&gt;:with&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="sr"&gt;/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                      &lt;span class="ss"&gt;:message&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"Not an Email"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                      &lt;span class="ss"&gt;:if&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;lambda&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;user_email&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;present?&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+
+  &lt;span class="n"&gt;validates_length_of&lt;/span&gt; &lt;span class="ss"&gt;:user_password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                      &lt;span class="ss"&gt;:minimum&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                      &lt;span class="ss"&gt;:message&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"Too short"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                      &lt;span class="ss"&gt;:if&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;lambda&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;user_email&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;present?&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;save&lt;/span&gt;
+    &lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;
+      &lt;span class="no"&gt;Membership&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;account: &lt;/span&gt;&lt;span class="n"&gt;account&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;user: &lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, we have two models, &lt;code&gt;Account&lt;/code&gt; and &lt;code&gt;User&lt;/code&gt;. In this example app, a &lt;code&gt;User&lt;/code&gt; can have access to several &lt;code&gt;Accounts&lt;/code&gt; which might represent a business entity, similar to how Github Organizations work. When a user signs up, we want to automatically create but their &lt;code&gt;User&lt;/code&gt; for login, and the initial &lt;code&gt;Account&lt;/code&gt; they&amp;#39;ll belong to. Because attribute names may overlap, &lt;code&gt;GoldPlating&lt;/code&gt; prefixes them with the model name. &lt;code&gt;Account#name&lt;/code&gt; becomes &lt;code&gt;Registration#account_name&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Validations&lt;/h3&gt;
+
+&lt;p&gt;I&amp;#39;ve also added some validations to the Registration class. Sometimes different forms dealing with the same models have different valid states for those models, which validation contexts attempt to solve. I think having validations on the wrapper object is a much more elegant solution, leaving the validations on the model objects to simply validate whats needed to stick the object in the database, or is required of the model for the business logic in the rest of the app.&lt;/p&gt;
+
+&lt;p&gt;It also lets you have separate human-readable error messages closer to the view, leaving your model validations simpler. For example, if I was requiring users to confirm their email or password, this would be an excellent place to put the &lt;code&gt;validates_confirmation_of&lt;/code&gt;, leaving the model clear. It also makes it so that you don&amp;#39;t have to set the &lt;code&gt;_confirmation&lt;/code&gt; fields in your tests or factories when creating the objects.&lt;/p&gt;
+
+&lt;p&gt;The downside is that you have to duplicate some of your model validations in the conductor, like the validation on &lt;code&gt;email&lt;/code&gt; above. I don&amp;#39;t have an elegant solution for this yet.&lt;/p&gt;
+
+&lt;h3&gt;Controller&lt;/h3&gt;
+
+&lt;p&gt;When writing a registration form that needs to create both objects, the normal Rails method would be to separate out the &lt;code&gt;params&lt;/code&gt; in the controller, and create one of each object then associate them. This gets tricky, however, when one or the other fails to validate. Also, it puts a lot of logic in the controller. Using this conductor however, our controller is simple:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;RegistrationController&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ApplicationController&lt;/span&gt;
+  &lt;span class="n"&gt;skip_before_filter&lt;/span&gt; &lt;span class="ss"&gt;:require_login&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;
+    &lt;span class="vi"&gt;@registration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create&lt;/span&gt;
+    &lt;span class="vi"&gt;@registration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;:registration&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vi"&gt;@registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;valid?&lt;/span&gt;
+      &lt;span class="vi"&gt;@registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;save&lt;/span&gt;
+      &lt;span class="n"&gt;auto_login&lt;/span&gt; &lt;span class="vi"&gt;@registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;user&lt;/span&gt;
+      &lt;span class="n"&gt;redirect_back_or_to&lt;/span&gt; &lt;span class="n"&gt;root_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:notice&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"Registration Successful"&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;
+      &lt;span class="n"&gt;render&lt;/span&gt; &lt;span class="ss"&gt;:new&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The form in the view is, too:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight haml"&gt;&lt;code&gt;&lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;form_for&lt;/span&gt; &lt;span class="vi"&gt;@registration&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;url: &lt;/span&gt;&lt;span class="n"&gt;signup_path&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+
+  &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;text_field&lt;/span&gt; &lt;span class="ss"&gt;:account_name&lt;/span&gt;
+
+  &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;email_field&lt;/span&gt; &lt;span class="ss"&gt;:user_email&lt;/span&gt;
+
+  &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;password_field&lt;/span&gt; &lt;span class="ss"&gt;:user_password&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The controller and view can interact with the &lt;code&gt;Registration&lt;/code&gt; conductor like any other ActiveModel-compliant object. In fact, this is the entire implementation. GoldPlating handled the object initialization, and assignment of the params to the right objects. GoldPlating also handled saving the objects it wraps, all we had to do was implement a &lt;code&gt;#save&lt;/code&gt; to create the &lt;code&gt;Membership&lt;/code&gt; association record between the newly-created &lt;code&gt;User&lt;/code&gt; and &lt;code&gt;Account&lt;/code&gt; records.&lt;/p&gt;
+
+&lt;h2&gt;So much easier&lt;/h2&gt;
+
+&lt;p&gt;I&amp;#39;ve been using this Conductor pattern quite liberally throughout my recent projects. Having this wrapper object to contain all the business logic related to presenting multiple objects to a form, and consuming and validating that form&amp;#39;s output, greatly simplifies my code. It also makes testing a breeze. I can test all the edge-case behaviour via tests that exercise the conductor, rather than full-stack tests through the full Rails request stack.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve found that having a single conductor object for each form is the best way to go. It does lead to some code duplication, which might be alleviated some by including modules of shared methods, but overall the code in the conductor is simple and focused enough that the duplication has not (yet) been a major problem. It really helps to isolate the User-Interface of the forms from the data model, and associated business logic.&lt;/p&gt;
+
+&lt;p&gt;Some of the really useful places for conductors have been &lt;code&gt;Registration&lt;/code&gt;, &lt;code&gt;UserPreferences&lt;/code&gt;, &lt;code&gt;PasswordReset&lt;/code&gt;, &lt;code&gt;ManipulateAuthorization&lt;/code&gt;. You&amp;#39;ll notice that all of these involve some sort of &lt;code&gt;User&lt;/code&gt; model, but each in a different way. Its nice having all the logic for each process encapsulated in a single, distinct place.&lt;/p&gt;
+
+&lt;p&gt;Feel free to grab &lt;code&gt;GoldPlating&lt;/code&gt; from that gist, or if there&amp;#39;s enough interest, I can package it up as a gem.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

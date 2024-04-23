@@ -1,0 +1,469 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Writing DataMapper Adapters - A Tutorial</title>
+
+    <title>Writing DataMapper Adapters - A Tutorial</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Writing DataMapper Adapters - A Tutorial" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Writing DataMapper Adapters - A Tutorial" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Writing DataMapper Adapters - A Tutorial",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Writing DataMapper Adapters - A Tutorial
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/writing-datamapper-adapters-a-tutorial.html">Writing DataMapper Adapters - A Tutorial</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2009-03-31T02:33:33Z">Tuesday, March 31st 2009</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/writing-datamapper-adapters---a-tutorial.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">DataMapper<li>
+          <li class="icon fa-tag">Ruby<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<h2>Introduction</h2>
+
+<p>The adapter API for DataMapper has been in a bit of flux recently. When I submitted
+my proposal for a <a href="http://mwrc2009.confreaks.com/14-mar-2009-16-10-writing-adapters-for-datamapper-paul-sadauskas.html">talk at MountainWest</a>, adapters were irritatingly complex to write.
+You just needed to know too much about DataMapper's internals to be able to write one.
+A week before the conference began, I started a significant effort to re-write the API to make
+it easier. I succeeded, a little too well; my 30 minute talk only took 15. Since then,
+I've written a couple more adapters from scratch, and refined the API further. This post
+will serve as notes on the changes that I've made, and a tutorial on writing adapters.</p>
+
+<p>The API changes are currently only in my branch, but they will be merged into the
+<a href="http://www.github.com/datamapper/dm-core/tree/next">DataMapper/next</a> branch. For now, you'll need to use my
+<a href="http://www.github.com/paul/dm-core/tree/adapters_1.0">adapters_1.0</a> branch.</p>
+
+<p>This tutorial will follow my process as I make a DataMapper adapter for <a href="http://tokyocabinet.sourceforge.net/index.html">TokyoTyrant</a>. You
+can grab the code from my github repo, <a href="http://www.github.com/paul/dm-tokyotyrant-adapter">paul/dm-tokyotyrant-adapter</a>.</p>
+
+<h2>Setup</h2>
+
+<p>I'll assume you know how to build a gem, and get it all set up using your favorite gem builder,
+so I'm going to skip all that. To begin, we only need a couple files. First (of course!), the spec:</p>
+
+<h3>spec/dm-tokyotyrant-adapter_spec.rb</h3>
+<div class="highlight"><pre class="highlight plaintext"><code>require File.dirname(__FILE__) + '/spec_helper'
+
+require 'dm-core/spec/adapter_shared_spec'
+
+describe DataMapper::Adapters::TokyoTyrantAdapter do
+  before :all do
+    @adapter = DataMapper.setup(:default, :adapter   =&gt; 'tokyo_tyrant',
+                                          :hostname  =&gt; 'localhost',
+                                          :port      =&gt; 1978)
+  end
+
+  it_should_behave_like 'An Adapter'
+
+end
+</code></pre></div>
+<p>And thats all there is to it. We make an <code>@adapter</code> instance var, which gets returned from
+<code>DataMapper.setup</code>, and then run the adapter shared spec. As of now, the shared spec is fairly
+thorough, but its far from comprehensive. If we run this now, we'll get some errors about not finding
+the <code>TokyoTyrantAdapter</code>. So, lets go make it.</p>
+
+<h2>Initialization</h2>
+
+<h3>lib/dm-tokyotyrant-adapter.rb</h3>
+<div class="highlight"><pre class="highlight plaintext"><code>require 'dm-core'
+require 'dm-core/adapters/abstract_adapter'       # 1
+
+require 'tokyotyrant'
+
+module DataMapper::Adapters
+
+  class TokyoTyrantAdapter &lt; AbstractAdapter      # 2
+    include TokyoTyrant
+
+    def initialize(name, options)
+      super                                       # 3
+
+      @options[:hostname] ||= 'localhost'         # 4
+      @options[:port]     ||= 1978
+
+      @db = RDB::new
+    end
+  end
+
+end
+</code></pre></div>
+<p>Some of this is pretty TokyoTyrant-specific. Since the Ruby API isn't very Rubyish, I'm going
+to skip over a lot of it, and just talk about the DataMapper/adapter specific stuff. Referencing
+the comments in the code above:</p>
+
+<ol>
+<li>
+<code>require</code> the abstract adapter explicitly, since its not <code>require</code>'d as part of requiring dm-core.</li>
+<li>Make a class that follows the naming convention <code>#{AdapterName}Adapter</code> so that DataMapper can find it
+when we use the <code>:adapter =&gt; 'adapter_name'</code> option. Inherit from AbstractAdapter as well, as it will
+provide us with many helpers we'll be using.</li>
+<li>Make an <code>initialize</code> method, and call super. This will turn any provided options into a Mash (a Hash
+that can use a string and a symbol as the same key. It handles a little other setup for you, as well.</li>
+<li>The rest is Tyrant-specific, but useful to know. We set some default connection options, and initialze
+a <code>@db</code> object.</li>
+</ol>
+
+<p>If we run the spec now, it connects, and we get a bunch of pending specs, saying we need to implment <code>#read</code>,
+<code>#create</code>, etc...</p>
+<div class="highlight"><pre class="highlight plaintext"><code>dm-tokyotyrant-adapter/master % rake spec
+(in /home/rando/dev/dm-tokyotyrant-adapter)
+*****
+
+Pending:
+
+DataMapper::Adapters::TokyoTyrantAdapter needs to support #create (Not Yet Implemented)
+/usr/lib/ruby/gems/1.8/gems/dm-core-0.10.0/lib/dm-core/spec/adapter_shared_spec.rb:52
+
+DataMapper::Adapters::TokyoTyrantAdapter needs to support #read (Not Yet Implemented)
+/usr/lib/ruby/gems/1.8/gems/dm-core-0.10.0/lib/dm-core/spec/adapter_shared_spec.rb:75
+
+DataMapper::Adapters::TokyoTyrantAdapter needs to support #update (Not Yet Implemented)
+/usr/lib/ruby/gems/1.8/gems/dm-core-0.10.0/lib/dm-core/spec/adapter_shared_spec.rb:107
+
+DataMapper::Adapters::TokyoTyrantAdapter needs to support #delete (Not Yet Implemented)
+/usr/lib/ruby/gems/1.8/gems/dm-core-0.10.0/lib/dm-core/spec/adapter_shared_spec.rb:129
+
+DataMapper::Adapters::TokyoTyrantAdapter needs to support #read and #create to test query matching (Not Yet Implemented)
+/usr/lib/ruby/gems/1.8/gems/dm-core-0.10.0/lib/dm-core/spec/adapter_shared_spec.rb:289
+
+Finished in 0.005982 seconds
+
+5 examples, 0 failures, 5 pending
+</code></pre></div>
+<h2>Create</h2>
+<div class="highlight"><pre class="highlight plaintext"><code>def create(resources)                                     # 1
+  db do |db|                                              # 2
+    resources.each do |resource|                          # 3
+      initialize_identity_field(resource, rand(2**32))    # 4
+      save(db, key(resource), serialize(resource))        # 5
+    end
+  end
+end
+</code></pre></div>
+<ol>
+<li>
+<code>resources</code> is an Array of DataMapper Resource objects.</li>
+<li>
+<code>#db</code> is a helper to make TokyoTyrant's api a little more friendly. It handles connecting to the
+ttserver, and yields the connection to the block. When finished, it closes the connetion.</li>
+<li>Some adapters might be able to support bulk creates, like SQL INSERT. This one doesn't, so we'll loop
+over every resource.</li>
+<li>We'll need to set the identity field. More on this later.</li>
+<li>Put the resource into the database. <code>#key</code> and <code>#serialize</code> are helpers, I'll explain them in a bit.</li>
+</ol>
+
+<p>Something useful to note here: The resources being passed in to this method are the actual resources in use by DataMapper. That
+means that any modifications you make to them will also be automatically availble to anything using DataMapper. This is extremely
+useful for any data store that can provide a representation of the created object. If the data store set some fields as a result
+of creation, eg, a <code>created_at</code> timestamp, or an <code>href</code> linking to the location of the resource, you can update the resource right
+here, and not have to have DataMapper perform a <code>#read</code> to update the resource object.</p>
+
+<p>If you're coming from an RDBMS world, you'll be familiar with sequences. Since you're here, learning how to write
+adapters, I'm going to assume you're not going to be talking to a relational database. If thats the case, and you don't need
+to support these kinds of sequences, you should probably use UUIDs or something similar for your identity fields. Sequences are
+not scalable or distributable, they're a relic of the big RDBMSs. I only have this <code>#initialize_identity_field</code> line in there to
+show how its done. As you can see, I'm not even picking it sequentially, but choosing a random number, instead, because I don't have
+a resonable way to keep track of sequences. The method won't try to overwrite a value if one is already set, so take the opportunity to
+use a UUID instead, and save everyone involved a bunch of trouble.%lt;/soapbox&gt;</p>
+
+<p>Because TokyoCabinet &amp; Tyrant are key-value stores, I've written a couple helpers to try and coerce resources into a single key and
+value. First, I choose a key from the model name, and keys in the model, like so:</p>
+<div class="highlight"><pre class="highlight mosel"><code><span class="n">def</span> <span class="n">key</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+  <span class="k">model</span> <span class="p">=</span> <span class="n">resource</span><span class="p">.</span><span class="k">model</span>
+  <span class="n">key</span> <span class="p">=</span> <span class="n">resource</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+  <span class="s2">"#{model}/#{key}"</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>We get the model, and the keys from the resource. One thing to keep in mind, is that DataMapper assumes composite keys for every model,
+so even if a model has only a single key, <code>Resource#keys</code> will always return an array. We use that to build a string, like
+<code>Article/1234</code>. I chose a slash as the delimiter, because TokyoTyrant has a ReSTful interface, and it will make for pretty urls.</p>
+
+<p>We also need to serialze the resource. I chose to serialize it as JSON, because its cross-platform, and lightweight. YAML or even XML would
+also be ok choices, depending on what you may be interoperating with.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>def serialize(resource)
+  resource.attributes(:field).to_json
+end
+</code></pre></div>
+<p><code>resource#attributes</code> normally returns a Hash of <code>{:property_name =&gt; value}</code> pairs. DataMapper properties also can take an option, <code>:field</code>,
+which is used to indicate the name of the field used by the data store. Because we're writing an adapter to a data-store, thats what we want.
+<code>#attributes</code> can take an optional argument to indicate what we want to use as keys. Here, I used <code>:field</code>, meaning I want the field attribute
+of the property. It will then return a Hash of the form <code>{"field_name" =&gt; value}</code> There usually won't be a difference, but its important
+that adapters use the field instead of the name, so that someone writing a model can use the <code>:field</code> option to property correctly.</p>
+
+<p>Let's run the spec again, and see how we did:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>dm-tokyotyrant-adapter/master % rake spec
+(in /home/rando/dev/dm-tokyotyrant-adapter)
+/usr/lib/ruby/gems/1.8/gems/rake-0.8.3/lib/rake/gempackagetask.rb:13:Warning: Gem::manage_gems is deprecated and will be removed on or after March 2009.
+****..
+
+Finished in 0.009957 seconds
+
+6 examples, 0 failures, 4 pending
+</code></pre></div>
+<h2>Read</h2>
+<div class="highlight"><pre class="highlight mosel"><code><span class="n">def</span> <span class="nb">read</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+  <span class="k">model</span> <span class="p">=</span> <span class="n">query</span><span class="p">.</span><span class="k">model</span>
+
+  <span class="n">db</span> <span class="k">do</span> <span class="p">|</span><span class="n">db</span><span class="p">|</span>
+    <span class="n">keys</span> <span class="p">=</span> <span class="n">db</span><span class="p">.</span><span class="n">fwmkeys</span><span class="p">(</span><span class="k">model</span><span class="p">.</span><span class="n">to_s</span><span class="p">)</span>
+    <span class="n">records</span> <span class="p">=</span> <span class="p">[]</span>
+    <span class="n">keys</span><span class="p">.</span><span class="n">each</span> <span class="k">do</span> <span class="p">|</span><span class="n">key</span><span class="p">|</span>
+      <span class="n">value</span> <span class="p">=</span> <span class="n">db</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+      <span class="n">records</span> <span class="p">&lt;&lt;</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span>
+    <span class="k">end</span>
+    <span class="n">filter_records</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p><code>#read</code> takes a DataMapper::Query object, which has everything needed to filter, sort, and limit records. For simple adapters, that don't have
+a native query language, you don't need to care. The <code>#filter_records</code> helper in AbstractAdapter will take care of everything for you. All you
+need to do it provide it an Array of Hashes, using the <code>field</code> name of the property as the key. Since we use json to serialize the value, here
+we deserialize it back into a hash. We used field names as the keys, so no further translation is needed. TokyoTyrant provides the <code>#fwmkeys</code>
+method as a way to search for a key prefix, so we pass the model name in, because the model name is the first part of the key we used. We pass
+all the records we found in to <code>#filter_records</code>, which performs the filtering, and we then return the result.</p>
+
+<h2>Update</h2>
+<div class="highlight"><pre class="highlight plaintext"><code>def update(attributes, collection)                                 # 1
+  attributes = attributes_as_fields(attributes)                    # 2
+  db do |db|
+    collection.each do |resource|                                  # 3
+      attributes = resource.attributes(:field).merge(attributes)   # 4
+      save(db, key(resource), serialize(resource))                 # 5
+    end
+  end
+end
+</code></pre></div>
+<ol>
+<li>We take an <code>attributes</code> hash and a DataMapper::Collection. The <code>attributes</code> are in the form of <code>{Property =&gt; value}</code>, using the actual
+property object. A <code>Collection</code> is a set of resources.</li>
+<li>We need to convert the keys in the <code>attributes</code> has from <code>Property</code> objects into <code>:field</code> name. Luckily, AbstractAdapter provides
+<code>#attributes_as_fields</code>, which does exactly that.</li>
+<li>Iterate over every resource in the collection</li>
+<li>Update the attributes hash with the combination of the existing attributes, merged with the attributes we wish to update.</li>
+<li>Write the whole thing back to the database.</li>
+</ol>
+
+<p>You may also want to take a look at how the <a href="http://github.com/paul/dm-core/blob/27a0277c8b00aa9d5be67a25a4113c437e4a6b34/lib/dm-core/adapters/in_memory_adapter.rb">InMemoryAdapter in dm-core</a> accomplishes the same task. It extracts the query
+used to build the collection, and looks for those records in its data store, using <code>#filter_records</code>. It then updates each record in-place.
+Either way works fine, and the ease of which may depend upon the adapter. In TokyoTyrant, finding the records is harder than retrieving them,
+so I opted to just re-save the ones I already had in the collection. An SQL adapter is able to update the records without loading them, so
+using the query is faster. ( "UPDATE {attributes} WHERE {query}" ).</p>
+
+<h2>Delete</h2>
+<div class="highlight"><pre class="highlight plaintext"><code>def delete(collection)
+  db do |db|
+    collection.each do |resource|
+      db.delete(key(resource))
+    end
+  end
+end
+</code></pre></div>
+<p>At this point, it should all be self-explainatory. Just iterate over every resource in the colleciton, and delete its key from the db. Yay.</p>
+
+<h2>Conclusion</h2>
+
+<p>And thats all there is to it. 3 hours, 2 beers, and ~100 LOC later, and we have a fully-capable adapter that can be used with DataMapper. I was
+running the specs at every stage, but left them out for brevity. Here's the final run:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>dm-tokyotyrant-adapter/master % rake spec
+(in /home/rando/dev/dm-tokyotyrant-adapter)
+......................................
+
+Finished in 0.175668 seconds
+
+38 examples, 0 failures
+</code></pre></div>
+<p>As I said before, the specs aren't exactly comprehensive, but they will be added to over the next few weeks. For now, they're good enough that you
+can be pretty confident your adapter will work for most things.</p>
+
+<p>Thanks for tuning in, leave a comment, or come visit me in #datamapper on freenode if you have any adapter questions.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

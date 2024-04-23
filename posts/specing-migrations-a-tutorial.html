@@ -1,0 +1,276 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Spec'ing Migrations (A Tutorial)</title>
+
+    <title>Spec'ing Migrations (A Tutorial)</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Spec'ing Migrations (A Tutorial)" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Spec'ing Migrations (A Tutorial)" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Spec'ing Migrations (A Tutorial)",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Spec'ing Migrations (A Tutorial)
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/specing-migrations-a-tutorial.html">Spec'ing Migrations (A Tutorial)</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2008-05-23T01:30:59Z">Friday, May 23rd 2008</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/specing-migrations-a-tutorial.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">DataMapper<li>
+          <li class="icon fa-tag">Ruby<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>I realized I haven't blogged about (IMHO) the neatest feature of DataMapper's migrations yet. One of the more harrowing experiences for me in Rails is upgrading a production server with live data, and hoping your migration handles all the existing data correctly. You can dump the database, and attempt the migration on a clone, and hand-examine the data to make sure it was correct, but that feels very non-ruby-like to me. With the spec groups and matchers available in DataMapper migrations, though, you can spec your migrations and be certain that it will work correctly, and translate all your edge-case data correctly.</p>
+
+<p>Lets start off with a simple example. We'll start backwards for this example, but in real life, you're probably better off writing the spec first, then the migration itself, as is normal in iterative development. But regardless, lets say we have the following simple migration we want to spec:</p>
+
+<pre lang="ruby">
+migration 1, :create_people_table do
+  up do
+    create_table :people do
+      column :id,     "integer"
+      column :name,   "varchar(255)"
+      column :age,    "integer"
+    end
+  end
+end
+</pre>
+
+<p>Note that I've used string as the column types here. I hope that one day migrations will support dm-types, but until those stabilize post-0.9, I'm not going to try to implement it. Anyways, this just creates a pretty typical <code>people</code> table.</p>
+
+<p>Now lets start writing the spec:</p>
+
+<pre lang="ruby">
+describe :create_people_table, :type =&gt; :migration do
+
+  before do
+    run_migration
+  end
+
+end
+</pre>
+
+<p>Just some boilerplate here. You put the migration name as the name of the <code>describe</code> block, and pass the additional option of <code>:type =&gt; :migration</code>. This informs rspec to run the migration group-specific routines as part of this spec. After that, we have a before block. You must specify the <code>run_migration</code> at the end of this block. This allows you to insert any data you want <em>before</em> the migration gets run, so that you can test it got migrated correctly. The way these work is that for every describe block, the database is dropped and recreated, then the migrations run <em>up</em>to_ the migration specified. Then the before block is executed, the migration is performed, then the examples are executed. There are some subtle differences between the various DO adapters as to how that all works, but the results are the same.</p>
+
+<p>Alright, lets look at an example now:</p>
+
+<pre lang="ruby">
+it 'should create a people table' do
+  repository(:default).should have_table(:people)
+end
+</pre>
+
+<p>Pretty self explanatory, right? Here we use the <code>#have_table</code> matcher to check that we do, in fact, have a table called <code>people</code>.</p>
+
+<p>How about a more complicated one?</p>
+
+<pre lang="ruby">
+it 'should have an id column as the primary key' do
+  table(:people).should have_column(:id)
+  table(:people).column(:id).type.should == 'integer'
+  #table(:people).column(:id).should be_primary_key
+end
+</pre>
+
+<p>Ah, some meat in this one. Pretty obvious what it does, too. First we check that the <code>people</code> table has a column called <code>id</code>. Then we look to see that the column's type is 'integer'. (I plan on writing better matchers for these. Right now you have to string-match the column type of your RDBMS. Someday, you will be able to do <code>column(:id).should have_type(:integer)</code> or <code>column(:id).type.should be_integer</code>. I haven't decided which I like better.) Finally, we check that the column is a primary key. (This matcher hasn't been written yet, either. Feel free to contribute patches to any of this.)</p>
+
+<p>And that's really all there is to it. Take a look at the [sample migration spec]: <a href="http://github.com/sam/dm-more/tree/master/dm-migrations/examples/sample_migration_spec.rb">http://github.com/sam/dm-more/tree/master/dm-migrations/examples/sample_migration_spec.rb</a> to see the whole thing with more examples.</p>
+
+<h2>Some things to be aware of</h2>
+
+<ul>
+<li>The matchers don't work at all for MySQL. If anyone wants to contribute, please feel free. Take a look at the postgres &amp; sqlite files under lib/sql/ to see how it should work.</li>
+<li>I couldn't find a way to drop/create a database while inside a DO adapter connection. Rather than trying, I just drop/recreate the 'test' schema inside the database specified in the adapter.</li>
+<li>In Sqlite, I just delete the file, and let the adapter re-create it on its own.</li>
+<li>Postgres is the best-tested, and the most feature-complete. Everything in the examples works on both pg and sqlite. The spec can be initialized in run in mysql, but none of the matchers have been written yet.</li>
+</ul>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

@@ -1,0 +1,394 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Using Postgres Enum in Rails ActiveRecord</title>
+
+    <title>Using Postgres Enum in Rails ActiveRecord</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Using Postgres Enum in Rails ActiveRecord" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Using Postgres Enum in Rails ActiveRecord" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Using Postgres Enum in Rails ActiveRecord",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Using Postgres Enum in Rails ActiveRecord
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/postgres-enums-in-rails.html">Using Postgres Enum in Rails ActiveRecord</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2020-10-16T21:13:31Z">Friday, October 16th 2020</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2020-10-29T08:06:09-06:00">Thursday, October 29th 2020</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/postgres-enums-in-rails.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Rails<li>
+          <li class="icon fa-tag">Postgres<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>In this post, I will provide some code to make working with an Enum data type
+in Postgres easier within your ActiveRecord models. Skip to the end for the
+code, or stick around for some verbose pontificating.</p>
+
+<h2>ActiveRecord Enums</h2>
+
+<p>ActiveRecord comes with a <a href="https://edgeapi.rubyonrails.org/classes/ActiveRecord/Enum.html">handy feature to specify a certain field is an
+Enum</a>, or
+"Enumerated set of values". However, the documentation emphasizes the simple
+way to use it that is fraught with peril. They even note the danger in the
+docs:</p>
+
+<blockquote>
+<p>Note that when an array is used, the implicit mapping from the values to
+database integers is derived from the order the values appear in the array.
+In the example, :active is mapped to 0 as it's the first element, and
+:archived is mapped to 1. In general, the i-th element is mapped to i-1 in
+the database.</p>
+
+<p>Therefore, once a value is added to the enum array, its position in the array
+must be maintained, and new values should only be added to the end of the
+array. To remove unused values, the explicit hash syntax should be used.</p>
+</blockquote>
+
+<p>If you use the Array form in your model, like this, it implicitly uses the
+position of the item in that array for the integer value for the column in the
+database:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Message</span>
+  <span class="n">enum</span> <span class="ss">state: </span><span class="p">[</span>
+    <span class="ss">:queued</span><span class="p">,</span>     <span class="c1"># 0</span>
+    <span class="ss">:dispatched</span><span class="p">,</span> <span class="c1"># 1</span>
+    <span class="ss">:delivered</span>   <span class="c1"># 2</span>
+  <span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This writes rows to the DB that look like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code> id |  state   |         created_at
+----+----------+----------------------------
+  1 |        0 | 2020-10-14 21:34:40.036597
+  2 |        2 | 2020-10-14 21:34:40.056437
+</code></pre></div>
+<p>However, if you make <em>any change</em> to the enum aside from adding a new value to
+the end of the Array, then the integer values of the fields change as well.</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Message</span>
+  <span class="n">enum</span> <span class="ss">state: </span><span class="p">[</span>
+    <span class="ss">:queued</span><span class="p">,</span>     <span class="c1"># 0</span>
+    <span class="ss">:dispatched</span><span class="p">,</span> <span class="c1"># 1</span>
+    <span class="ss">:failed</span><span class="p">,</span>     <span class="c1"># 2</span>
+    <span class="ss">:delivered</span>   <span class="c1"># 3</span>
+  <span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>By inserting <code>:failed</code> in the middle of the Array, ActiveRecord will now
+consider <code>2</code> to be "failed" where previously it was "delivered", and so Message
+id:2 in our table that used to be "delivered" is now "failed". 💣</p>
+
+<p>However, not all is lost! ActiveRecord Enums may also be defined as a Hash
+instead of an Array. That looks like this:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Message</span>
+  <span class="n">enum</span> <span class="ss">state: </span><span class="p">{</span>
+    <span class="ss">queued:     </span><span class="mi">0</span><span class="p">,</span>
+    <span class="ss">dispatched: </span><span class="mi">1</span><span class="p">,</span>
+    <span class="ss">delivered:  </span><span class="mi">2</span>
+  <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Now, when we add a new value to the enum, we can put it wherever we want in
+that hash, as long as we don't change the numbers.</p>
+
+<p>Its still kinda tedious and annoying, though, that we have to track these
+numbers ourselves. It would be nice if we could just store those values
+directly as strings in the DB, but that would result in a much larger table,
+wasting storage on all those same strings over and over again.</p>
+
+<h2>Leveraging Postgres</h2>
+
+<p>The reason why Rails chooses to use Integers as values for its enums is because
+it has to support the lowest-common feature set of the databases it supports,
+and not all of them support Enums natively. Postgres, however, is <a href="https://www.postgresql.org/docs/current/datatype-enum.html">one that
+does</a>, and so if
+your app will only ever talk to Postgres, then you can take
+advantage of them.</p>
+
+<p>Here's a simple migration to add an enum, we have to drop to raw SQL to
+accomplish it:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">CreateMessagingTables</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">6.0</span><span class="p">]</span>
+  <span class="n">reversible</span> <span class="k">do</span> <span class="o">|</span><span class="n">dir</span><span class="o">|</span>
+    <span class="n">dir</span><span class="p">.</span><span class="nf">up</span> <span class="k">do</span>
+      <span class="n">execute</span> <span class="s2">"CREATE TYPE message_state_type AS ENUM ('queued', 'dispatched', 'delivered')"</span>
+
+      <span class="n">create_table</span> <span class="ss">:messages</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+        <span class="n">t</span><span class="p">.</span><span class="nf">column</span> <span class="ss">:state</span><span class="p">,</span> <span class="ss">:message_state_type</span><span class="p">,</span> <span class="ss">null: </span><span class="kp">false</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="n">dir</span><span class="p">.</span><span class="nf">down</span> <span class="k">do</span>
+      <span class="n">drop_table</span> <span class="ss">:messages</span>
+      <span class="n">execute</span> <span class="s2">"DROP TYPE message_state_type"</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>That's gross and annoying, though, so lets extract a helper:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="c1"># lib/migration_utils.rb</span>
+
+<span class="k">module</span> <span class="nn">MigrationUtils</span>
+  <span class="k">module</span> <span class="nn">CreateEnum</span>
+    <span class="k">def</span> <span class="nf">create_enum</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+      <span class="n">reversible</span> <span class="k">do</span> <span class="o">|</span><span class="n">dir</span><span class="o">|</span>
+        <span class="n">dir</span><span class="p">.</span><span class="nf">up</span> <span class="k">do</span>
+          <span class="n">say_with_time</span> <span class="s2">"create_enum(:</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">)"</span> <span class="k">do</span>
+            <span class="n">suppress_messages</span> <span class="k">do</span>
+              <span class="n">execute</span> <span class="s2">"CREATE TYPE </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2"> AS ENUM (</span><span class="si">#{</span><span class="n">values</span><span class="p">.</span><span class="nf">map</span><span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">quote</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="si">}</span><span class="s2">.join(', ')})"</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+
+        <span class="n">dir</span><span class="p">.</span><span class="nf">down</span> <span class="k">do</span>
+          <span class="n">say_with_time</span> <span class="s2">"drop_enum(:</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">)"</span> <span class="k">do</span>
+            <span class="n">execute</span> <span class="s2">"DROP TYPE </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># Then use it in a migration</span>
+<span class="c1">#</span>
+<span class="c1"># db/migrations/0000000000_create_messages.rb</span>
+<span class="k">class</span> <span class="nc">CreateMessagingTables</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">6.0</span><span class="p">]</span>
+  <span class="kp">include</span> <span class="no">MigrationUtils</span><span class="o">::</span><span class="no">CreateEnum</span>
+
+  <span class="n">change</span> <span class="k">do</span>
+    <span class="n">create_enum</span> <span class="ss">:message_state_type</span><span class="p">,</span> <span class="sx">%w[queued dispatched delivered]</span>
+
+    <span class="n">create_table</span> <span class="ss">:messages</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+      <span class="n">t</span><span class="p">.</span><span class="nf">column</span> <span class="ss">:state</span><span class="p">,</span> <span class="ss">:message_state_type</span><span class="p">,</span> <span class="ss">null: </span><span class="kp">false</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Now we can use Postgres Enum in Rails!</p>
+
+<p>Instead of Integers, Postgres will expose the enum values as Strings, so we need to update the Hash in our model:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Message</span>
+  <span class="n">enum</span> <span class="ss">state: </span><span class="p">{</span>
+    <span class="ss">queued:     :queued</span><span class="p">,</span>
+    <span class="ss">dispatched: :dispatched</span><span class="p">,</span>
+    <span class="ss">delivered:  :delivered</span>
+  <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The values of the hash must match those of the postgres enum, but the keys can
+be whatever you like (but why would you do that to yourself?). Since for our
+app, the keys always match the values, we wrote a little helper to remove some
+boilerplate:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">ApplicationRecord</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="nb">self</span><span class="p">.</span><span class="nf">abstract_class</span> <span class="o">=</span> <span class="kp">true</span>
+
+  <span class="c1"># Provides a bit of syntactic sugar around Rails' built-in enums to map</span>
+  <span class="c1"># them to postgres enums which expect string values instead of integer</span>
+  <span class="c1"># values. Basically this saves you from having to pass in:</span>
+  <span class="c1"># {</span>
+  <span class="c1">#   foo: "foo",</span>
+  <span class="c1">#   bar: "bar",</span>
+  <span class="c1">#   baz: "baz"</span>
+  <span class="c1"># }</span>
+  <span class="c1"># to the Rails enum DSL method.</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">pg_enum</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="n">enum</span><span class="p">({</span> <span class="n">attribute</span> <span class="o">=&gt;</span> <span class="no">Hash</span><span class="p">[</span><span class="n">values</span><span class="p">.</span><span class="nf">map</span><span class="p">{</span> <span class="o">|</span><span class="n">value</span><span class="o">|</span> <span class="p">[</span><span class="n">value</span><span class="p">.</span><span class="nf">to_sym</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="nf">to_s</span><span class="p">]</span> <span class="p">}]</span> <span class="p">}.</span><span class="nf">merge</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Now our model looks like this:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Message</span>
+  <span class="n">pg_enum</span> <span class="ss">state: </span><span class="sx">%i[ queued dispatched delivered ]</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>You can find all the code for this, along with helpers to add and remove fields
+in the migration, at <a href="https://gist.github.com/paul/675d7a3cafca3c05f08a5a1f2aaf19f4">this
+gist</a></p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

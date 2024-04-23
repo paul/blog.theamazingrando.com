@@ -1,0 +1,252 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Dear Microsoft: Please Do Pinned Menus Like This Instead</title>
+
+    <title>Dear Microsoft: Please Do Pinned Menus Like This Instead</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Dear Microsoft: Please Do Pinned Menus Like This Instead" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Dear Microsoft: Please Do Pinned Menus Like This Instead" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Dear Microsoft: Please Do Pinned Menus Like This Instead",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Dear Microsoft: Please Do Pinned Menus Like This Instead
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/using-the-link-element.html">Dear Microsoft: Please Do Pinned Menus Like This Instead</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2010-09-25T21:46:19Z">Saturday, September 25th 2010</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/using_the_link_element.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Hypermedia<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>With the IE9 betas beginning to come out, Microsoft have introduced an interesting new feature they're calling <a href="http://msdn.microsoft.com/en-us/library/gg131029(VS.85).aspx">pinned sites</a>. For more details about how it works, you can check out the <a href="http://arstechnica.com/microsoft/news/2010/09/inside-internet-explorer-9-redmond-gets-back-in-the-game.ars/4">Ars Technica preview</a>. Essentially, you put several ms-vendor specific <code>meta</code> tags in the html of your header that describe the menu. The example given on the Ars preview uses this markup:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;meta name="application-name" content="Ars Technica"/&gt;
+&lt;meta name="msapplication-starturl" content="http://arstechnica.com/"/&gt;
+&lt;meta name="msapplication-tooltip" content="Ars Technica: Serving the technologist for 1.2 decades"/&gt;
+&lt;meta name="msapplication-task" content="name=News;action-uri=http://arstechnica.com/;icon-uri=http://arstechnica.com/favicon.ico"/&gt;
+&lt;meta name="msapplication-task" content="name=Features;action-uri=http://arstechnica.com/features/;icon-uri=http://static.arstechnica.net/ie-jump-menu/jump-features.ico"/&gt;
+&lt;meta name="msapplication-task" content="name=OpenForum;action-uri=http://arstechnica.com/civis/;icon-uri=http://static.arstechnica.net/ie-jump-menu/jump-forum.ico"/&gt;
+&lt;meta name="msapplication-task" content="name=One Microsoft Way;action-uri=http://arstechnica.com/microsoft/;icon-uri=http://static.arstechnica.net/ie-jump-menu/jump-omw.ico"/&gt;
+&lt;meta name="msapplication-task" content="name=Subscribe;action-uri=http://arstechnica.com/subscriptions/;icon-uri=http://static.arstechnica.net/ie-jump-menu/jump-subscribe.ico"/&gt;
+</code></pre></div>
+<p>...to produce this Windows 7 "pinned menu":</p>
+
+<p><img src="http://static.arstechnica.com/ie-9-beta-1/ie9-ars-jump-list.png" alt="Ars Technica pinned menu"></p>
+
+<p>Kroc Camen at <a href="http://camendesign.com/">Camen Design</a> has a <a href="http://camendesign.com/blog/stop_this_madnessels">pretty decent rant</a> about how he thinks this is a bad idea. However, aside from the annoying proprietary <code>.ico</code> image format, the way Microsoft chose to use the <code>meta</code> element it isn't nearly as bad as what Mr. Camen proposes in its stead.</p>
+
+<h2>The <code>Meta</code> Element</h2>
+
+<p>I take no issue with Microsoft's use of the <code>meta</code> element. It was always intended to be used by vendors for browser-specific features. From the <a href="http://wiki.whatwg.org/wiki/MetaExtensions">HTML5 working group wiki</a>:</p>
+
+<blockquote>
+<p>You may add your own values to this list, which makes them legal HTML5 metadata names. We ask that you try to avoid redundancy; if someone has already defined a name that does roughly what you want, please reuse it.</p>
+</blockquote>
+
+<p>That said, this implementation is far from ideal. It is extremely verbose, 8 lines and over 1KB of text. Not surprising, as Microsoft and IE have always had issues with <a href="http://www.gethifi.com/blog/browser-rest-http-accept-headers">extreme</a> <a href="http://stackoverflow.com/questions/2838635/ajax-microsoft-com-vs-cookieless-domain-for-cdn">verbosity</a>. This text will have to be sent with every page that a user might possibly want to "pin" your site from. Every page * every visitor * 1KB = a whole lot of bandwidth.</p>
+
+<p>Camen's proposal is to use the new HTML5 <code>menu</code> element, in the body of the page. Not only does this have the same problems as above, its going to break accessibilty. Even if its it hidden from view by CSS, screen readers and other devices are going to be confused by having a <code>menu</code> stuck in the page, that is only tangentially related to the page's content.</p>
+
+<p>Luckily, there is a perfectly acceptable solution: the <code>link</code> element.</p>
+
+<h2>The <code>Link</code> Element</h2>
+
+<p>You're probably already familiar with <a href="http://dev.w3.org/html5/spec/Overview.html#the-link-element">this element</a>; you use it any time you want to attach a stylesheet to your page.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;link rel="stylesheet" type="text/css" href="/style.css"&gt;
+</code></pre></div>
+<p>The <code>rel</code> attribute is a space-separated list of keywords that describe what <em>relationship</em> the linked content has to this page. So the IE pinned menu markup above could easily be replaced with:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;link rel="ms-pinned-menu" type="application/xml" href="/pinned-menu.xml"&gt;
+</code></pre></div>
+<p>Then <code>pinned-menu.xml</code> could be simple xml (or HTML5 menu!) describing the menu. By doing it this way, web applications gain all the same benefits as serving linked stylesheets: it can be cached, and hosted as a static file on a CDN. Additionally, its much easier to extend the XML dialect as more browsers want to support Windows 7 pinned menus. Further, its a jumping-point to more integrated browser features, such as Android's "Menu" button, and single-page browser wrappers like Fluid and Prism.</p>
+
+<p>I know its too late to get Microsoft to fix this in IE9, but hopefully the other browser vendors will be more forward-thinking, and let us developers do this the easy way, without adding kilobytes of additional markup to all our pages.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

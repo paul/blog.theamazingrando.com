@@ -1,0 +1,712 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog</title>
+
+    <meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "The Amazing Blog",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              <a href="/" id="logo">The Amazing Blog</a>
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                
+  <section>
+    <h2>
+      <a href="/posts/rails-naming-conventions.html">Rails File Naming Conventions</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Mar  8, 2023
+      </li>
+    </ul>
+    <p>
+      <p>One of the best things about Rails, that it gets right over so many other frameworks like React, is its <em>Directory Naming Conventions</em>. You can jump into any Rails app written in the last 15 years and no immediately where to go to start exploring. Where's the routes? Database Models? Controllers and Views? Every app keeps them in the same place, so once you learn it, you can easily transfer that knowledge to another project.</p>
+    </p>
+    <a href="/posts/rails-naming-conventions.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/postgres-enums-in-rails.html">Using Postgres Enum in Rails ActiveRecord</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Oct 16, 2020
+      </li>
+    </ul>
+    <p>
+      <p>In this post, I will provide some code to make working with an Enum data type
+in Postgres easier within your ActiveRecord models. Skip to the end for the
+code, or stick around for some verbose pontificating.</p>
+    </p>
+    <a href="/posts/postgres-enums-in-rails.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/containers-for-dependency-injection.html">Using Dry::Container for Dependency Injection</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        May  6, 2020
+      </li>
+    </ul>
+    <p>
+      <p>The point of this post isn't to convince you of the usefulness of <a href="https://dry-rb.org/gems/dry-container/0.8/#introduction">Dependency
+Injection</a> there's been plenty of <a href="https://visualstudiomagazine.com/articles/2014/05/01/how-to-refactor-for-dependency-injection.aspx">pixels spilled about it already</a>.
+Instead, I want to talk about using <a href="https://dry-rb.org/gems/dry-container/0.8/">Dry::Container</a> to
+alleviate some of the pain points that DI introduces.</p>
+    </p>
+    <a href="/posts/containers-for-dependency-injection.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/in-band-vs-out-of-band.html">In-Band vs. Out-of-Band: The Advantages of Hypermedia APIs</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Jul 30, 2016
+      </li>
+    </ul>
+    <p>
+      <p>A good way to look at the advantages of a hypermedia-based API vs an "HTTP-RPC"
+style one is to consider the differences between "In-Band" and "Out-of-Band"
+information. A hypermedia API focuses on getting as much information in-band as
+possible, reducing the burden on clients to deal with changes.</p>
+    </p>
+    <a href="/posts/in-band-vs-out-of-band.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/lets-encrypt-route53.html">Let's Encrypt + Route53 + Ruby = Yay!</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Apr 21, 2016
+      </li>
+    </ul>
+    <p>
+      <p>A few months ago, Let's Encrypt <a href="https://community.letsencrypt.org/t/dns-challenge-is-in-staging/8322">rolled out a feature to verify domains over
+DNS</a>. Their automatic configuration tool doesn't support all
+the use cases yet, including my particular scenario: multiple load-balanced EC2
+instances behind a single ELB, using Route53 for DNS. I <a href="https://github.com/paul/letsencrypt-route53">wrote a
+tool</a> to simplify updating Route53 DNS Records with the
+challenge, as well as updating the ELB with the resulting certificate. Check
+out the <a href="https://github.com/paul/letsencrypt-route53">README</a> and <a href="https://github.com/paul/letsencrypt-route53">code</a>, or read
+on for why I wrote it.</p>
+    </p>
+    <a href="/posts/lets-encrypt-route53.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/the-conductor-pattern.html">The Conductor Pattern</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        May  1, 2012
+      </li>
+    </ul>
+    <p>
+      <p>A movement has been growing over the last several months to make our Rails applications more object-oriented. One of the most popular recently has been <a href="http://objectsonrails.com/">Avdi Grimm's Objects on Rails</a>. In it, he talks about an alternative to the Presenter pattern, which he calls Exhibits (and both of which are subsets of the Decorator pattern). I've been using another form of this, which may or may not be called a Conductor.</p>
+    </p>
+    <a href="/posts/the-conductor-pattern.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/announcing-progress-bar.html">Annoucing ProgressBar</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Apr 10, 2011
+      </li>
+    </ul>
+    <p>
+      <p>I was working on a script to sync hundreds of thousands of records
+between two databases, and wanted a simple way to keep track of
+progress. I couldn't find one that was easy to use and did what I
+wanted, so I <a href="https://github.com/paul/progress_bar">wrote my own</a>. Not much more introduction needed, how about
+a simple example?</p>
+    </p>
+    <a href="/posts/announcing-progress-bar.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/the-road-to-better-auth.html">The Road to Better Authorization</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Nov 22, 2010
+      </li>
+    </ul>
+    <p>
+      <p>I have several Google accounts: My <a href="mailto:psadauskas@gmail.com">personal email</a>, Google Apps at <a href="http://absolute-performance.com">my employer</a>, and Gmail for <a href="http://theamazingrando.com">my domain</a>. I use my personal email all the time, and have several Google Docs spreadsheets and letters. Our company uses Google Docs and Sites. Its extremely annoying that switching between these accounts is brittle, and unpredictable. The same situation existed on Github between my personal and the company account, before they added "Organizations".</p>
+    </p>
+    <a href="/posts/the-road-to-better-auth.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/using-the-link-element.html">Dear Microsoft: Please Do Pinned Menus Like This Instead</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Sep 25, 2010
+      </li>
+    </ul>
+    <p>
+      <p>With the IE9 betas beginning to come out, Microsoft have introduced an interesting new feature they're calling <a href="http://msdn.microsoft.com/en-us/library/gg131029(VS.85).aspx">pinned sites</a>. For more details about how it works, you can check out the <a href="http://arstechnica.com/microsoft/news/2010/09/inside-internet-explorer-9-redmond-gets-back-in-the-game.ars/4">Ars Technica preview</a>. Essentially, you put several ms-vendor specific <code>meta</code> tags in the html of your header that describe the menu. The example given on the Ars preview uses this markup:</p>
+    </p>
+    <a href="/posts/using-the-link-element.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/about-this-blog.html">About this Blog</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Jul  2, 2010
+      </li>
+    </ul>
+    <p>
+      <p>After nearly a year on hiatus, I'm finally ready to start blogging again. I have several neat projects I've been working on over the last several months, and I need a place to write about them.</p>
+    </p>
+    <a href="/posts/about-this-blog.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/your-web-service-might-not-be-restful-if.html">Your Web Service Might Not Be RESTful If...</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Jul 20, 2009
+      </li>
+    </ul>
+    <p>
+      <p>The other day, I gave a brief talk about our HTTP Library, <a href="http://github.com/paul/resourceful">Resourceful</a>. After a few minutes of going over the features,
+it became apparent to me that very few people have taken the time to appreciate the finer points of HTTP. Everyone who
+calls themself a web application developer needs to take a few hours to read <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC2616: Hypertext Transfer Protocol -- HTTP/1.1</a>.
+Its not very long, and increadibly readable for a spec. Print it out, and read a few sections when you go for your
+morning "reading library" break. Unfortunately, a great many people got confused by it, and ended up reimplementing a lot
+of http in another layer, and thats how we ended up with SOAP and XML-RPC. There's a good parable about
+<a href="http://serialseb.blogspot.com/2009/06/fighting-for-rest-or-tale-of-ice-cream.html">how this all went of the rails for awhile</a>, until some people re-discovered a section in  Roy T. Fielding's
+disseration, "<a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">Representational State Transfer (REST)</a>".</p>
+    </p>
+    <a href="/posts/your-web-service-might-not-be-restful-if.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/writing-datamapper-adapters-a-tutorial.html">Writing DataMapper Adapters - A Tutorial</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Mar 31, 2009
+      </li>
+    </ul>
+    <p>
+      <p>The adapter API for DataMapper has been in a bit of flux recently. When I submitted
+my proposal for a <a href="http://mwrc2009.confreaks.com/14-mar-2009-16-10-writing-adapters-for-datamapper-paul-sadauskas.html">talk at MountainWest</a>, adapters were irritatingly complex to write.
+You just needed to know too much about DataMapper's internals to be able to write one.
+A week before the conference began, I started a significant effort to re-write the API to make
+it easier. I succeeded, a little too well; my 30 minute talk only took 15. Since then,
+I've written a couple more adapters from scratch, and refined the API further. This post
+will serve as notes on the changes that I've made, and a tutorial on writing adapters.</p>
+    </p>
+    <a href="/posts/writing-datamapper-adapters-a-tutorial.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/datamapper-echo-adapter.html">DataMapper Echo Adapter</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Mar 12, 2009
+      </li>
+    </ul>
+    <p>
+      <p>I just wrote a simple adapter that can be used to investigate the DM Adapter API, and debug your own adapter. Its really simple to use:</p>
+    </p>
+    <a href="/posts/datamapper-echo-adapter.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/a-response-to-database-versioning.html">A Response to "Database Versioning"</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Mar  3, 2009
+      </li>
+    </ul>
+    <p>
+      <p>I was just going to post a comment in reply to <a href="http://adam.blog.heroku.com/past/2009/3/2/database_versioning/">Adam Wiggins's Database Versioning post</a>, but it ended up being pretty long, so I'll post a response here instead.</p>
+    </p>
+    <a href="/posts/a-response-to-database-versioning.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/howto-get-a-list-of-a-classs-subclasses.html">HOWTO - Get a list of a class's subclasses</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Feb  5, 2009
+      </li>
+    </ul>
+    <p>
+      <p>I recently came across a situation where I had an AbstractClass, an I wanted to know all of the classes that had inherited from it. There were lots of implementations on the web, but that weren't exactly what I wanted, or they used ObjectSpace to get ALL the classes, and see if the interesting one was in its ancestors.</p>
+    </p>
+    <a href="/posts/howto-get-a-list-of-a-classs-subclasses.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/ruby-dirglob-bug.html">Ruby Dir.glob bug</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Jan 20, 2009
+      </li>
+    </ul>
+    <p>
+      <p>To further elaborate on Yehuda's <a href="http://twitter.com/wycats/status/1124457823">twit</a>:</p>
+    </p>
+    <a href="/posts/ruby-dirglob-bug.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/datamapper-096-released.html">DataMapper 0.9.6 released</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Oct 13, 2008
+      </li>
+    </ul>
+    <p>
+      <p>I just pushed 0.9.6 of dm-core, dm-more and data_objects up to rubyforge, as well as 0.9.8 of extlib. There's several bugfixes that were applied in the runup to merbcamp. This is also preparing for the imminent release of merb 1.0RC1.</p>
+    </p>
+    <a href="/posts/datamapper-096-released.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/howto-better-json-parsing-when-posting-to-merb-apps.html">HOWTO: Better JSON parsing when POSTing to Merb Apps</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Oct 10, 2008
+      </li>
+    </ul>
+    <p>
+      <p>Where I work, we have fairly extensive, JSON-based web services in all out applications. As a quick example, here's what you would get if you were to <code>GET</code> <code>http://config.ssbe.example.com/configurations/90</code> with the mime-type <code>application/vnd.absperf.sscj1+json</code>:</p>
+    </p>
+    <a href="/posts/howto-better-json-parsing-when-posting-to-merb-apps.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/howto-exception-handling-in-merb.html">HOWTO: Exception Handling in Merb</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Oct  1, 2008
+      </li>
+    </ul>
+    <p>
+      <p>Our app is very (JSON) web-service heavy, and so having helpful error messages in our web service documents is pretty important. Luckily, Merb makes this, like everything, a metric shitton easier than it is in rails. There are a couple poorly documented things I had to stumble through, so I thought I would write some up on how to do this.</p>
+    </p>
+    <a href="/posts/howto-exception-handling-in-merb.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/howto-getting-a-sidebar-in-merb.html">HOWTO: Getting a sidebar in Merb</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Sep 16, 2008
+      </li>
+    </ul>
+    <p>
+      <p>In several of my pages, I have a side-bar menu-y thingie. I didn't want to have to rewrite a controller-specific layout each time, but luckily Merb supports something similar to <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/CaptureHelper.html#M001751">Rails's content_for</a> block that <a href="http://www.theamazingrando.com/blog/?p=7">I wrote about earlier</a>. In Merb, its done using <code>throw_content</code>(<a href="http://merb.rubyforge.org/classes/Merb/ViewContextMixin.html#M000146">API</a>) and <code>catch_content</code>(<a href="http://merb.rubyforge.org/classes/Merb/RenderMixin.html#M000129">API</a>).</p>
+    </p>
+    <a href="/posts/howto-getting-a-sidebar-in-merb.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/howto-datamapper-setting-the-default-repository-for-a-model.html">HOWTO: DataMapper - Setting the default repository for a model</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Aug 29, 2008
+      </li>
+    </ul>
+    <p>
+      <p>Had to google for quite a while before I was able to find the solution. Essentially, I have a model that I want to always use a different repository than what I <code>#setup</code> in <code>:default</code>. To do that:</p>
+    </p>
+    <a href="/posts/howto-datamapper-setting-the-default-repository-for-a-model.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/resourceful-adding-default-options.html">Resourceful - Adding default options</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Aug  1, 2008
+      </li>
+    </ul>
+    <p>
+      <p>I just commited a change that allows you to specify some default headers to attach to all requests made on a resource. Best shown in an example, I'll use the sample code I gave in my <a href="http://www.theamazingrando.com/blog/index.php/2008/07/31/resourceful-021/">last post</a>:</p>
+    </p>
+    <a href="/posts/resourceful-adding-default-options.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/resourceful-021.html">Resourceful 0.2.1</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Jul 31, 2008
+      </li>
+    </ul>
+    <p>
+      <p>I'm pleased to introduce the next release of Resourceful, 0.2.1. This one has tons of bugfixes over 0.2, and is actually being used in production. There's only one real new feature to speak of is prettier logging output. It shows the runtime for requests, the resulting status code, and if it was retrieved from the cache. Some sample log output:</p>
+    </p>
+    <a href="/posts/resourceful-021.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/announcing-resourceful.html">Announcing Resourceful</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Jun 30, 2008
+      </li>
+    </ul>
+    <p>
+      <p><a href="http://resourceful.rubyforge.org/">Resourceful</a> is an advanced http library for Ruby that does all the fancy stuff that makes HTTP an amazing protocol. I'm pleased to announce the <a href="http://github.com/paul/resourceful/commits/rel_0.2">initial release</a> of Resourceful, 0.2. It already has some pretty cool features, with more to come.</p>
+    </p>
+    <a href="/posts/announcing-resourceful.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/specing-migrations-a-tutorial.html">Spec'ing Migrations (A Tutorial)</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        May 23, 2008
+      </li>
+    </ul>
+    <p>
+      <p>I realized I haven't blogged about (IMHO) the neatest feature of DataMapper's migrations yet. One of the more harrowing experiences for me in Rails is upgrading a production server with live data, and hoping your migration handles all the existing data correctly. You can dump the database, and attempt the migration on a clone, and hand-examine the data to make sure it was correct, but that feels very non-ruby-like to me. With the spec groups and matchers available in DataMapper migrations, though, you can spec your migrations and be certain that it will work correctly, and translate all your edge-case data correctly.</p>
+    </p>
+    <a href="/posts/specing-migrations-a-tutorial.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/moving-on-from-gentoo.html">Moving on from Gentoo...</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        May 22, 2008
+      </li>
+    </ul>
+    <p>
+      <p><strong>Updated:</strong> I added a few more paragraphs that I had originally commented on in response to Mr. Berkholz's comment.</p>
+    </p>
+    <a href="/posts/moving-on-from-gentoo.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/i-might-as-well-get-in-on-it-too.html">I might as well get in on it, too</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Apr 16, 2008
+      </li>
+    </ul>
+    <p>
+      <p>Modified for zshell:</p>
+    </p>
+    <a href="/posts/i-might-as-well-get-in-on-it-too.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/mysql-enterprise.html">MySQL Enterprise</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Apr 15, 2008
+      </li>
+    </ul>
+    <p>
+      <p>I just came across this link <a href="http://jcole.us/blog/archives/2008/04/14/just-announced-mysql-to-launch-new-features-only-in-mysql-enterprise/">about some new MySQL features will be for Enterprise customers only</a>. The feature they mention here is online backups. I think I'm just going to stop using MySQL for any new projects.</p>
+    </p>
+    <a href="/posts/mysql-enterprise.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/rails-logging-to-syslog-using-logging-gem.html">Rails Logging to Syslog using Logging gem</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Mar  6, 2008
+      </li>
+    </ul>
+    <p>
+      <p>When using a mongrel cluster, you can either log to a separate file for each mongrel instance, or you can log them all to the same file, but on a loaded cluster, there's a good chance your logged lines will get interleaved and be unreadable. Luckily, there's another way. The new replacement for log4r <a href="http://logging.rubyforge.org">Logging</a> can take care of this. It has a built-in way of <a href="http://www.ruby-forum.com/topic/142485">not interleaving the lines</a>, but (I think) its using lockfiles to do so, and if so, that's going to be detrimental to performance. The best solution has been around for 25 years, syslog. And with one of the more recent syslog daemons (syslog-ng, or rsyslog), you can set it up to log your mongrel log wherever you like.</p>
+    </p>
+    <a href="/posts/rails-logging-to-syslog-using-logging-gem.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/dm-migrations-now-with-100-more-helpers.html">DM Migrations (now with 100% more helpers!)</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Feb 12, 2008
+      </li>
+    </ul>
+    <p>
+      <p>Added some helpers to the DataMapper Migrations I've been writing. These helpers just build up some SQL, and feed it into #execute.</p>
+    </p>
+    <a href="/posts/dm-migrations-now-with-100-more-helpers.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/idealized-migration-dsl.html">Idealized Migration DSL</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Jan  8, 2008
+      </li>
+    </ul>
+    <p>
+      <p>There's a <a href="http://groups.google.com/group/datamapper/browse_thread/thread/1b24e6f3d7675add">discussion</a> in the datamapper group about how to do migrations. I've thrown together an idealized DSL for how the migrations themselves should look.</p>
+    </p>
+    <a href="/posts/idealized-migration-dsl.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/ruby-rescues-are-not-slow.html">Ruby rescues are not slow</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Nov 27, 2007
+      </li>
+    </ul>
+    <p>
+      <p>I've heard several times that you should avoid exceptions because they are slow. They are in Java, so I think that has given them a bad name everywhere. The only real numbers I could find are from <a href="http://www.notsostupid.com/blog/2006/08/31/the-price-of-a-rescue/" title="http://www.notsostupid.com/blog/2006/08/31/the-price-of-a-rescue/"></a><a href="http://www.notsostupid.com/blog/2006/08/31/the-price-of-a-rescue/">http://www.notsostupid.com/blog/2006/08/31/the-price-of-a-rescue/</a> . His 'plain' test is also missing the conditional that would also have to be executed (In this case, to make sure 5 is not 0). His post is also 18 months old, so I updated the 'plain' test and re-ran it (Upping the runs to 5,000,000). My plain test now looks like:
+</p>
+
+    </p>
+    <a href="/posts/ruby-rescues-are-not-slow.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/comcast-bittorrent.html">Comcast & Bittorrent</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Oct 27, 2007
+      </li>
+    </ul>
+    <p>
+      <p>Comcast user? Bummed that they're ruining your bittorrent? No problem. They way the kill your connection is by sending unsolicited TCP reset packets to your bittorrent client, making it think that the person you're downloading from has closed the connection. If you're using a good firewall/router, you can write a rule that will block it. I'm using <a href="http://www.polarcloud.com/tomato">Tomato</a> firmware for my Linksys WRT54G, and added the following line to my firewall scripts:
+<code>
+iptables -A {wan interface} -p tcp --dport {bittorrent port} --tcp-flags RST RST -j DROP
+</code>
+This drops all incoming RST packets to your bittorrent client. Now, this even removes the legitimate ones, if your source really does disconnect, you won't know about it. Luckily, the connection will timeout after about 10 minutes anyways, so its not that bad. I've been using this for a couple weeks now, and my bittorrent transfer speeds are back to what they were before Comcast started doing all this.</p>
+    </p>
+    <a href="/posts/comcast-bittorrent.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/rails-tip-additional-content-for-a-layout.html">Rails tip: Additional content for a layout</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Oct 22, 2007
+      </li>
+    </ul>
+    <p>
+      <p>If you need to add additional content to your layout, you can have named content_for blocks. Great for including additional page-specific javascript files.</p>
+    </p>
+    <a href="/posts/rails-tip-additional-content-for-a-layout.html">Read more</a>
+  </section>
+  <section>
+    <h2>
+      <a href="/posts/rails-update-attribute-gotcha.html">Rails update_attribute gotcha</a>
+    </h2>
+    <ul class="meta">
+      <li class="icon fa-clock">
+        Jan 26, 2007
+      </li>
+    </ul>
+    <p>
+      <p>Model#update_attribute(:name, "Rando") does not trigger any validations, <em>even on name</em> and just saves it to the database.</p>
+    </p>
+    <a href="/posts/rails-update-attribute-gotcha.html">Read more</a>
+  </section>
+
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

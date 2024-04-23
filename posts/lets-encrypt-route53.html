@@ -1,0 +1,284 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Let's Encrypt + Route53 + Ruby = Yay!</title>
+
+    <title>Let's Encrypt + Route53 + Ruby = Yay!</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Let's Encrypt + Route53 + Ruby = Yay!" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Let's Encrypt + Route53 + Ruby = Yay!" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Let's Encrypt + Route53 + Ruby = Yay!",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Let's Encrypt + Route53 + Ruby = Yay!
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/lets-encrypt-route53.html">Let's Encrypt + Route53 + Ruby = Yay!</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2016-04-21T05:15:20Z">Thursday, April 21st 2016</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/lets-encrypt-route53.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Ruby<li>
+          <li class="icon fa-tag">AWS<li>
+          <li class="icon fa-tag">Let's Encrypt<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>A few months ago, Let's Encrypt <a href="https://community.letsencrypt.org/t/dns-challenge-is-in-staging/8322">rolled out a feature to verify domains over
+DNS</a>. Their automatic configuration tool doesn't support all
+the use cases yet, including my particular scenario: multiple load-balanced EC2
+instances behind a single ELB, using Route53 for DNS. I <a href="https://github.com/paul/letsencrypt-route53">wrote a
+tool</a> to simplify updating Route53 DNS Records with the
+challenge, as well as updating the ELB with the resulting certificate. Check
+out the <a href="https://github.com/paul/letsencrypt-route53">README</a> and <a href="https://github.com/paul/letsencrypt-route53">code</a>, or read
+on for why I wrote it.</p>
+
+<p>Previously, the way to prove you owned a particular domain was to have a web
+server host a file that Lets Encrypt provided, which they would then query and
+confirm the results. This works great, and they even provide a client that will
+automagically configure your nginx or apache webserver to host the file. Having
+a magic tool touch my webserver config makes me nervous, however. Additionally,
+I have multiple web servers behind an ELB load balancer, and it was not clear
+to me how that update would work, since all the servers would have to have the
+same file in the same location at the same time, lest the Lets Encrypt
+verification check get routed to a server that didn't have it. I'm sure they've
+thought of this, but that many moving parts behind a magic tool made me
+concerned for potential downtime.</p>
+
+<p>However, the DNS challenge gets around the load-balanced web server problem by letting you set the challenge as a <code>TXT</code> record on the DNS server hosting your domain. The tool I've written which automates this process also takes care of a lot of the other steps needed to update your ELB and clean up after itself.</p>
+
+<h2>Let's Encrypt DNS Challenges</h2>
+
+<p>These are the steps needed to obtain a certificate from Let's Encrypt, and update your ELB with it:</p>
+
+<ol>
+<li>Tell LetsEncrypt.org that you'd like to protect the domain at
+<code>myawesomeblog.example</code> using a DNS challenge.</li>
+<li>They provide a challenge record, which provides a name and value. You then
+create new DNS <code>TXT</code> record in the Route53 hosted zone with those
+parameters.</li>
+<li>Wait for Route53 to roll out those changes. This takes several tens of
+seconds to a couple minutes.</li>
+<li>Notify Lets Encrypt that you've made the changes. They query the DNS server
+to check that the value they expect is there.</li>
+<li>If they succeed, you can then generate a certificate signing request (CSR)
+for the domain.</li>
+<li>Submit the CSR to LetsEncrypt. In return, they will provide
+you with a real actual signed certificate for your domain.</li>
+<li>Upload that certificate to IAM's certificate management service.</li>
+<li>Update the ELB's 443 listener to use the IAM certificate. This can also take
+a few seconds, so wait for that to finish.</li>
+<li>Delete any old certificates from IAM, we won't be needing them any more, and
+it's good to be tidy.</li>
+<li>Finally, delete the TXT record.</li>
+</ol>
+
+<p>Whew, that's a lot of bookkeeping. There's another step I left out, too: You
+need to make a private key, and provide it to the LetsEncrypt client on
+subsequent certificate requests. And since it is a private key, it is a good idea
+to keep it encrypted, and your updating process will need access to it. My
+solution was to encrypt it using AWS' built-in <a href="https://aws.amazon.com/kms/">Key Management Service</a>,
+which allows my EC2 instances that will be performing the steps to decrypt the
+private key without needing the decryption token directly.</p>
+
+<p>This was a lot of learning for me, and I've captured everything I've learned as
+a Ruby script: <a href="https://github.com/paul/letsencrypt-route53">github.com/paul/letsencrypt-route53</a>. I
+don't think it's worthy of being a gem, in fact, you should probably not even
+copy it verbatim. Feel free to take it and modify it to fit your own needs, it
+should provide a nice starting point.</p>
+
+<p>I've also included a script that checks the certificate expiry for a domain,
+and an example rake task. It should be trivial to incorporate into an
+ActiveJob, or cron task, or however else you feel like updating your
+certificates.</p>
+
+<p>I'm also excited to hear how people are using this, so please feel to contact
+me on twitter or email, or open an Issue or PR on that repo if I screwed up
+something obvious.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

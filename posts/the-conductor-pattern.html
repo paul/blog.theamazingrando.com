@@ -1,0 +1,308 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - The Conductor Pattern</title>
+
+    <title>The Conductor Pattern</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="The Conductor Pattern" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="The Conductor Pattern" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "The Conductor Pattern",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              The Conductor Pattern
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/the-conductor-pattern.html">The Conductor Pattern</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2012-05-01T06:26:07Z">Tuesday, May 1st 2012</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/the-conductor-pattern.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Ruby<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<h2>Objects on Rails</h2>
+
+<p>A movement has been growing over the last several months to make our Rails applications more object-oriented. One of the most popular recently has been <a href="http://objectsonrails.com/">Avdi Grimm's Objects on Rails</a>. In it, he talks about an alternative to the Presenter pattern, which he calls Exhibits (and both of which are subsets of the Decorator pattern). I've been using another form of this, which may or may not be called a Conductor.</p>
+
+<p>Most of these patterns come from the Java world, and Smalltalk before that. They have very specific rules about how they can be used (read-only, wrap methods on a single object, etc). In the Ruby world, however, its flexible object model and powerful metaprogramming features mean we can be a little more lazy about those rules. The Conductor pattern is an implementation of what Martin Fowler's PoEAA calls a <a href="http://martinfowler.com/eaaCatalog/unitOfWork.html">Unit of Work</a>. Specifically, it wraps one or more models, and can be bidirectional, so it can decorate attributes of the models as well as update them.</p>
+
+<p>I gave a talk a couple years ago at Mountain.rb entitled <a href="http://www.confreaks.com/videos/422-mountainrb2010-forms-don-t-have-to-be-this-complicated">Forms Don't Have to be this Complicated</a>. In it, I spoke about how terrible Rails is at managing forms, particularly ones that deal with several related objects. I outlined a couple solutions, none of which were very good. I have recently been using this Conductor pattern for these complicated forms, and it seems to have alleviated most of the pain. The ability to wrap multiple models means it can handle the nested associations, and being bidirectional makes it perfect for forms.</p>
+
+<p>In this post, I'm going to show you a couple uses of the Conductor pattern, as well as a library I wrote that implements it.</p>
+
+<h2>GoldPlating</h2>
+
+<p>In Ruby, writing an implementation of the Conductor library is trivial with the help of ActiveModel. The entire implementation is only 60 LOC. I haven't bothered making a gem of it yet, but <a href="https://gist.github.com/2565340">here's a gist</a>. Just toss it in your Rails <code>lib/</code> dir and require it.</p>
+
+<p>Here's how to use it:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">Registration</span>
+  <span class="kp">include</span> <span class="no">GoldPlating</span>
+
+  <span class="n">wrap</span> <span class="no">Account</span><span class="p">,</span> <span class="ss">:name</span>
+  <span class="n">wrap</span> <span class="no">User</span><span class="p">,</span>    <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span>
+
+  <span class="n">validates_presence_of</span> <span class="ss">:account_name</span><span class="p">,</span>
+                        <span class="ss">:user_email</span><span class="p">,</span>
+                        <span class="ss">:user_password</span><span class="p">,</span>
+                        <span class="ss">:message</span> <span class="o">=&gt;</span> <span class="s2">"Required"</span>
+
+  <span class="n">validates_format_of</span> <span class="ss">:user_email</span><span class="p">,</span>
+                      <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="sr">/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/</span><span class="p">,</span>
+                      <span class="ss">:message</span> <span class="o">=&gt;</span> <span class="s2">"Not an Email"</span><span class="p">,</span>
+                      <span class="ss">:if</span> <span class="o">=&gt;</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="n">user_email</span><span class="p">.</span><span class="nf">present?</span> <span class="p">}</span>
+
+  <span class="n">validates_length_of</span> <span class="ss">:user_password</span><span class="p">,</span>
+                      <span class="ss">:minimum</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">,</span>
+                      <span class="ss">:message</span> <span class="o">=&gt;</span> <span class="s2">"Too short"</span><span class="p">,</span>
+                      <span class="ss">:if</span> <span class="o">=&gt;</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="n">user_email</span><span class="p">.</span><span class="nf">present?</span> <span class="p">}</span>
+
+
+  <span class="k">def</span> <span class="nf">save</span>
+    <span class="k">super</span> <span class="o">&amp;&amp;</span>
+      <span class="no">Membership</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">account: </span><span class="n">account</span><span class="p">,</span> <span class="ss">user: </span><span class="n">user</span><span class="p">)</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div>
+<p>Here, we have two models, <code>Account</code> and <code>User</code>. In this example app, a <code>User</code> can have access to several <code>Accounts</code> which might represent a business entity, similar to how Github Organizations work. When a user signs up, we want to automatically create but their <code>User</code> for login, and the initial <code>Account</code> they'll belong to. Because attribute names may overlap, <code>GoldPlating</code> prefixes them with the model name. <code>Account#name</code> becomes <code>Registration#account_name</code>.</p>
+
+<h3>Validations</h3>
+
+<p>I've also added some validations to the Registration class. Sometimes different forms dealing with the same models have different valid states for those models, which validation contexts attempt to solve. I think having validations on the wrapper object is a much more elegant solution, leaving the validations on the model objects to simply validate whats needed to stick the object in the database, or is required of the model for the business logic in the rest of the app.</p>
+
+<p>It also lets you have separate human-readable error messages closer to the view, leaving your model validations simpler. For example, if I was requiring users to confirm their email or password, this would be an excellent place to put the <code>validates_confirmation_of</code>, leaving the model clear. It also makes it so that you don't have to set the <code>_confirmation</code> fields in your tests or factories when creating the objects.</p>
+
+<p>The downside is that you have to duplicate some of your model validations in the conductor, like the validation on <code>email</code> above. I don't have an elegant solution for this yet.</p>
+
+<h3>Controller</h3>
+
+<p>When writing a registration form that needs to create both objects, the normal Rails method would be to separate out the <code>params</code> in the controller, and create one of each object then associate them. This gets tricky, however, when one or the other fails to validate. Also, it puts a lot of logic in the controller. Using this conductor however, our controller is simple:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">RegistrationController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="n">skip_before_filter</span> <span class="ss">:require_login</span>
+
+  <span class="k">def</span> <span class="nf">new</span>
+    <span class="vi">@registration</span> <span class="o">=</span> <span class="no">Registration</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@registration</span> <span class="o">=</span> <span class="no">Registration</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:registration</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="vi">@registration</span><span class="p">.</span><span class="nf">valid?</span>
+      <span class="vi">@registration</span><span class="p">.</span><span class="nf">save</span>
+      <span class="n">auto_login</span> <span class="vi">@registration</span><span class="p">.</span><span class="nf">user</span>
+      <span class="n">redirect_back_or_to</span> <span class="n">root_path</span><span class="p">,</span> <span class="ss">:notice</span> <span class="o">=&gt;</span> <span class="s2">"Registration Successful"</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="ss">:new</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The form in the view is, too:</p>
+<div class="highlight"><pre class="highlight haml"><code><span class="p">=</span> <span class="n">form_for</span> <span class="vi">@registration</span><span class="p">,</span> <span class="ss">url: </span><span class="n">signup_path</span> <span class="k">do</span> <span class="o">|</span><span class="n">form</span><span class="o">|</span>
+
+  <span class="p">=</span> <span class="n">form</span><span class="p">.</span><span class="nf">text_field</span> <span class="ss">:account_name</span>
+
+  <span class="p">=</span> <span class="n">form</span><span class="p">.</span><span class="nf">email_field</span> <span class="ss">:user_email</span>
+
+  <span class="p">=</span> <span class="n">form</span><span class="p">.</span><span class="nf">password_field</span> <span class="ss">:user_password</span>
+</code></pre></div>
+<p>The controller and view can interact with the <code>Registration</code> conductor like any other ActiveModel-compliant object. In fact, this is the entire implementation. GoldPlating handled the object initialization, and assignment of the params to the right objects. GoldPlating also handled saving the objects it wraps, all we had to do was implement a <code>#save</code> to create the <code>Membership</code> association record between the newly-created <code>User</code> and <code>Account</code> records.</p>
+
+<h2>So much easier</h2>
+
+<p>I've been using this Conductor pattern quite liberally throughout my recent projects. Having this wrapper object to contain all the business logic related to presenting multiple objects to a form, and consuming and validating that form's output, greatly simplifies my code. It also makes testing a breeze. I can test all the edge-case behaviour via tests that exercise the conductor, rather than full-stack tests through the full Rails request stack.</p>
+
+<p>I've found that having a single conductor object for each form is the best way to go. It does lead to some code duplication, which might be alleviated some by including modules of shared methods, but overall the code in the conductor is simple and focused enough that the duplication has not (yet) been a major problem. It really helps to isolate the User-Interface of the forms from the data model, and associated business logic.</p>
+
+<p>Some of the really useful places for conductors have been <code>Registration</code>, <code>UserPreferences</code>, <code>PasswordReset</code>, <code>ManipulateAuthorization</code>. You'll notice that all of these involve some sort of <code>User</code> model, but each in a different way. Its nice having all the logic for each process encapsulated in a single, distinct place.</p>
+
+<p>Feel free to grab <code>GoldPlating</code> from that gist, or if there's enough interest, I can package it up as a gem.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

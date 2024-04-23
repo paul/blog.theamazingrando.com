@@ -1,0 +1,309 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - The Road to Better Authorization</title>
+
+    <title>The Road to Better Authorization</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="The Road to Better Authorization" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="The Road to Better Authorization" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "The Road to Better Authorization",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              The Road to Better Authorization
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/the-road-to-better-auth.html">The Road to Better Authorization</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2010-11-22T05:08:14Z">Monday, November 22nd 2010</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/the_road_to_better_auth.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Hypermedia<li>
+          <li class="icon fa-tag">Authentication<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<h2>The Problem</h2>
+
+<p>I have several Google accounts: My <a href="mailto:psadauskas@gmail.com">personal email</a>, Google Apps at <a href="http://absolute-performance.com">my employer</a>, and Gmail for <a href="http://theamazingrando.com">my domain</a>. I use my personal email all the time, and have several Google Docs spreadsheets and letters. Our company uses Google Docs and Sites. Its extremely annoying that switching between these accounts is brittle, and unpredictable. The same situation existed on Github between my personal and the company account, before they added "Organizations".</p>
+
+<p>The other problem is poor integration with the hundreds of accounts I have across various sites. I have a simple password that I use for throwaway, which is still horribly insecure. The alternative is a password manager such as KeePass or 1Password, but browser integration is poor or non-existent.</p>
+
+<p>I use the <a href="http://chrome.desc.se/">Google Mail Checker Plus</a> extension for Chrome, which can automatically redirect me to the Gmail inbox for each account, and from there I can follow links to Docs or Sites. However, all the accounts are "logged in", and I occasionally experience trouble and get permission denied errors when I click on a document link in my list.</p>
+
+<p>My main workaround at this point is to use Chrome for normal browsing and personal accounts, and Firefox, which I use for development &amp; debugging anyways, has the saved passwords for company accounts. This has worked for awhile, but as I amass various side-projects, and need a 3rd login for some sites (Github and Amazon AWS seem to be the main ones), I don't want to have to maintain more browser profiles.</p>
+
+<p>Ideally, the browser and sites would integrate and work together to manage everything automatically, but this is a chicken and egg problem. The solution will likely have to be completed in stages.</p>
+
+<p>OpenID and OAuth are attempts at solving this on the server side, but they are complicated. And they need to be, because there's several parties involved, all needing to handshake with each other and prove everyone's identity. I feel a simpler solution, and a much better way to handle this, would be in the browser itself. Even the technical name for the browser, "User Agent", indicates its purpose. I see it as the concierge at an expensive hotel. They have the inside knowledge of the city, and the personal contacts, to get you anything you need. Want blueberry and peanut-butter waffles at 11pm? Call the concierge and he'll figure out how to get it for you.</p>
+
+<p>Same for the browser. It's your concierge for the web. You don't need to know HTML and CSS to be able to use a website, the browser renders the text and images into a sensible layout for you to read. If a page moved, you don't have to type in the new location manually, the browser automatically goes there for you. If you need credentials to visit your Facebook page, you don't have to deal with the ugly bouncer directly, the concierge coughs and politely asks you for your password. What I'm proposing is promoting your concierge to your own personal assistant. You shouldn't even need to know there <em>is</em> a bouncer, because your assistant has already made arrangements and you can walk right in.</p>
+
+<h2>Phase 1</h2>
+
+<p>The first step is a browser extension for managing all my accounts at various sites. On a site where I have several accounts, or a personal account and a shared corporate account, it would be great to have a simple way to switch between them. When I come to a page, but want to view it as a different account, I have to:</p>
+
+<ol>
+<li>Find and click a "Sign Out" link.</li>
+<li>Find the "Sign In" link.</li>
+<li>Clear the "username" field of the form, and replace it with the other account's username.</li>
+<li>Hope the browser remembers the other account's password, or look it up and fill it in.</li>
+<li>Navigate back to the original page.</li>
+</ol>
+
+<p>Compare that to a browser extension or built-in feature:</p>
+
+<ol>
+<li>Click "Account Manager" toolbar button, which provides a list of known accounts for the site.</li>
+<li>Select the account from the list.</li>
+</ol>
+
+<p>The implementation would be straightforward. Just save all the cookies currently associated with the domain and tie them to that account, then load the previously stored cookies for the account that was selected, and re-request the page with the new cookies. If the page is using http authentication, the browser only has to change which Authorization header it is providing to the site.</p>
+
+<p>There have been various attempts to do this, but nothing ever seems completed. I haven't attempted my own, so maybe there's some complication that I'm missing. Mozilla has a proposal for such an extension called <a href="https://wiki.mozilla.org/Labs/Weave/Identity/Account_Manager">Account Manager</a>, but there seems to be no real activity since a few weeks after the project was announced back in March 2010. This seems like a real win for users, I can't understand why no browser has this built-in, or even an extension. I'd switch to Opera or Safari in a minute if they offered this, its a killer feature for a browser.</p>
+
+<p>There's also programs such as <a href="http://www.keepassx.org/">KeePassX</a>, <a href="http://agilewebsolutions.com/onepassword">1Password</a>, and <a href="https://lastpass.com/">LastPass</a>, some of which include browser plugins that can manage passwords for you. These all seem to be standalone password managers first, with the browser integration coming 2nd, which can sometimes be pretty clunky. Phase one needs to be a browser extension specifically designed to integrate with web site logins.</p>
+
+<h2>Phase 2</h2>
+
+<p>The next phase would be for the browser to be able to manage account creation. Since the browser can manage my accounts, it would be handy if it would create them, by automatically filling out the sign up form at the site. Browsers already have my name, email, address, etc, from being able to auto-fill forms. It could auto-fill the sign up form with my personal information (or suitably anonymized information if I choose), create a login and a random password, and save all that with the account manager.</p>
+
+<p>Undoubtedly, this would require "rules" for lots of sites, similar to adblock extensions, to know which signup fields are which, and how exactly to fill out the signup form. Perhaps some JSON to indicate field names, or even some javascript.</p>
+
+<p>For example, say we have a signup form (like, say, Facebook's, with non-essential tags stripped out):</p>
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;form method="post" id="reg" name="reg"&gt;
+  &lt;input type="text" class="inputtext" id="firstname" name="firstname"&gt;
+  &lt;input type="text" class="inputtext" id="lastname" name="lastname"&gt;
+  &lt;input type="text" class="inputtext" id="reg_email__" name="reg_email__"&gt;
+  &lt;input type="text" class="inputtext" id="reg_email_confirmation__" name="reg_email_confirmation__"&gt;
+  &lt;input type="password" class="inputtext" id="reg_passwd__" name="reg_passwd__" value=""&gt;
+  &lt;select class="select" name="sex" id="sex"&gt;&lt;option value="1"&gt;Female&lt;option value="2"&gt;Male&lt;/select&gt;
+  &lt;select id="birthday_month" name="birthday_month"&gt;...&lt;/select&gt;
+  &lt;select name="birthday_day" id="birthday_day"&gt;...&lt;/select&gt;
+  &lt;select name="birthday_year" id="birthday_year"&gt;...&lt;/select&gt;
+  &lt;input value="Sign Up" type="submit"&gt;
+&lt;/form&gt;
+</code></pre></div>
+<p>Since names like <code>"reg_email__"</code> are rather nonstandard, we'll need some way to map the fields we know for our profile to the fields on the website form. The mappings are probably too complicated to be one-to-one with a simple XML or JSON file, however a JavaScript function could be executed:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>function performSignup(profile) {
+  $("#firstname").val(profile.first_name);
+  $("#lastname").val(profile.last_name);
+  $("#reg_email__").val(profile.email);
+  $("#reg_email_confirmation__").val(profile.email);
+  $("#reg_passwd__").val(profile.generate_random_password());
+  $("#sex").val(profile.gender == "male" ? "2" : "1");
+  $("#birthday_day").val(profile.birthday.day);
+  $("#birthday_month").val(profile.birthday.month);
+  $("#birthday_year").val(profile.birthday.year);
+
+  $("#reg").submit();
+}
+</code></pre></div>
+<p>Some helpers to make that less verbose, and getting contributions to write rules for the most common sites, and now your browser can perform signups for you. If this becomes popular or compelling to websites to implement, a JavaScript browser API could be exposed so that websites could implement the signup function themselves.</p>
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;script&gt;
+  accountManager.setSignup(function(profile) { ... } );
+&lt;/script&gt;
+</code></pre></div>
+<p>Where <code>setSignup</code> is the browser API function to call to assign your website's signup function, and <code>profile</code> is an object containing the personal information provided by the user.</p>
+
+<h2>Phase 3</h2>
+
+<p>Phase 3 involves developing an API between the browser and the web page directly. It can be a simple extension to some of the new HTML5 APIs out there for dealing with video or local storage in javascript. Hopefully (but not likely, given how similar projects have played out before), each browser that implements this would have a similar API that common elements could be used.</p>
+
+<h2>Conclusion</h2>
+
+<p>In conclusion, authentication for web services sucks, and has for a long time. The right place to manage this is in the browser itself, rather than a complicated handshaking protocol between servers. Writing a browser extension like the one described in Phase 1 is on my TODO list, but I know nothing about browser extensions, and have plenty of other projects to keep me busy. If someone out there is willing to take this on, drop me a line, I'd certainly love to help.</p>
+
+<h2>Extra Credit</h2>
+
+<ul>
+<li>Store all the data in the cloud, so its not lost in reformats, and can be shared between computers. Even better, have an interchange format so it can be shared between browsers, and your phone, so you can login to sites from wherever.</li>
+<li>An extension to the built-in HTTP Auth methods, something more secure than the MD5 used in Digest Auth. Properly implemented with nonces and cnonces, Digest Auth is still pretty secure, but it will only be a matter of time before MD5 can be brute-forced in a reasonable amount of time. Or maybe just convince everyone that all HTTP should be over SSL, and then we can just use Basic Auth. Once people start using browser authentication managers, no-one will care about styling the login form any more. Maybe the browser could load the favicon, or follow a <code>&lt;link&gt;</code> tag to a logo image for the site being logged in to.</li>
+</ul>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

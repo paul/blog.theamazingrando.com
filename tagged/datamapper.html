@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog</title>
+
+    <meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "The Amazing Blog",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              <a href="/" id="logo">The Amazing Blog</a>
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                <h1>Articles tagged with 'DataMapper'</h1>
+
+
+  <article>
+    <h1>
+      <a href="/posts/writing-datamapper-adapters-a-tutorial.html">Writing DataMapper Adapters - A Tutorial</a>
+    </h1>
+    <h2>
+      Mar 31, 2009
+    </h2>
+    <p>
+      <p>The adapter API for DataMapper has been in a bit of flux recently. When I submitted
+my proposal for a <a href="http://mwrc2009.confreaks.com/14-mar-2009-16-10-writing-adapters-for-datamapper-paul-sadauskas.html">talk at MountainWest</a>, adapters were irritatingly complex to write.
+You just needed to know too much about DataMapper's internals to be able to write one.
+A week before the conference began, I started a significant effort to re-write the API to make
+it easier. I succeeded, a little too well; my 30 minute talk only took 15. Since then,
+I've written a couple more adapters from scratch, and refined the API further. This post
+will serve as notes on the changes that I've made, and a tutorial on writing adapters.</p>
+    </p>
+    <p>
+      <a href="/posts/writing-datamapper-adapters-a-tutorial.html">Read more</a>
+    </p>
+  </article>
+  <article>
+    <h1>
+      <a href="/posts/datamapper-echo-adapter.html">DataMapper Echo Adapter</a>
+    </h1>
+    <h2>
+      Mar 12, 2009
+    </h2>
+    <p>
+      <p>I just wrote a simple adapter that can be used to investigate the DM Adapter API, and debug your own adapter. Its really simple to use:</p>
+    </p>
+    <p>
+      <a href="/posts/datamapper-echo-adapter.html">Read more</a>
+    </p>
+  </article>
+  <article>
+    <h1>
+      <a href="/posts/a-response-to-database-versioning.html">A Response to "Database Versioning"</a>
+    </h1>
+    <h2>
+      Mar  3, 2009
+    </h2>
+    <p>
+      <p>I was just going to post a comment in reply to <a href="http://adam.blog.heroku.com/past/2009/3/2/database_versioning/">Adam Wiggins's Database Versioning post</a>, but it ended up being pretty long, so I'll post a response here instead.</p>
+    </p>
+    <p>
+      <a href="/posts/a-response-to-database-versioning.html">Read more</a>
+    </p>
+  </article>
+  <article>
+    <h1>
+      <a href="/posts/datamapper-096-released.html">DataMapper 0.9.6 released</a>
+    </h1>
+    <h2>
+      Oct 13, 2008
+    </h2>
+    <p>
+      <p>I just pushed 0.9.6 of dm-core, dm-more and data_objects up to rubyforge, as well as 0.9.8 of extlib. There's several bugfixes that were applied in the runup to merbcamp. This is also preparing for the imminent release of merb 1.0RC1.</p>
+    </p>
+    <p>
+      <a href="/posts/datamapper-096-released.html">Read more</a>
+    </p>
+  </article>
+  <article>
+    <h1>
+      <a href="/posts/howto-datamapper-setting-the-default-repository-for-a-model.html">HOWTO: DataMapper - Setting the default repository for a model</a>
+    </h1>
+    <h2>
+      Aug 29, 2008
+    </h2>
+    <p>
+      <p>Had to google for quite a while before I was able to find the solution. Essentially, I have a model that I want to always use a different repository than what I <code>#setup</code> in <code>:default</code>. To do that:</p>
+    </p>
+    <p>
+      <a href="/posts/howto-datamapper-setting-the-default-repository-for-a-model.html">Read more</a>
+    </p>
+  </article>
+  <article>
+    <h1>
+      <a href="/posts/specing-migrations-a-tutorial.html">Spec'ing Migrations (A Tutorial)</a>
+    </h1>
+    <h2>
+      May 23, 2008
+    </h2>
+    <p>
+      <p>I realized I haven't blogged about (IMHO) the neatest feature of DataMapper's migrations yet. One of the more harrowing experiences for me in Rails is upgrading a production server with live data, and hoping your migration handles all the existing data correctly. You can dump the database, and attempt the migration on a clone, and hand-examine the data to make sure it was correct, but that feels very non-ruby-like to me. With the spec groups and matchers available in DataMapper migrations, though, you can spec your migrations and be certain that it will work correctly, and translate all your edge-case data correctly.</p>
+    </p>
+    <p>
+      <a href="/posts/specing-migrations-a-tutorial.html">Read more</a>
+    </p>
+  </article>
+  <article>
+    <h1>
+      <a href="/posts/dm-migrations-now-with-100-more-helpers.html">DM Migrations (now with 100% more helpers!)</a>
+    </h1>
+    <h2>
+      Feb 12, 2008
+    </h2>
+    <p>
+      <p>Added some helpers to the DataMapper Migrations I've been writing. These helpers just build up some SQL, and feed it into #execute.</p>
+    </p>
+    <p>
+      <a href="/posts/dm-migrations-now-with-100-more-helpers.html">Read more</a>
+    </p>
+  </article>
+  <article>
+    <h1>
+      <a href="/posts/idealized-migration-dsl.html">Idealized Migration DSL</a>
+    </h1>
+    <h2>
+      Jan  8, 2008
+    </h2>
+    <p>
+      <p>There's a <a href="http://groups.google.com/group/datamapper/browse_thread/thread/1b24e6f3d7675add">discussion</a> in the datamapper group about how to do migrations. I've thrown together an idealized DSL for how the migrations themselves should look.</p>
+    </p>
+    <p>
+      <a href="/posts/idealized-migration-dsl.html">Read more</a>
+    </p>
+  </article>
+
+
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

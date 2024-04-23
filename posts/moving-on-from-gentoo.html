@@ -1,0 +1,235 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Moving on from Gentoo...</title>
+
+    <title>Moving on from Gentoo...</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Moving on from Gentoo..." />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Moving on from Gentoo..." />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Moving on from Gentoo...",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Moving on from Gentoo...
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/moving-on-from-gentoo.html">Moving on from Gentoo...</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2008-05-22T00:34:34Z">Thursday, May 22nd 2008</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/moving-on-from-gentoo.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Gentoo<li>
+          <li class="icon fa-tag">Linux<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p><strong>Updated:</strong> I added a few more paragraphs that I had originally commented on in response to Mr. Berkholz's comment.</p>
+
+<p>I recently saw the announcement of the 'fork' of Gentoo, <a href="http://exherbo.org/">Exherbo</a>. Its not really a fork, because there isn't any shared stuff. The package manager used is Paludis, one of the alternatives to Portage in Gentoo. Several of the developers on Exherbo are from Gentoo, and they profess similar goals. I'm a bit wary, though, because their webpage is pretty dickish. Thats fine, Gentoo never claimed to be a everyman's distro, but I kind of wish they'd waited to announce their project until <em>after</em> they wanted people to start using it.</p>
+
+<p>I shouldn't be surprised, though, since Gentoo dev and author of Paludis, Ciaran McCreesh, is one of the Exherbo devs. I once tried to use Paludis about a year ago, when portage was in one of its broken states ( one of the reasons I'm moving on, more on that later...) I read the install page for Paludis, got it installed, but couldn't get it working. I fiddled with it for awhile, read some conflicting documentation on the Paludis website, and finally hopped on the IRC channel to ask for help. I was informed that the documentation was out of date, and when I asked what I needed to do, showing them my error messages and everything, I was told by Mr. McCreesh to just wait a few weeks. That's a crazy way to treat your users and potential contributors. Maybe I'm just used to the Ruby community, where everyone is helpful and supportive.</p>
+
+<p>I've been an idle user of Ubuntu for awhile, its great for my older laptop so I don't have to spend 5 days compiling X, and all the ACPI and wireless just work without me having to spend an afternoon reading documentation on the gentoo wiki or forums. It installs an awful lot of crap I don't want, like PAM and games, but that's an acceptable trade-off to me, for a completely usable desktop system. I can't stand it for development work, though. All the packages are crazily-named, and you have to install an extra 500MB of stuff to be able to compile anything of your own. And the header files for all the packages are named differently, so you have to search or remember if its -dev, -devel, lib{pkg}-dev, and so on. Gentoo was great, because if you installed a package, you got the header files you needed to develop against it, too. When I got my new laptop, I just skipped even trying Gentoo, and stuck with the Dell Ubuntu that came with it, then a few weeks later replaced it with Ubuntu 8.04.</p>
+
+<p>I've tinkered with several other distros for awhile, Slack, Suse, Fedora, but nothing met my development needs as well as Gentoo. Then I saw a post on <a href="http://www.zedshaw.com/blog/index.html">Zed Shaw's blog</a> (that I can't seem to find right now) and he mentioned that he used <a href="http://www.archlinux.org/">Arch Linux</a> for development. I'd played with Arch some, its actually being used on my <a href="http://www.slicehost.com/">Slice</a> that I'm hosting this blog from. It seemed nice as a server OS, extremely lightweight (after install, you get not much more than bash and vi, just like Gentoo). After reading Zed's post, though, I decided to give it a shot (I had just melted down my Gentoo machine because portage was broken. Again.)</p>
+
+<p>It's great. Barebones, extremely configurable, you install only the stuff you want, everything gets installed where I want it, with sane package names, in sane locations. The core repository is rock solid, and the user-submitted package repository (AUR) is well-supported. In the 2 months I've been running it, no upgrade has broken my system. Unlike Ubuntu and like Gentoo, Arch doesn't have distro releases, they just put out an updated live CD every few months. The packages themselves stay pretty close to the lastest release from upstream. You don't have to wait for a new version of the distro to upgrade to the lastest xorg or kernel version. Overall, its been extremely stable, and the problems I have had received attention from the developers really quickly, and they were extremely helpful.</p>
+
+<p>I think that until Gentoo manages to get its act back together, and be the awesome distro it was for the first few years of its existence, I'm going to stick with Arch for development, and Ubuntu for my laptop. I'm still stuck with Centos for server installs at work, they're afraid if we tell clients we're not running some name-brand linux, they won't buy our product. I tried explaining that if a client cares what OS we run we probably don't want to sell to them anyways. But as far as rpm-based distros go, Centos isn't <em>too</em> bad.</p>
+
+<p>My issues with Gentoo are all the breakage, even in non-keyworded packages. If you don’t stay on top of it, and emerge -avu world every week or two, you’re just about guaranteed to spend an afternoon getting everything working again. If you wait more than a month, as a coworker of mine does, you have to spend a whole day getting it to the point where you can upgrade even a single package, because of all the dependencies. I have a server at home that I first installed about two years ago, and haven’t upgraded since. I’m probably better of at this point to just reinstall it.</p>
+
+<p>Not to mention the countless time (at least once a month), where I do my daily emerge world and it fails, and I have to track down on the forums for the answer, if there is even one. Most of the times it can be solved by emerge --sync, but the fact that a package even slipped past QA long enough to make it into stable is appalling.</p>
+
+<p>I love to tweak, and Gentoo still is awesome for that. But Arch is just as good, and the packages are just as fresh, or more so (Where’s postgres 8.3 in Gentoo? It’s been out for 6 months now, and I still have to use an overlay that’s broken more often than not? Is was the same story with upgrading to 8.2, and I thought the plan was to get it slotted to fix all these problems.)</p>
+
+<p>Probably the biggest problem of all is the detachment of the Gentoo leaders from the users. This has been blogged about elsewhere, probably most famously by Daniel Robbins himself. The devs lead the show, which is how it has always been, but over the last few years they’ve been working more on pet projects, rather than making things better for the users. When’s the last time we had a livecd? The Gentoo forums used to be a great resource, but in the same time span, the atmosphere has changed for the worse. There’s fewer people interested in helping out and answering questions these days. The Arch forums remind me of the Gentoo forums of old, its nice being able to find answers to your questions, without having to sift through the rude responses. Maybe it has gotten better, I haven’t visited the forum in several months.</p>
+
+<p>I guess my biggest gripe is the community. The focus has changed away from the users, which is the whole reason Gentoo is in existence. I see on your blog that you’re now a member of the council, maybe you can help make the changes that need to be made.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

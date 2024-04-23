@@ -1,0 +1,10 @@
+<p>Level 0: Users. They log in, and they own everything.
+Level 1: Accounts are the unit of ownership. (eg, all other resources in the system belong to an Account). Users have a password and can log in. Account has many Users.
+Level 2: Account &lt;- Membership -&gt; User. Allows users to belong to many accounts. Membership can also have a &quot;role&quot; field, to differentiate between admins and regular users.
+Level 3: Membership -&gt; Role -&gt; Privilege. Allows accounts to define custom roles with specific permissions.
+Level 4: &quot;Orgs&quot;. For any B2B SaaS product, you&#39;ll be asked for a way to group Accounts together under a &quot;super-account&quot;, or Organization. Inevitably, as you get larger more enterprise-y customers, you&#39;ll soon afterwards be asked to create another layer, a Super-Org. 
+  Instead, I propose making Account be a hierarchical &quot;tree&quot;. Your company has a single Account as the &quot;root&quot;, and all customer Accounts are children of that Account. If the customer needs more granular ownership groupings, they get children accounts under their primary. This can also be repeated as many levels deep as needed.</p>
+
+<p>Postgres has great tooling for making those hierarchical queries efficient: <a href="https://www.postgresql.org/docs/13/ltree.html">https://www.postgresql.org/docs/13/ltree.html</a></p>
+
+<p>When building a new app, always start at at least Level 2. The others are easier to add later if you need it.</p>

@@ -1,0 +1,227 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - A Response to "Database Versioning"</title>
+
+    <title>A Response to "Database Versioning"</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="A Response to &quot;Database Versioning&quot;" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="A Response to &quot;Database Versioning&quot;" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "A Response to "Database Versioning"",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              A Response to "Database Versioning"
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/a-response-to-database-versioning.html">A Response to "Database Versioning"</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2009-03-03T02:36:50Z">Tuesday, March 3rd 2009</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2017-02-07T16:49:25-07:00">Tuesday, February 7th 2017</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/a-response-to-database-versioning.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">DataMapper<li>
+          <li class="icon fa-tag">Ruby<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>I was just going to post a comment in reply to <a href="http://adam.blog.heroku.com/past/2009/3/2/database_versioning/">Adam Wiggins's Database Versioning post</a>, but it ended up being pretty long, so I'll post a response here instead.</p>
+
+<p>I'm the original author and current maintainer of the migrations plugin for datamapper. I spent a lot of time <a href="http://www.theamazingrando.com/blog/?p=11">thinking about AR migrations</a> before I started writing it. I think that DM migrations have solved a few of the problems he has with AR migrations.</p>
+
+<p>The part about screwing up a migration, and having to re-run it sounds more like a tooling problem. When I write a migration, I drop/create the db, and re-run all the migrations to 'test' it. (Also, the <a href="http://www.theamazingrando.com/blog/?p=21">DM migration specs</a> should help with this.) Yeah, it blows away all your development data, but you should have fixtures or scripts or something to make it easy to recreate.</p>
+
+<p>There are also long-term plans for a plugin in datamapper to inspect the current database schema, examine the definitions in the models, then "infer" the migration that needs to take place. It will be impossible, of course, to guess at what kind of data migration might be needed, but I believe that migrations shouldn't touch data. If, given your fullname =&gt; firstname, lastname example, I add the new columns, and run a rake task to handle the data. After a few days/weeks, when I'm sure that every production server has been upgraded, and that task run, I'll write a migration to drop the fullname column.</p>
+
+<p>I do agree that having the database schema living in two different places if very non-dry, but even his suggestion of a schema.yml would duplicate the column definitions that are present in datamapper models.So</p>
+
+<p>I've used these DM migrations in 2 projects now that have been in production for &gt;6 months, and it fits in very well with my workflow. I tend to break up the migration files by table, so I end up with <code>schema/people.rb</code>, <code>schema/articles.rb</code>, <code>schema/comments.rb</code>, with each of those being a table in the db. Then inside one of the files, I list the migrations in version order: <code>1, :create_people_table</code>, <code>2, :add_firstname_lastname</code>, <code>3, :remove_fullname</code>. This lets me see at a glance what version I'm on for a particular table, and I don't have to worry about dependencies. If I do need to modify several tables at once, I have a simple rake task that tells me what the maximum version number is, so I can make one after it.</p>
+
+<p>I think that tryring to use SHAs as version numbers would be even more annoying than epoch timestamps as versions. I do like the idea about the model/application requiring a specific version, and refusing to start otherwise. From a DataMapper POV, it would be easy to add a <code>#requires_db_version(5)</code> method to the model. I'm already in the habit of not using my models in migrations, by virtue of never writing data migrations. I even just usually write the migrations in raw SQL, it gives me more control over the table stucture when I really care.</p>
+
+<p>So, essentially, DataMapper already provides the solution that Adam outlines in his post; Replace schema.yml with DataMapper model definitions, and have the discipline to not write data migrations. Write specs for your migrations, like everything else, and use DM migrations' sane versioning, rather than AR's irritating one, and you should be fine. There are definitely improvements to be made with DM migrations, to be sure, but I feel like I got the underlying design mostly right.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>

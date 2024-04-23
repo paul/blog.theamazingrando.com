@@ -1,0 +1,459 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Using Dry::Container for Dependency Injection</title>
+
+    <title>Using Dry::Container for Dependency Injection</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Using Dry::Container for Dependency Injection" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Using Dry::Container for Dependency Injection" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Using Dry::Container for Dependency Injection",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Using Dry::Container for Dependency Injection
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/containers-for-dependency-injection.html">Using Dry::Container for Dependency Injection</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2020-05-06T22:30:42Z">Wednesday, May 6th 2020</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2020-05-06T16:30:42-06:00">Wednesday, May 6th 2020</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/containers-for-dependency-injection.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Ruby<li>
+          <li class="icon fa-tag">DryRb<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>The point of this post isn't to convince you of the usefulness of <a href="https://dry-rb.org/gems/dry-container/0.8/#introduction">Dependency
+Injection</a> there's been plenty of <a href="https://visualstudiomagazine.com/articles/2014/05/01/how-to-refactor-for-dependency-injection.aspx">pixels spilled about it already</a>.
+Instead, I want to talk about using <a href="https://dry-rb.org/gems/dry-container/0.8/">Dry::Container</a> to
+alleviate some of the pain points that DI introduces.</p>
+
+<p>The first problem is when one object calls another, and both are using DI. For
+example, say you have a Command object that calls and Adapter object that
+finally calls the Client object. You end up with long chains of DI objects
+being injected into objects at a higher level, and it quickly becomes unwieldy,
+particularly for testing. Imagine we have something like this:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyCommand</span>
+  <span class="nb">attr_reader</span> <span class="ss">:adapter</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">adapter: </span><span class="no">MyAdapter</span><span class="p">.</span><span class="nf">new</span><span class="p">)</span>
+    <span class="vi">@adapter</span> <span class="o">=</span> <span class="n">adapter</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="c1"># do stuff</span>
+    <span class="n">adapter</span><span class="p">.</span><span class="nf">do_something</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">MyAdapter</span>
+  <span class="nb">attr_reader</span> <span class="ss">:client</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">client: </span><span class="no">MyClient</span><span class="p">.</span><span class="nf">new</span><span class="p">)</span>
+    <span class="vi">@client</span> <span class="o">=</span> <span class="n">client</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">do_something</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="c1"># do stuff</span>
+    <span class="n">client</span><span class="p">.</span><span class="nf">make_request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">MyClient</span>
+  <span class="nb">attr_reader</span> <span class="ss">:http</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">http: </span><span class="no">HttpClient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">timeout: </span><span class="mi">5</span><span class="p">))</span>
+    <span class="vi">@http</span> <span class="o">=</span> <span class="n">http</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">make_request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="p">)</span>
+    <span class="n">http</span><span class="p">.</span><span class="nf">auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">pass</span><span class="p">).</span><span class="nf">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="ss">json: </span><span class="n">json</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>In an integration test, you want to set up a mock client for the Client object
+to use, so it doesn't make any real requests.  A typical solution is involves
+complicated test setup:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="c1"># my_command_spec.rb</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">MyCommand</span> <span class="k">do</span>
+  <span class="n">let</span><span class="p">(</span><span class="ss">:http</span><span class="p">)</span>    <span class="p">{</span> <span class="n">instance_spy</span><span class="p">(</span><span class="no">HttpClient</span><span class="p">)</span> <span class="p">}</span>
+
+  <span class="n">let</span><span class="p">(</span><span class="ss">:client</span><span class="p">)</span>  <span class="p">{</span> <span class="no">MyClient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">http: </span><span class="n">http</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">let</span><span class="p">(</span><span class="ss">:adapter</span><span class="p">)</span> <span class="p">{</span> <span class="no">MyAdapter</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">client: </span><span class="n">client</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">let</span><span class="p">(</span><span class="ss">:command</span><span class="p">)</span> <span class="p">{</span> <span class="n">described_class</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">adapter: </span><span class="n">adapter</span><span class="p">)</span> <span class="p">}</span>
+
+  <span class="n">it</span> <span class="s2">"should make an http call"</span> <span class="k">do</span>
+    <span class="n">command</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="ss">:send_message</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">http</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_received</span><span class="p">(</span><span class="ss">:post</span><span class="p">).</span><span class="nf">with</span><span class="p">(</span><span class="s2">"http://myapp.example/send_message"</span><span class="p">,</span>
+                                              <span class="ss">json: </span><span class="p">{</span> <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Hello!"</span> <span class="p">})</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>In our integration test for <code>MyCommand</code>, we have to set up a whole lot of other
+intermediate objects, just so we can inject the spy in at the lowest level. It
+seems strange that the test for this high-level business object needs to care
+about the low-level details about how the client is calling our HttpClient.
+Additionally, we probably have different things using the Adapter or MyCommand
+themselves, and the tests for those will need the same setup. Then, if we do
+any refactorings around how the Command -&gt; Adapter -&gt; Client pattern is set up,
+we'll have to come fix the setup for all these tests, which becomes tedious and
+error-prone.</p>
+
+<p>Another alternative would be to set up all the intermediate objects to allow
+<code>http</code> to be injected, and pass it all the way through to the thing that cares
+about it.</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyCommand</span>
+  <span class="nb">attr_reader</span> <span class="ss">:adapter</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">adapter: </span><span class="no">MyAdapter</span><span class="p">,</span> <span class="ss">client: </span><span class="no">MyClient</span><span class="p">,</span> <span class="ss">http: </span><span class="no">HttpClient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">timeout: </span><span class="mi">5</span><span class="p">))</span>
+    <span class="vi">@adapter</span> <span class="o">=</span> <span class="n">adapter</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">client: </span><span class="n">client</span><span class="p">,</span> <span class="ss">http: </span><span class="n">http</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">MyAdapter</span>
+  <span class="nb">attr_reader</span> <span class="ss">:client</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">client: </span><span class="no">MyClient</span><span class="p">,</span> <span class="ss">http: </span><span class="no">HttpClient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">timeout: </span><span class="mi">5</span><span class="p">))</span>
+    <span class="vi">@client</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">http: </span><span class="n">http</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">MyClient</span>
+  <span class="nb">attr_reader</span> <span class="ss">:http</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">http: </span><span class="no">HttpClient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">timeout: </span><span class="mi">5</span><span class="p">))</span>
+    <span class="vi">@http</span> <span class="o">=</span> <span class="n">http</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This isn't great either, because now all the outer objects have to
+pass through a thing they don't care about at all. Its also easy to loose track
+of them, which object needs which dependency. Also, if <code>MyCommand</code>'s job is to
+decide which of 5 Adapters it needs to send the message, it has to have 5
+different clients injected.</p>
+
+<p>The other issue I have with Dependency Injection is that once you start using
+it, it makes sense to use it for <em>everything</em>. The problem with that, however,
+is that you quickly run into very long and noisy <code>#initialize</code> methods:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyCommand</span>
+  <span class="nb">attr_reader</span> <span class="ss">:http</span><span class="p">,</span> <span class="ss">:logger</span><span class="p">,</span> <span class="ss">:instrumenter</span><span class="p">,</span> <span class="ss">:error_handler</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">http: </span><span class="no">HttpClient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">timeout: </span><span class="mi">5</span><span class="p">),</span>
+                <span class="ss">logger: </span><span class="no">Rails</span><span class="p">.</span><span class="nf">logger</span><span class="p">,</span>
+                <span class="ss">instrumenter: </span><span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Notifications</span><span class="p">,</span>
+                <span class="ss">error_handler: </span><span class="no">Honeybadger</span><span class="p">)</span>
+    <span class="vi">@http</span> <span class="o">=</span> <span class="n">http</span>
+    <span class="vi">@logger</span><span class="p">,</span> <span class="vi">@instrumenter</span><span class="p">,</span> <span class="vi">@error_handler</span> <span class="o">=</span> <span class="n">logger</span><span class="p">,</span> <span class="n">instrumenter</span><span class="p">,</span> <span class="n">error_handler</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>I found that nearly every object I had was injecting that triplet of <code>[:logger,
+:instrumenter, :error_handler]</code>, which got fairly tedious. While this maybe
+could be resolved with a small object like what's used for <a href="https://refactoring.guru/smells/primitive-obsession">Primitive
+Obsession</a>, I don't have a
+good name for that object.</p>
+
+<p>These two problems are particularly exacerbated when you need to pass through a
+mock logger or instrumenter, and test the calls made to that. Now you need to
+inject a whole lot of unrelated things, some of which the object doesn't care
+about, and it gets messy quickly.</p>
+
+<h2>Dry::Container</h2>
+
+<p>First, lets take a look at what a Dry::Container looks like:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">module</span> <span class="nn">MyApp</span>
+  <span class="k">module</span> <span class="nn">Container</span>
+    <span class="kp">extend</span> <span class="no">Dry</span><span class="o">::</span><span class="no">Container</span><span class="o">::</span><span class="no">Mixin</span>
+
+    <span class="n">register</span><span class="p">(</span><span class="ss">:error_handler</span><span class="p">)</span> <span class="p">{</span> <span class="no">Honeybadger</span> <span class="p">}</span>
+    <span class="n">register</span><span class="p">(</span><span class="ss">:instrumenter</span><span class="p">)</span>  <span class="p">{</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Notifications</span> <span class="p">}</span>
+    <span class="n">register</span><span class="p">(</span><span class="ss">:logger</span><span class="p">)</span>        <span class="p">{</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">logger</span> <span class="p">}</span>
+
+    <span class="n">namespace</span><span class="p">(</span><span class="ss">:clients</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">register</span><span class="p">(</span><span class="ss">:http</span><span class="p">)</span>   <span class="p">{</span> <span class="no">HttpClient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">timeout: </span><span class="mi">5</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">register</span><span class="p">(</span><span class="ss">:github</span><span class="p">)</span> <span class="p">{</span> <span class="no">Octokit</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">login: </span><span class="n">config</span><span class="p">.</span><span class="nf">github_user</span><span class="p">,</span> <span class="ss">password: </span><span class="n">config</span><span class="p">.</span><span class="nf">github_password</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">register</span><span class="p">(</span><span class="ss">:heroku</span><span class="p">)</span> <span class="p">{</span> <span class="no">PlatformAPI</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">token: </span><span class="n">config</span><span class="p">.</span><span class="nf">heroku_token</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>To use the values within a Container, its fairly simple, you can treat the
+container like a Hash:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>http = MyApp::Container["clients.http"]
+http.get("https://myapp.example/")
+</code></pre></div>
+<p>We can inject them into our objects be referencing them through the container,
+rather than directly:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyClient</span>
+  <span class="nb">attr_reader</span> <span class="ss">:http</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">http: </span><span class="no">MyApp</span><span class="o">::</span><span class="no">Container</span><span class="p">[</span><span class="s2">"clients.http"</span><span class="p">])</span>
+    <span class="vi">@http</span> <span class="o">=</span> <span class="n">http</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">make_request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="p">)</span>
+    <span class="n">http</span><span class="p">.</span><span class="nf">auth</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">pass</span><span class="p">).</span><span class="nf">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="ss">json: </span><span class="n">json</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This, when coupled with <a href="https://dry-rb.org/gems/dry-container/0.8/testing/#stub">dry-container's stub
+feature</a>, lets us
+avoid complex test setup or deep injection:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="c1"># in spec_helper.rb or something:</span>
+<span class="nb">require</span> <span class="s1">'dry/container/stub'</span>
+<span class="no">MyApp</span><span class="o">::</span><span class="no">Container</span><span class="p">.</span><span class="nf">enable_stubs!</span>
+
+<span class="c1"># In your test:</span>
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">MyCommand</span> <span class="k">do</span>
+  <span class="n">let</span><span class="p">(</span><span class="ss">:http</span><span class="p">)</span> <span class="p">{</span> <span class="n">instance_spy</span><span class="p">(</span><span class="no">HttpClient</span><span class="p">)</span> <span class="p">}</span>
+
+  <span class="n">around</span> <span class="k">do</span> <span class="o">|</span><span class="n">example</span><span class="o">|</span>
+    <span class="no">MyApp</span><span class="o">::</span><span class="no">Container</span><span class="p">.</span><span class="nf">stub</span><span class="p">(</span><span class="s2">"clients.http"</span><span class="p">)</span> <span class="p">{</span> <span class="n">http</span> <span class="p">}</span>
+    <span class="n">example</span><span class="p">.</span><span class="nf">run</span>
+    <span class="no">MyApp</span><span class="o">::</span><span class="no">Container</span><span class="p">.</span><span class="nf">unstub</span><span class="p">(</span><span class="s2">"clients.http"</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s2">"should make an http call"</span> <span class="k">do</span>
+    <span class="n">command</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="ss">:send_message</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">http</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_received</span><span class="p">(</span><span class="ss">:post</span><span class="p">).</span><span class="nf">with</span><span class="p">(</span><span class="s2">"http://myapp.example/send_message"</span><span class="p">,</span>
+                                              <span class="ss">json: </span><span class="p">{</span> <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"Hello!"</span> <span class="p">})</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p><em>Aside</em>: In our app, we have that wrapped in a helper:
+<code>stub_container(MyContainer, http: fake_client) { ... }</code>. Inside the block its
+stubbed, then un-stubbed when the block ends.</p>
+
+<h3>Auto-inject</h3>
+
+<p>A separate gem, <a href="https://dry-rb.org/gems/dry-auto_inject/0.6/">Dry::AutoInject</a>
+can work with our containers to help eliminate the boilerplate when injecting
+many dependencies into a class. You can set it up in your container:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">module</span> <span class="nn">MyApp</span>
+  <span class="no">Import</span> <span class="o">=</span> <span class="no">Dry</span><span class="o">::</span><span class="no">AutoInject</span><span class="p">(</span><span class="no">Container</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Then, in your objects:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyCommand</span>
+  <span class="kp">include</span> <span class="no">MyApp</span><span class="o">::</span><span class="no">Import</span><span class="p">[</span><span class="ss">:logger</span><span class="p">,</span> <span class="ss">:instrumenter</span><span class="p">,</span> <span class="ss">:error_handler</span><span class="p">]</span>
+  <span class="kp">include</span> <span class="no">MyApp</span><span class="o">::</span><span class="no">Import</span><span class="p">[</span><span class="s2">"clients.http"</span><span class="p">]</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">instrumenter</span><span class="p">.</span><span class="nf">instrument</span><span class="p">(</span><span class="s2">"MyCommand.call"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="s2">"doing stuff"</span><span class="p">)</span>
+      <span class="n">http</span><span class="p">.</span><span class="nf">post</span><span class="p">(</span><span class="s2">"https://myapp.example/"</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>It looks a bit strange, but essentially <code>include MyApp::Import[:foo]</code> is a macro that generates code like:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="nb">attr_reader</span> <span class="ss">:foo</span>
+
+<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="ss">foo: </span><span class="no">MyApp</span><span class="o">::</span><span class="no">Container</span><span class="p">[</span><span class="ss">:foo</span><span class="p">])</span>
+  <span class="vi">@foo</span> <span class="o">=</span> <span class="n">foo</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>When you have a lot of dependencies to inject, it really cuts down on the
+boilerplate. One thing to make a note of, however, if you have non-DI args
+passed to your <code>#initialize</code> method, you have to remember to call <code>super</code>.</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">class</span> <span class="nc">MyCommand</span>
+  <span class="kp">include</span> <span class="no">MyApp</span><span class="o">::</span><span class="no">Import</span><span class="p">[</span><span class="ss">:logger</span><span class="p">,</span> <span class="ss">:instrumenter</span><span class="p">,</span> <span class="ss">:error_handler</span><span class="p">]</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">user</span><span class="p">:,</span> <span class="o">**</span><span class="n">deps</span><span class="p">)</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="n">user</span>
+    <span class="k">super</span><span class="p">(</span><span class="o">**</span><span class="n">deps</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Hopefully you find this helpful, we certainly have. Dependency Injection is a
+powerful tool that makes organizing and testing code a much cleaner experience,
+and dry-container and dry-auto_inject are a nice bit of polish over some of the
+tedious or boilerplate parts that come with it.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>
