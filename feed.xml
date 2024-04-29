@@ -5,10 +5,77 @@
   <id>http://blog.theamazingrando.com/</id>
   <link href="http://blog.theamazingrando.com/"/>
   <link href="http://blog.theamazingrando.com/feed.xml" rel="self"/>
-  <updated>2023-03-08T11:06:15-07:00</updated>
+  <updated>2024-04-29T14:01:14-06:00</updated>
   <author>
     <name>Paul Sadauskas</name>
   </author>
+  <entry>
+    <title>Using Local Font Files in the Rails 7.1 Asset Pipeline</title>
+    <link rel="alternate" href="http://blog.theamazingrando.com/posts/rails-7-propshaft-fonts.html"/>
+    <id>http://blog.theamazingrando.com/posts/rails-7-propshaft-fonts.html</id>
+    <published>2024-04-29T14:01:14-06:00</published>
+    <updated>2024-04-29T14:01:08-06:00</updated>
+    <author>
+      <name>Paul Sadauskas</name>
+    </author>
+    <summary type="html">&lt;p&gt;I wanted to play with the new hotness of Rails asset handling in a sideproject, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I'm using &lt;a href="https://github.com/rails/propshaft"&gt;propshaft&lt;/a&gt; and &lt;a href="https://github.com/rails/dartsass-rails"&gt;Dart Sass&lt;/a&gt;&lt;/p&gt;</summary>
+    <content type="html">&lt;h1&gt;Using Local Font Files in the Rails 7.1 Asset Pipeline&lt;/h1&gt;
+
+&lt;p&gt;I wanted to play with the new hotness of Rails asset handling in a sideproject, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I&amp;#39;m using &lt;a href="https://github.com/rails/propshaft"&gt;propshaft&lt;/a&gt; and &lt;a href="https://github.com/rails/dartsass-rails"&gt;Dart Sass&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I happen to have a FontAwesome 5 Pro license from back when it was a KickStarter lifetime license, so that&amp;#39;s what I&amp;#39;m using. FontAwesome 6 Pro is now a &lt;a href="https://fontawesome.com/plans"&gt;$100/yr subscription&lt;/a&gt;, which doesn&amp;#39;t make sense for random side-projects, but I imagine these instructions will work the same. They provide a gem, but it wasn&amp;#39;t working out-of-the-box for me in the new Rails asset pipeline, and I try to avoid dependencies when possible, so I installed it manually.&lt;/p&gt;
+
+&lt;p&gt;I started by &lt;a href="https://fontawesome.com/download"&gt;downloading the zipfile&lt;/a&gt;. It includes a bunch of stuff, but we only care about what&amp;#39;s in &lt;code&gt;scss&lt;/code&gt; and &lt;code&gt;webfonts&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/posts/rails-7-propshaft-fonts/FontAwesomeZip.png" alt="FontAwesome Zip Contents" /&gt;&lt;/p&gt;
+
+&lt;p&gt;I copied everything from &lt;code&gt;scss&lt;/code&gt; into &lt;code&gt;app/assets/stylesheets/fontawesome&lt;/code&gt;, and the font files from &lt;code&gt;webfonts&lt;/code&gt; into &lt;code&gt;app/assets/fonts&lt;/code&gt;. I noticed in FontAweseom6, it only includes files for &lt;code&gt;ttf&lt;/code&gt; and &lt;code&gt;woff2&lt;/code&gt;, since the other formats are for older browsers, so I only copied those.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/posts/rails-7-propshaft-fonts/app-assets.png" alt="FontAwesome app assets folder" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Then, in my &lt;code&gt;application.scss&lt;/code&gt;, I added the main fontawesome file, and then the &lt;code&gt;regular&lt;/code&gt; theme, since that&amp;#39;s what I&amp;#39;m using.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight scss"&gt;&lt;code&gt;&lt;span class="c1"&gt;// app/assets/stylesheets/application.scss&lt;/span&gt;
+&lt;span class="k"&gt;@use&lt;/span&gt; &lt;span class="s1"&gt;'fontawesome/fontawesome'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;@use&lt;/span&gt; &lt;span class="s1"&gt;'fontawesome/regular'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I also had to modify the &lt;code&gt;fontawesome/regular.scss&lt;/code&gt; file, to use the right asset paths for the font files. (The &lt;code&gt;regular.scss&lt;/code&gt; from FontAwesome 5 is different than this, and I was struggling to get it working. This one is based off the &lt;a href="https://github.com/FortAwesome/font-awesome-sass/blob/master/assets/stylesheets/font-awesome/_regular.scss"&gt;&lt;code&gt;regular.scss&lt;/code&gt; from FontAwesome 6&lt;/a&gt;).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight scss"&gt;&lt;code&gt;&lt;span class="c1"&gt;// app/assets/stylesheets/fontawesome/regular.scss&lt;/span&gt;
+&lt;span class="k"&gt;@import&lt;/span&gt; &lt;span class="s1"&gt;'variables'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="nd"&gt;:root&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nd"&gt;:host&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="na"&gt;--fa-style-family-classic&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"Font Awesome 5 Pro"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="na"&gt;--fa-font-regular&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;normal&lt;/span&gt; &lt;span class="m"&gt;400&lt;/span&gt; &lt;span class="m"&gt;1em&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="s2"&gt;"Font Awesome 5 Pro"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;@font-face&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nl"&gt;font-family&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"Font Awesome 5 Pro"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nl"&gt;font-style&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;normal&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nl"&gt;font-weight&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="m"&gt;400&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="na"&gt;font-display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;block&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="c1"&gt;// This here is the part to change&lt;/span&gt;
+  &lt;span class="nl"&gt;src&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="sx"&gt;url("fa-regular-400.woff2")&lt;/span&gt; &lt;span class="nf"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"woff2"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="sx"&gt;url("fa-regular-400.ttf")&lt;/span&gt; &lt;span class="nf"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"truetype"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nc"&gt;.far&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+&lt;span class="nc"&gt;.fa-regular&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nl"&gt;font-family&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'Font Awesome 5 Pro'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="nl"&gt;font-weight&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="m"&gt;400&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The important part I had to change was the &lt;code&gt;src: url(...)&lt;/code&gt; bits. The way the asset pipeline works, these &lt;code&gt;url()&lt;/code&gt; statements get replaced with the path to the digest files with the &lt;code&gt;/assets/&lt;/code&gt; prefix.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/posts/rails-7-propshaft-fonts/regular-css-output.png" alt="CSS Output" /&gt;&lt;/p&gt;
+
+&lt;p&gt;And with that, I get FontAwesome icons!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight haml"&gt;&lt;code&gt;&lt;span class="nt"&gt;%a&lt;/span&gt;&lt;span class="nc"&gt;.is-active&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;href: &lt;/span&gt;&lt;span class="n"&gt;dashboard_path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;account_slug: &lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;:account_slug&lt;/span&gt;&lt;span class="p"&gt;])}&lt;/span&gt;
+  &lt;span class="nt"&gt;%span&lt;/span&gt;&lt;span class="nc"&gt;.icon&lt;/span&gt;
+    &lt;span class="nt"&gt;%i&lt;/span&gt;&lt;span class="nc"&gt;.far.fa-tachometer-alt&lt;/span&gt;
+    &lt;span class="nt"&gt;%span&lt;/span&gt;
+      Dashboard
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src="/posts/rails-7-propshaft-fonts/Menu-icons.png" alt="Menu icons screenshot" /&gt;&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Rails File Naming Conventions</title>
     <link rel="alternate" href="http://blog.theamazingrando.com/posts/rails-naming-conventions.html"/>
@@ -1099,117 +1166,6 @@ certificates.&lt;/p&gt;
 &lt;p&gt;I&amp;#39;m also excited to hear how people are using this, so please feel to contact
 me on twitter or email, or open an Issue or PR on that repo if I screwed up
 something obvious.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>The Conductor Pattern</title>
-    <link rel="alternate" href="http://blog.theamazingrando.com/posts/the-conductor-pattern.html"/>
-    <id>http://blog.theamazingrando.com/posts/the-conductor-pattern.html</id>
-    <published>2012-05-01T00:26:07-06:00</published>
-    <updated>2017-02-09T11:50:34-07:00</updated>
-    <author>
-      <name>Paul Sadauskas</name>
-    </author>
-    <summary type="html">&lt;p&gt;A movement has been growing over the last several months to make our Rails applications more object-oriented. One of the most popular recently has been &lt;a href="http://objectsonrails.com/"&gt;Avdi Grimm's Objects on Rails&lt;/a&gt;. In it, he talks about an alternative to the Presenter pattern, which he calls Exhibits (and both of which are subsets of the Decorator pattern). I've been using another form of this, which may or may not be called a Conductor.&lt;/p&gt;</summary>
-    <content type="html">&lt;h1&gt;The Conductor Pattern&lt;/h1&gt;
-
-&lt;h2&gt;Objects on Rails&lt;/h2&gt;
-
-&lt;p&gt;A movement has been growing over the last several months to make our Rails applications more object-oriented. One of the most popular recently has been &lt;a href="http://objectsonrails.com/"&gt;Avdi Grimm&amp;#39;s Objects on Rails&lt;/a&gt;. In it, he talks about an alternative to the Presenter pattern, which he calls Exhibits (and both of which are subsets of the Decorator pattern). I&amp;#39;ve been using another form of this, which may or may not be called a Conductor.&lt;/p&gt;
-
-&lt;p&gt;Most of these patterns come from the Java world, and Smalltalk before that. They have very specific rules about how they can be used (read-only, wrap methods on a single object, etc). In the Ruby world, however, its flexible object model and powerful metaprogramming features mean we can be a little more lazy about those rules. The Conductor pattern is an implementation of what Martin Fowler&amp;#39;s PoEAA calls a &lt;a href="http://martinfowler.com/eaaCatalog/unitOfWork.html"&gt;Unit of Work&lt;/a&gt;. Specifically, it wraps one or more models, and can be bidirectional, so it can decorate attributes of the models as well as update them.&lt;/p&gt;
-
-&lt;p&gt;I gave a talk a couple years ago at Mountain.rb entitled &lt;a href="http://www.confreaks.com/videos/422-mountainrb2010-forms-don-t-have-to-be-this-complicated"&gt;Forms Don&amp;#39;t Have to be this Complicated&lt;/a&gt;. In it, I spoke about how terrible Rails is at managing forms, particularly ones that deal with several related objects. I outlined a couple solutions, none of which were very good. I have recently been using this Conductor pattern for these complicated forms, and it seems to have alleviated most of the pain. The ability to wrap multiple models means it can handle the nested associations, and being bidirectional makes it perfect for forms.&lt;/p&gt;
-
-&lt;p&gt;In this post, I&amp;#39;m going to show you a couple uses of the Conductor pattern, as well as a library I wrote that implements it.&lt;/p&gt;
-
-&lt;h2&gt;GoldPlating&lt;/h2&gt;
-
-&lt;p&gt;In Ruby, writing an implementation of the Conductor library is trivial with the help of ActiveModel. The entire implementation is only 60 LOC. I haven&amp;#39;t bothered making a gem of it yet, but &lt;a href="https://gist.github.com/2565340"&gt;here&amp;#39;s a gist&lt;/a&gt;. Just toss it in your Rails &lt;code&gt;lib/&lt;/code&gt; dir and require it.&lt;/p&gt;
-
-&lt;p&gt;Here&amp;#39;s how to use it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Registration&lt;/span&gt;
-  &lt;span class="kp"&gt;include&lt;/span&gt; &lt;span class="no"&gt;GoldPlating&lt;/span&gt;
-
-  &lt;span class="n"&gt;wrap&lt;/span&gt; &lt;span class="no"&gt;Account&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:name&lt;/span&gt;
-  &lt;span class="n"&gt;wrap&lt;/span&gt; &lt;span class="no"&gt;User&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;    &lt;span class="ss"&gt;:email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:password&lt;/span&gt;
-
-  &lt;span class="n"&gt;validates_presence_of&lt;/span&gt; &lt;span class="ss"&gt;:account_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                        &lt;span class="ss"&gt;:user_email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                        &lt;span class="ss"&gt;:user_password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                        &lt;span class="ss"&gt;:message&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"Required"&lt;/span&gt;
-
-  &lt;span class="n"&gt;validates_format_of&lt;/span&gt; &lt;span class="ss"&gt;:user_email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                      &lt;span class="ss"&gt;:with&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="sr"&gt;/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                      &lt;span class="ss"&gt;:message&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"Not an Email"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                      &lt;span class="ss"&gt;:if&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;lambda&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;user_email&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;present?&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
-
-  &lt;span class="n"&gt;validates_length_of&lt;/span&gt; &lt;span class="ss"&gt;:user_password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                      &lt;span class="ss"&gt;:minimum&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                      &lt;span class="ss"&gt;:message&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"Too short"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                      &lt;span class="ss"&gt;:if&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;lambda&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;user_email&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;present?&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
-
-
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;save&lt;/span&gt;
-    &lt;span class="k"&gt;super&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;
-      &lt;span class="no"&gt;Membership&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ss"&gt;account: &lt;/span&gt;&lt;span class="n"&gt;account&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;user: &lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-  &lt;span class="k"&gt;end&lt;/span&gt;
-
-&lt;span class="k"&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Here, we have two models, &lt;code&gt;Account&lt;/code&gt; and &lt;code&gt;User&lt;/code&gt;. In this example app, a &lt;code&gt;User&lt;/code&gt; can have access to several &lt;code&gt;Accounts&lt;/code&gt; which might represent a business entity, similar to how Github Organizations work. When a user signs up, we want to automatically create but their &lt;code&gt;User&lt;/code&gt; for login, and the initial &lt;code&gt;Account&lt;/code&gt; they&amp;#39;ll belong to. Because attribute names may overlap, &lt;code&gt;GoldPlating&lt;/code&gt; prefixes them with the model name. &lt;code&gt;Account#name&lt;/code&gt; becomes &lt;code&gt;Registration#account_name&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h3&gt;Validations&lt;/h3&gt;
-
-&lt;p&gt;I&amp;#39;ve also added some validations to the Registration class. Sometimes different forms dealing with the same models have different valid states for those models, which validation contexts attempt to solve. I think having validations on the wrapper object is a much more elegant solution, leaving the validations on the model objects to simply validate whats needed to stick the object in the database, or is required of the model for the business logic in the rest of the app.&lt;/p&gt;
-
-&lt;p&gt;It also lets you have separate human-readable error messages closer to the view, leaving your model validations simpler. For example, if I was requiring users to confirm their email or password, this would be an excellent place to put the &lt;code&gt;validates_confirmation_of&lt;/code&gt;, leaving the model clear. It also makes it so that you don&amp;#39;t have to set the &lt;code&gt;_confirmation&lt;/code&gt; fields in your tests or factories when creating the objects.&lt;/p&gt;
-
-&lt;p&gt;The downside is that you have to duplicate some of your model validations in the conductor, like the validation on &lt;code&gt;email&lt;/code&gt; above. I don&amp;#39;t have an elegant solution for this yet.&lt;/p&gt;
-
-&lt;h3&gt;Controller&lt;/h3&gt;
-
-&lt;p&gt;When writing a registration form that needs to create both objects, the normal Rails method would be to separate out the &lt;code&gt;params&lt;/code&gt; in the controller, and create one of each object then associate them. This gets tricky, however, when one or the other fails to validate. Also, it puts a lot of logic in the controller. Using this conductor however, our controller is simple:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;RegistrationController&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ApplicationController&lt;/span&gt;
-  &lt;span class="n"&gt;skip_before_filter&lt;/span&gt; &lt;span class="ss"&gt;:require_login&lt;/span&gt;
-
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;
-    &lt;span class="vi"&gt;@registration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;
-  &lt;span class="k"&gt;end&lt;/span&gt;
-
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create&lt;/span&gt;
-    &lt;span class="vi"&gt;@registration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;:registration&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vi"&gt;@registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;valid?&lt;/span&gt;
-      &lt;span class="vi"&gt;@registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;save&lt;/span&gt;
-      &lt;span class="n"&gt;auto_login&lt;/span&gt; &lt;span class="vi"&gt;@registration&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;user&lt;/span&gt;
-      &lt;span class="n"&gt;redirect_back_or_to&lt;/span&gt; &lt;span class="n"&gt;root_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:notice&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"Registration Successful"&lt;/span&gt;
-    &lt;span class="k"&gt;else&lt;/span&gt;
-      &lt;span class="n"&gt;render&lt;/span&gt; &lt;span class="ss"&gt;:new&lt;/span&gt;
-    &lt;span class="k"&gt;end&lt;/span&gt;
-  &lt;span class="k"&gt;end&lt;/span&gt;
-&lt;span class="k"&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The form in the view is, too:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre class="highlight haml"&gt;&lt;code&gt;&lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;form_for&lt;/span&gt; &lt;span class="vi"&gt;@registration&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;url: &lt;/span&gt;&lt;span class="n"&gt;signup_path&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
-
-  &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;text_field&lt;/span&gt; &lt;span class="ss"&gt;:account_name&lt;/span&gt;
-
-  &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;email_field&lt;/span&gt; &lt;span class="ss"&gt;:user_email&lt;/span&gt;
-
-  &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;password_field&lt;/span&gt; &lt;span class="ss"&gt;:user_password&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The controller and view can interact with the &lt;code&gt;Registration&lt;/code&gt; conductor like any other ActiveModel-compliant object. In fact, this is the entire implementation. GoldPlating handled the object initialization, and assignment of the params to the right objects. GoldPlating also handled saving the objects it wraps, all we had to do was implement a &lt;code&gt;#save&lt;/code&gt; to create the &lt;code&gt;Membership&lt;/code&gt; association record between the newly-created &lt;code&gt;User&lt;/code&gt; and &lt;code&gt;Account&lt;/code&gt; records.&lt;/p&gt;
-
-&lt;h2&gt;So much easier&lt;/h2&gt;
-
-&lt;p&gt;I&amp;#39;ve been using this Conductor pattern quite liberally throughout my recent projects. Having this wrapper object to contain all the business logic related to presenting multiple objects to a form, and consuming and validating that form&amp;#39;s output, greatly simplifies my code. It also makes testing a breeze. I can test all the edge-case behaviour via tests that exercise the conductor, rather than full-stack tests through the full Rails request stack.&lt;/p&gt;
-
-&lt;p&gt;I&amp;#39;ve found that having a single conductor object for each form is the best way to go. It does lead to some code duplication, which might be alleviated some by including modules of shared methods, but overall the code in the conductor is simple and focused enough that the duplication has not (yet) been a major problem. It really helps to isolate the User-Interface of the forms from the data model, and associated business logic.&lt;/p&gt;
-
-&lt;p&gt;Some of the really useful places for conductors have been &lt;code&gt;Registration&lt;/code&gt;, &lt;code&gt;UserPreferences&lt;/code&gt;, &lt;code&gt;PasswordReset&lt;/code&gt;, &lt;code&gt;ManipulateAuthorization&lt;/code&gt;. You&amp;#39;ll notice that all of these involve some sort of &lt;code&gt;User&lt;/code&gt; model, but each in a different way. Its nice having all the logic for each process encapsulated in a single, distinct place.&lt;/p&gt;
-
-&lt;p&gt;Feel free to grab &lt;code&gt;GoldPlating&lt;/code&gt; from that gist, or if there&amp;#39;s enough interest, I can package it up as a gem.&lt;/p&gt;
 </content>
   </entry>
 </feed>
