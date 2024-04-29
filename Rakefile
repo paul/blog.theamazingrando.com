@@ -5,7 +5,9 @@ task :build do
   sh "middleman build"
 end
 
-desc "Deploy to s3"
-task :deploy do
-  sh "middleman s3_sync"
+desc "Publish to resume.sadauskas.com"
+task :publish do
+  FileUtils.cd "build" do
+    `git commit -am "Re-render" && git push`
+  end
 end

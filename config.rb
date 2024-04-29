@@ -105,7 +105,6 @@ helpers do
 end
 
 # Build-specific configuration
-activate :gzip
 configure :build do
   # Minify CSS on build
   activate :minify_css
