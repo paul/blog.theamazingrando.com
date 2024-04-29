@@ -1,0 +1,264 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - Using Local Font Files in the Rails 7.1 Asset Pipeline</title>
+
+    <title>Using Local Font Files in the Rails 7.1 Asset Pipeline</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="Using Local Font Files in the Rails 7.1 Asset Pipeline" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="Using Local Font Files in the Rails 7.1 Asset Pipeline" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "Using Local Font Files in the Rails 7.1 Asset Pipeline",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              Using Local Font Files in the Rails 7.1 Asset Pipeline
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/rails-7-propshaft-fonts.html">Using Local Font Files in the Rails 7.1 Asset Pipeline</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2024-04-29T20:01:14Z">Monday, April 29th 2024</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2024-04-29T14:01:14-06:00">Monday, April 29th 2024</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/rails-7-propshaft-fonts.html.markdown">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Rails<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p>I wanted to play with the new hotness of Rails asset handling in a sideproject, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I'm using <a href="https://github.com/rails/propshaft">propshaft</a> and <a href="https://github.com/rails/dartsass-rails">Dart Sass</a></p>
+
+<p>I happen to have a FontAwesome 5 Pro license from back when it was a KickStarter lifetime license, so that's what I'm using. FontAwesome 6 Pro is now a <a href="https://fontawesome.com/plans">$100/yr subscription</a>, which doesn't make sense for random side-projects, but I imagine these instructions will work the same. They provide a gem, but it wasn't working out-of-the-box for me in the new Rails asset pipeline, and I try to avoid dependencies when possible, so I installed it manually.</p>
+
+<p>I started by <a href="https://fontawesome.com/download">downloading the zipfile</a>. It includes a bunch of stuff, but we only care about what's in <code>scss</code> and <code>webfonts</code>.</p>
+
+<p><img src="/posts/rails-7-propshaft-fonts/FontAwesomeZip.png" alt="FontAwesome Zip Contents"></p>
+
+<p>I copied everything from <code>scss</code> into <code>app/assets/stylesheets/fontawesome</code>, and the font files from <code>webfonts</code> into <code>app/assets/fonts</code>. I noticed in FontAweseom6, it only includes files for <code>ttf</code> and <code>woff2</code>, since the other formats are for older browsers, so I only copied those.</p>
+
+<p><img src="/posts/rails-7-propshaft-fonts/app-assets.png" alt="FontAwesome app assets folder"></p>
+
+<p>Then, in my <code>application.scss</code>, I added the main fontawesome file, and then the <code>regular</code> theme, since that's what I'm using.</p>
+<div class="highlight"><pre class="highlight scss"><code><span class="c1">// app/assets/stylesheets/application.scss</span>
+<span class="k">@use</span> <span class="s1">'fontawesome/fontawesome'</span><span class="p">;</span>
+<span class="k">@use</span> <span class="s1">'fontawesome/regular'</span><span class="p">;</span>
+</code></pre></div>
+<p>I also had to modify the <code>fontawesome/regular.scss</code> file, to use the right asset paths for the font files. (The <code>regular.scss</code> from FontAwesome 5 is different than this, and I was struggling to get it working. This one is based off the <a href="https://github.com/FortAwesome/font-awesome-sass/blob/master/assets/stylesheets/font-awesome/_regular.scss"><code>regular.scss</code> from FontAwesome 6</a>).</p>
+<div class="highlight"><pre class="highlight scss"><code><span class="c1">// app/assets/stylesheets/fontawesome/regular.scss</span>
+<span class="k">@import</span> <span class="s1">'variables'</span><span class="p">;</span>
+
+<span class="nd">:root</span><span class="o">,</span> <span class="nd">:host</span> <span class="p">{</span>
+  <span class="na">--fa-style-family-classic</span><span class="p">:</span> <span class="s2">"Font Awesome 5 Pro"</span><span class="p">;</span>
+  <span class="na">--fa-font-regular</span><span class="p">:</span> <span class="nb">normal</span> <span class="m">400</span> <span class="m">1em</span><span class="o">/</span><span class="m">1</span> <span class="s2">"Font Awesome 5 Pro"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@font-face</span> <span class="p">{</span>
+  <span class="nl">font-family</span><span class="p">:</span> <span class="s2">"Font Awesome 5 Pro"</span><span class="p">;</span>
+  <span class="nl">font-style</span><span class="p">:</span> <span class="nb">normal</span><span class="p">;</span>
+  <span class="nl">font-weight</span><span class="p">:</span> <span class="m">400</span><span class="p">;</span>
+  <span class="na">font-display</span><span class="p">:</span> <span class="nb">block</span><span class="p">;</span>
+  <span class="c1">// This here is the part to change</span>
+  <span class="nl">src</span><span class="p">:</span> <span class="sx">url("fa-regular-400.woff2")</span> <span class="nf">format</span><span class="p">(</span><span class="s2">"woff2"</span><span class="p">)</span><span class="o">,</span> <span class="sx">url("fa-regular-400.ttf")</span> <span class="nf">format</span><span class="p">(</span><span class="s2">"truetype"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nc">.far</span><span class="o">,</span>
+<span class="nc">.fa-regular</span> <span class="p">{</span>
+  <span class="nl">font-family</span><span class="p">:</span> <span class="s1">'Font Awesome 5 Pro'</span><span class="p">;</span>
+  <span class="nl">font-weight</span><span class="p">:</span> <span class="m">400</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The important part I had to change was the <code>src: url(...)</code> bits. The way the asset pipeline works, these <code>url()</code> statements get replaced with the path to the digest files with the <code>/assets/</code> prefix.</p>
+
+<p><img src="/posts/rails-7-propshaft-fonts/regular-css-output.png" alt="CSS Output"></p>
+
+<p>And with that, I get FontAwesome icons!</p>
+<div class="highlight"><pre class="highlight haml"><code><span class="nt">%a</span><span class="nc">.is-active</span><span class="p">{</span><span class="ss">href: </span><span class="n">dashboard_path</span><span class="p">(</span><span class="ss">account_slug: </span><span class="n">params</span><span class="p">[</span><span class="ss">:account_slug</span><span class="p">])}</span>
+  <span class="nt">%span</span><span class="nc">.icon</span>
+    <span class="nt">%i</span><span class="nc">.far.fa-tachometer-alt</span>
+    <span class="nt">%span</span>
+      Dashboard
+</code></pre></div>
+<p><img src="/posts/rails-7-propshaft-fonts/Menu-icons.png" alt="Menu icons screenshot"></p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(5)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>
