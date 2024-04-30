@@ -69,10 +69,10 @@
       <h2><a href="/posts/rails-7-propshaft-fonts.html">Using Local Font Files in the Rails 7.1 Asset Pipeline</a></h1>
       <ul class="meta">
         <li class="icon fa-upload">
-          Published: <time datetime="2024-04-29T20:01:14Z">Monday, April 29th 2024</time>
+          Published: <time datetime="2024-04-29T19:03:40Z">Monday, April 29th 2024</time>
         <li>
         <li class="icon fa-clock">
-          Updated: <time datetime="2024-04-29T14:01:14-06:00">Monday, April 29th 2024</time></br>
+          Updated: <time datetime="2024-04-30T14:57:44-06:00">Tuesday, April 30th 2024</time></br>
         <li>
         <li class="icon brands fa-github">
           <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/rails-7-propshaft-fonts.html.markdown">Article source on GitHub</a>
@@ -86,7 +86,7 @@
     <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html><body>
 
-<p>I wanted to play with the new hotness of Rails asset handling in a sideproject, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I'm using <a href="https://github.com/rails/propshaft">propshaft</a> and <a href="https://github.com/rails/dartsass-rails">Dart Sass</a></p>
+<p>I wanted to play with the new hotness of Rails asset handling in a <a href="https://scalar.sh">sideproject</a>, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I'm using <a href="https://github.com/rails/propshaft">propshaft</a> and <a href="https://github.com/rails/dartsass-rails">Dart Sass</a> in this app to build my CSS assets, and there wasn't any documentation I could find on how to reference your local font files within your SCSS files.</p>
 
 <p>I happen to have a FontAwesome 5 Pro license from back when it was a KickStarter lifetime license, so that's what I'm using. FontAwesome 6 Pro is now a <a href="https://fontawesome.com/plans">$100/yr subscription</a>, which doesn't make sense for random side-projects, but I imagine these instructions will work the same. They provide a gem, but it wasn't working out-of-the-box for me in the new Rails asset pipeline, and I try to avoid dependencies when possible, so I installed it manually.</p>
 

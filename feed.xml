@@ -5,7 +5,7 @@
   <id>http://blog.theamazingrando.com/</id>
   <link href="http://blog.theamazingrando.com/"/>
   <link href="http://blog.theamazingrando.com/feed.xml" rel="self"/>
-  <updated>2024-04-29T14:01:14-06:00</updated>
+  <updated>2024-04-29T13:03:40-06:00</updated>
   <author>
     <name>Paul Sadauskas</name>
   </author>
@@ -13,15 +13,15 @@
     <title>Using Local Font Files in the Rails 7.1 Asset Pipeline</title>
     <link rel="alternate" href="http://blog.theamazingrando.com/posts/rails-7-propshaft-fonts.html"/>
     <id>http://blog.theamazingrando.com/posts/rails-7-propshaft-fonts.html</id>
-    <published>2024-04-29T14:01:14-06:00</published>
-    <updated>2024-04-29T14:01:08-06:00</updated>
+    <published>2024-04-29T13:03:40-06:00</published>
+    <updated>2024-04-30T14:57:16-06:00</updated>
     <author>
       <name>Paul Sadauskas</name>
     </author>
-    <summary type="html">&lt;p&gt;I wanted to play with the new hotness of Rails asset handling in a sideproject, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I'm using &lt;a href="https://github.com/rails/propshaft"&gt;propshaft&lt;/a&gt; and &lt;a href="https://github.com/rails/dartsass-rails"&gt;Dart Sass&lt;/a&gt;&lt;/p&gt;</summary>
+    <summary type="html">&lt;p&gt;I wanted to play with the new hotness of Rails asset handling in a &lt;a href="https://scalar.sh"&gt;sideproject&lt;/a&gt;, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I'm using &lt;a href="https://github.com/rails/propshaft"&gt;propshaft&lt;/a&gt; and &lt;a href="https://github.com/rails/dartsass-rails"&gt;Dart Sass&lt;/a&gt; in this app to build my CSS assets, and there wasn't any documentation I could find on how to reference your local font files within your SCSS files.&lt;/p&gt;</summary>
     <content type="html">&lt;h1&gt;Using Local Font Files in the Rails 7.1 Asset Pipeline&lt;/h1&gt;
 
-&lt;p&gt;I wanted to play with the new hotness of Rails asset handling in a sideproject, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I&amp;#39;m using &lt;a href="https://github.com/rails/propshaft"&gt;propshaft&lt;/a&gt; and &lt;a href="https://github.com/rails/dartsass-rails"&gt;Dart Sass&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I wanted to play with the new hotness of Rails asset handling in a &lt;a href="https://scalar.sh"&gt;sideproject&lt;/a&gt;, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I&amp;#39;m using &lt;a href="https://github.com/rails/propshaft"&gt;propshaft&lt;/a&gt; and &lt;a href="https://github.com/rails/dartsass-rails"&gt;Dart Sass&lt;/a&gt; in this app to build my CSS assets, and there wasn&amp;#39;t any documentation I could find on how to reference your local font files within your SCSS files.&lt;/p&gt;
 
 &lt;p&gt;I happen to have a FontAwesome 5 Pro license from back when it was a KickStarter lifetime license, so that&amp;#39;s what I&amp;#39;m using. FontAwesome 6 Pro is now a &lt;a href="https://fontawesome.com/plans"&gt;$100/yr subscription&lt;/a&gt;, which doesn&amp;#39;t make sense for random side-projects, but I imagine these instructions will work the same. They provide a gem, but it wasn&amp;#39;t working out-of-the-box for me in the new Rails asset pipeline, and I try to avoid dependencies when possible, so I installed it manually.&lt;/p&gt;
 
