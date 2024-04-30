@@ -6,7 +6,7 @@ tags:
 
 # Using Local Font Files in the Rails 7.1 Asset Pipeline
 
-I wanted to play with the new hotness of Rails asset handling in a sideproject, and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I'm using [propshaft](https://github.com/rails/propshaft) and [Dart Sass](https://github.com/rails/dartsass-rails) in this app to build my CSS assets, and there wasn't any documentation I could find on how to reference your local font files within your SCSS files.
+I wanted to play with the new hotness of Rails asset handling in a [sideproject](https://scalar.sh), and ran into some fiddliness in getting FontAwesome webfonts to be seen when loading them from an SCSS file. I'm using [propshaft](https://github.com/rails/propshaft) and [Dart Sass](https://github.com/rails/dartsass-rails) in this app to build my CSS assets, and there wasn't any documentation I could find on how to reference your local font files within your SCSS files.
 
 I happen to have a FontAwesome 5 Pro license from back when it was a KickStarter lifetime license, so that's what I'm using. FontAwesome 6 Pro is now a [$100/yr subscription](https://fontawesome.com/plans), which doesn't make sense for random side-projects, but I imagine these instructions will work the same. They provide a gem, but it wasn't working out-of-the-box for me in the new Rails asset pipeline, and I try to avoid dependencies when possible, so I installed it manually.
 
