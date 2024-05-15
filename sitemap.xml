@@ -205,14 +205,20 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>http://blog.theamazingrando.com/posts/rails-7-propshaft-fonts.html</loc>
+    <lastmod>2024-04-30T14:57:16-06:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>http://blog.theamazingrando.com/posts/rails-naming-conventions.html</loc>
     <lastmod>2024-04-23T10:51:44-06:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://blog.theamazingrando.com/posts/rails-7-propshaft-fonts.html</loc>
-    <lastmod>2024-04-30T14:57:16-06:00</lastmod>
+    <loc>http://blog.theamazingrando.com/posts/rails-propshaft-stimulus-viewcomponent.html</loc>
+    <lastmod>2024-05-15T16:27:34-06:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

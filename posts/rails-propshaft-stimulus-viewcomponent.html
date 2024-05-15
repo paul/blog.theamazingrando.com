@@ -1,0 +1,263 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <title>The Amazing Blog - ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft</title>
+
+    <title>ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft</title>
+<meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="keywords" content="software, ruby, linux" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta name="twitter:image:src" content="/avatar.jpg" />
+<meta name="twitter:title" content="ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft" />
+<meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
+<meta property="og:image" content="/avatar.jpg" />
+<meta property="og:title" content="ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft" />
+    <script type="application/ld+json">
+      {
+        "@type": "WebSite",
+        "publisher": {
+          "@type": "Person",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "/avatar.png"
+          }
+        },
+        "url": "/",
+        "headline": "ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft",
+        "name": "The Amazing Blog",
+        "@context": "https://schema.org"
+      }
+    </script>
+
+    <link href="/stylesheets/txt.css" rel="stylesheet" />
+    <link href="/stylesheets/highlight.css" rel="stylesheet" />
+    <link rel="alternate" type="application/atom+xml" title="The Amazing Blog Feed" href="/feed.xml" />
+  </head>
+  <body class="is-preload">
+    <div id="page-wrapper">
+
+    <header id="header">
+      <div class="logo container">
+        <div>
+          <h1>
+              ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <ul>
+        <li class="current"><a href="/">Home</a></li>
+      </ul>
+    </nav>
+
+
+    <section id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col-9 col-12-medium">
+            <div class="content">
+              <article class="box page-content">
+                  <section>
+    <header>
+      <h2><a href="/posts/rails-propshaft-stimulus-viewcomponent.html">ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft</a></h1>
+      <ul class="meta">
+        <li class="icon fa-upload">
+          Published: <time datetime="2024-05-15T22:28:24Z">Wednesday, May 15th 2024</time>
+        <li>
+        <li class="icon fa-clock">
+          Updated: <time datetime="2024-05-15T16:28:24-06:00">Wednesday, May 15th 2024</time></br>
+        <li>
+        <li class="icon brands fa-github">
+          <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/rails-propshaft-stimulus-viewcomponent.html.md">Article source on GitHub</a>
+        </li>
+      </ul>
+      <ul class="meta">
+          <li class="icon fa-tag">Rails<li>
+      </ul>
+    </header>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>
+
+<p><em>AKA: How many Rails buzzwords can I fit in a single blog post title?</em></p>
+
+<p>In a <a href="rails-naming-conventions">previous post</a>, I described how I like to group related "Business Concept" objects together in <code>app/aspects</code>, rather than grouping them by type (<code>app/jobs</code>, <code>app/commands</code>, etc...)</p>
+
+<p>In a <a href="https://scalar.sh">sideproject I'm working on</a>, I wanted to put my ViewComponent objects in that folder too, instead of <code>app/components</code>. Starting in ViewComponent 3, they support <a href="https://viewcomponent.org/guide/templates.html#subdirectory">"sidecar" files</a>, where you can put all the related files to that component in a subdirectory named the same as the component. Since I'm also using Stimulus for this project, and several of my Components have corresponding Stimulus controllers, I also wanted to put the controller.js file in that sidecar subdir, too.</p>
+
+<p>For the final buzzword bingo, I'm <em>also</em> using Propshaft for this project, as I <a href="rails-7-propshaft-fonts">described in the last post</a>. However, Propshaft only wants to look in the <code>app/assets</code> folder for Javascript controllers. I found <a href="https://github.com/rails/propshaft/issues/87#issuecomment-1127234248">a</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-917760377">few</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-1046123018">different</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-1641212454">solutions</a>, but none of them worked as-is, I had to cobble a few different solutions together. </p>
+
+<p>To get started, here's what one of my "aspects" folder looks like:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>$ tree app/aspects/scalers
+app/aspects/scalers
+├── form_component
+│   ├── component_controller.js
+│   └── form_component.html.haml
+├── form_component.rb
+├── target_form_component
+│   ├── component_controller.js
+│   └── target_form_component.html.haml
+└── target_form_component.rb
+</code></pre></div>
+<p>I have two components, <code>Scalers::FormComponent</code> and <code>Scalers::TargetFormComponent</code> (one is a sub-form of the main, keep an eye out for an upcoming block post about that!). </p>
+
+<p>First, I added the folders to the <code>config/initializers/assets.rb</code>:</p>
+<div class="highlight"><pre class="highlight diff"><code><span class="gh">diff --git a/config/initializers/assets.rb b/config/initializers/assets.rb
+index b649f68..5311092 100644
+</span><span class="gd">--- a/config/initializers/assets.rb
+</span><span class="gi">+++ b/config/initializers/assets.rb
+</span><span class="p">@@ -8,3 +8,10 @@</span> Rails.application.config.assets.version = "1.0"
+ # Add additional assets to the asset load path.
+ # Rails.application.config.assets.paths &lt;&lt; Emoji.images_path
+ # Rails.application.config.assets.paths &lt;&lt; Rails.root.join("app/assets/fonts")
+<span class="gi">+Rails.application.config.assets.paths &lt;&lt; "app/components"
++Rails.application.config.assets.paths &lt;&lt; "app/aspects"
++
++Rails.application.config.importmap.cache_sweepers &lt;&lt; Rails.root.join("app/components")
++Rails.application.config.importmap.cache_sweepers &lt;&lt; Rails.root.join("app/aspects")
+</span></code></pre></div>
+<p>(I don't know if the "cache_sweepers" part is needed, I haven't deleted a stimulus controller in the project yet. It doesn't seem to hurt either.)</p>
+
+<p>Then in my <code>config/importmap.rb</code>, I added those folders as controllers:</p>
+<div class="highlight"><pre class="highlight diff"><code><span class="gi">+pin_all_from "app/components", under: "controllers", to: ""
++pin_all_from "app/aspects", under: "controllers", to: ""
+</span></code></pre></div>
+<p>Finally, to reference this controller, you have to use the awkward naming scheme of replacing the <code>/</code> with <code>--</code> in the name. In my case, the <code>&lt;form&gt;</code> element I want to attach to the controller starts like this:</p>
+<div class="highlight"><pre class="highlight html"><code><span class="nt">&lt;form</span> <span class="na">data-controller=</span><span class="s">"scalers--form-component--component"</span> <span class="err">...</span><span class="nt">&gt;</span>
+</code></pre></div>
+<p>I don't actually write that out by hand. My controllers include a module that handles all the Stimulus naming for me (another upcoming post). Here's one of the helper methods:</p>
+<div class="highlight"><pre class="highlight ruby"><code><span class="k">def</span> <span class="nf">stimulus_controller</span>
+  <span class="s2">"</span><span class="si">#{</span><span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">name</span><span class="p">.</span><span class="nf">underscore</span><span class="p">.</span><span class="nf">dasherize</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="s1">'--'</span><span class="p">)</span><span class="si">}</span><span class="s2">--component"</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This wasn't hard to get working, it was just fiddly to figure out which parts of the different solutions I needed.</p>
+</body></html>
+
+  </section>
+
+              </article>
+            </div>
+          </div>
+          <div class="col-3 col-12-medium">
+            <div class="sidebar">
+              <section>
+  <h2 class="major"><span>About Me</span></h2>
+  <a href="#" class="image featured">
+    <img src="/avatar.jpg" alt="avatar" />
+  </a>
+  <p>
+  Paul Sadauskas is a professional software engineer in Boulder, CO. I love
+  making tools for users and fellow developers that are elegant, robust, and
+  reliable.
+  </p>
+
+  <ul style="list-style: none">
+    <li class="icon brands fa-github">&nbsp;<a href="https://github.com/paul">@paul</a></li>
+    <li class="icon brands fa-mastodon">&nbsp;<a rel="me" href="https://ruby.social/@Paul">ruby.social@Paul</a></li>
+    <li class="icon brands fa-twitter">&nbsp;<a href="https://twitter.com/theamazingrando">@theamazingrando</a></li>
+    <li class="icon fa-envelope">&nbsp;<a href="mailto:paul@sadauskas.com">paul@sadauskas.com</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <div class="nav-section">
+    <ul class="tags">
+        <li>
+          <a href="/tagged/aws.html">AWS</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/authentication.html">Authentication</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/datamapper.html">DataMapper</a>&nbsp;(8)
+        </li>
+        <li>
+          <a href="/tagged/dryrb.html">DryRb</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/gentoo.html">Gentoo</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/hypermedia.html">Hypermedia</a>&nbsp;(4)
+        </li>
+        <li>
+          <a href="/tagged/let-s-encrypt.html">Let's Encrypt</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/linux.html">Linux</a>&nbsp;(2)
+        </li>
+        <li>
+          <a href="/tagged/logging.html">Logging</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/merb.html">Merb</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/mysql.html">MySQL</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/postgres.html">Postgres</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/progress-bar.html">Progress Bar</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/rails.html">Rails</a>&nbsp;(6)
+        </li>
+        <li>
+          <a href="/tagged/resourceful.html">Resourceful</a>&nbsp;(3)
+        </li>
+        <li>
+          <a href="/tagged/ruby.html">Ruby</a>&nbsp;(17)
+        </li>
+        <li>
+          <a href="/tagged/meta.html">meta</a>&nbsp;(1)
+        </li>
+        <li>
+          <a href="/tagged/tips.html">tips</a>&nbsp;(1)
+        </li>
+    </ul>
+  </div>
+</section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer">
+  <div class="container">
+    <div id="copyright">
+      <ul class="menu">
+        <li>
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
+            The Amazing Blog
+          </span>
+          by
+          <a xmlns:cc="http://creativecommons.org/ns#" href="http://blog.theamazingrando.com" property="cc:attributionName" rel="cc:attributionURL">
+            Paul Sadauskas
+          </a>
+        </li>
+        <li>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+        </li>
+        <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script data-goatcounter="https://rando.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>
