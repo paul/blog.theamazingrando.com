@@ -5,18 +5,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <title>The Amazing Blog - ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft</title>
+    <title>The Amazing Blog - Referencing Stimulus Controllers as ViewComponent Sidecar Files with Propshaft Importmaps</title>
 
-    <title>ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft</title>
+    <title>Referencing Stimulus Controllers as ViewComponent Sidecar Files with Propshaft Importmaps</title>
 <meta name="description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
 <meta name="keywords" content="software, ruby, linux" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
 <meta name="twitter:image:src" content="/avatar.jpg" />
-<meta name="twitter:title" content="ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft" />
+<meta name="twitter:title" content="Referencing Stimulus Controllers as ViewComponent Sidecar Files with Propshaft Importmaps" />
 <meta property="og:description" content="Inaccurate Posts from the Inscrutable Mind of Paul Sadauskas" />
 <meta property="og:image" content="/avatar.jpg" />
-<meta property="og:title" content="ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft" />
+<meta property="og:title" content="Referencing Stimulus Controllers as ViewComponent Sidecar Files with Propshaft Importmaps" />
     <script type="application/ld+json">
       {
         "@type": "WebSite",
@@ -28,7 +28,7 @@
           }
         },
         "url": "/",
-        "headline": "ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft",
+        "headline": "Referencing Stimulus Controllers as ViewComponent Sidecar Files with Propshaft Importmaps",
         "name": "The Amazing Blog",
         "@context": "https://schema.org"
       }
@@ -45,7 +45,7 @@
       <div class="logo container">
         <div>
           <h1>
-              ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft
+              Referencing Stimulus Controllers as ViewComponent Sidecar Files with Propshaft Importmaps
           </h1>
         </div>
       </div>
@@ -66,13 +66,13 @@
               <article class="box page-content">
                   <section>
     <header>
-      <h2><a href="/posts/rails-propshaft-stimulus-viewcomponent.html">ViewComponent Sidecar Stimulus Controllers in Rails 7 with Propshaft</a></h1>
+      <h2><a href="/posts/rails-propshaft-stimulus-viewcomponent.html">Referencing Stimulus Controllers as ViewComponent Sidecar Files with Propshaft Importmaps</a></h1>
       <ul class="meta">
         <li class="icon fa-upload">
-          Published: <time datetime="2024-05-15T22:28:24Z">Wednesday, May 15th 2024</time>
+          Published: <time datetime="2024-05-15T22:32:44Z">Wednesday, May 15th 2024</time>
         <li>
         <li class="icon fa-clock">
-          Updated: <time datetime="2024-05-15T16:28:24-06:00">Wednesday, May 15th 2024</time></br>
+          Updated: <time datetime="2024-05-15T16:32:44-06:00">Wednesday, May 15th 2024</time></br>
         <li>
         <li class="icon brands fa-github">
           <a href="https://github.com/paul/blog.theamazingrando.com/blob/master/source/posts/rails-propshaft-stimulus-viewcomponent.html.md">Article source on GitHub</a>
@@ -88,11 +88,11 @@
 
 <p><em>AKA: How many Rails buzzwords can I fit in a single blog post title?</em></p>
 
-<p>In a <a href="rails-naming-conventions">previous post</a>, I described how I like to group related "Business Concept" objects together in <code>app/aspects</code>, rather than grouping them by type (<code>app/jobs</code>, <code>app/commands</code>, etc...)</p>
+<p>In a <a href="/posts/rails-naming-conventions.html">previous post</a>, I described how I like to group related "Business Concept" objects together in <code>app/aspects</code>, rather than grouping them by type (<code>app/jobs</code>, <code>app/commands</code>, etc...)</p>
 
 <p>In a <a href="https://scalar.sh">sideproject I'm working on</a>, I wanted to put my ViewComponent objects in that folder too, instead of <code>app/components</code>. Starting in ViewComponent 3, they support <a href="https://viewcomponent.org/guide/templates.html#subdirectory">"sidecar" files</a>, where you can put all the related files to that component in a subdirectory named the same as the component. Since I'm also using Stimulus for this project, and several of my Components have corresponding Stimulus controllers, I also wanted to put the controller.js file in that sidecar subdir, too.</p>
 
-<p>For the final buzzword bingo, I'm <em>also</em> using Propshaft for this project, as I <a href="rails-7-propshaft-fonts">described in the last post</a>. However, Propshaft only wants to look in the <code>app/assets</code> folder for Javascript controllers. I found <a href="https://github.com/rails/propshaft/issues/87#issuecomment-1127234248">a</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-917760377">few</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-1046123018">different</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-1641212454">solutions</a>, but none of them worked as-is, I had to cobble a few different solutions together. </p>
+<p>For the final buzzword bingo, I'm <em>also</em> using Propshaft for this project, as I <a href="/posts/rails-7-propshaft-fonts.html">described in the last post</a>. However, Propshaft only wants to look in the <code>app/assets</code> folder for Javascript controllers. I found <a href="https://github.com/rails/propshaft/issues/87#issuecomment-1127234248">a</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-917760377">few</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-1046123018">different</a> <a href="https://github.com/ViewComponent/view_component/issues/1064#issuecomment-1641212454">solutions</a>, but none of them worked as-is, I had to cobble a few different solutions together. </p>
 
 <p>To get started, here's what one of my "aspects" folder looks like:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>$ tree app/aspects/scalers
