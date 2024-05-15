@@ -52,6 +52,7 @@ module Middleman
           first_draft_at: first_draft,
           updated_at:,
           first_paragraph:,
+          description: first_paragraph.text,
           content:
         }
       end
